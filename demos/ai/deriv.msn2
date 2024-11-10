@@ -1,0 +1,14 @@
+# Tests ChatGPT class ask derivations / with constraints on the return.
+#
+# author : Mason Marker
+# date : 9/26/2023
+# version : 2.0.388
+
+# ChatGPT
+import ('lib/auto/chatgpt')
+
+# create ChatGPT instance
+@gpt = chatgpt:instance('gpt-3.5-turbo')
+
+# forces word count
+print(gpt.ask('hi, how are you?'))

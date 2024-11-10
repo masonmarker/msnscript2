@@ -1,0 +1,706 @@
+# Running a program tutorial page.
+#
+# author : Mason Marker
+# date : 8/17/2023
+
+# python snippet to get the current working directory
+\\
+import os
+cwd = os.getcwd()
+page:run:getcwd \\
+
+
+# page component
+@ page:run_a_program = script((
+
+    # page explanation
+    console:print(arr(
+        object(
+            'text', 'Running a ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'Program',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+    )),
+    print(),
+    console:print(arr(
+        object(
+            'text', "You can run a ",
+            'style', 'bold'
+        ),
+        object(
+            'text', 'program',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', " from the interpreter's ",
+            'style', 'bold'
+        ),
+        object(
+            'text', 'root directory',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+    )),
+    print(),
+    console:print(arr(
+        object(
+            'text', 'For the main msn2 repository, this directory is ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'msnscript2/',
+            'style', 'bold',
+            'fore', 'green'
+        )
+    )),
+    2(print()),
+    console:print(arr(
+        object(
+            'text', 'The ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'normal',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' way to run a ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'program',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' is with ',
+            'style', 'bold'
+        ),
+        object(
+            'text', '{python_alias} msn2cli.py -f <filepath1> -a <args1> | {python_alias} msn2.py <filepath> <args>',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' from the msn2',
+            'style', 'bold'
+        ),
+        object(
+            'text', ' root directory',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ', where ',
+            'style', 'bold'
+        ),
+        object(
+            'text', '{python_alias}',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' is the alias for your ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'Python interpreter',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' and ',
+            'style', 'bold'
+        ),
+        object(
+            'text', '<program>',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' is the ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'program name',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', '.',
+            'style', 'bold'
+        )
+    )),
+    2(print()),
+    console:print(arr(
+        object(
+            'text', 'Example:   ',
+            'style', 'bold'
+        ),
+        object(
+            'text', '{python_alias} msn2cli.py -f hello_world',
+            'style', 'italic',
+            'fore', 'green'
+        )
+    )),
+    console:print(arr(
+        object(
+            'text', 'You may ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'omit',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' the .msn2 extension, ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'similar to that of ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'imports',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', '.',
+            'style', 'bold'
+        )
+    )),
+    print(),
+    console:print(arr(
+        object(
+            'text', 'The msn2 ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'interpreter',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' uses the ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'Python alias',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' listed in your ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'msn2_settings.json',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ', and you can change this if need be.',
+            'style', 'bold'
+        )
+    )),
+    print(),
+    
+    # give running a program options
+    console:print(arr(
+        object(
+            'text', 'Type ',
+            'style', 'italic'
+        ),
+        object(
+            'text', "'r'",
+            'style', 'italic',
+            'fore', 'yellow'
+        ),
+        object(
+            'text', ' to run a ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'program',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' now', 
+            'style', 'italic'
+        ),
+        object(
+            'text', '.',
+            'style', 'italic'
+        )
+    )),
+    console:print(arr(
+        object(
+            'text', 'Type ',
+            'style', 'italic'
+        ),
+        object(
+            'text', "'q'",
+            'style', 'italic',
+            'fore', 'yellow'
+        ),
+        object(
+            'text', ' to ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'quit',
+            'style', 'italic',
+            'fore', 'red'
+        ),
+        object(
+            'text', '.',
+            'style', 'italic'
+        )
+    )),
+
+    # handle input
+    @ page:run:input = strip(input()),
+    if (page:run:input.equals('r'), (
+        
+        # get a new page
+        new_page(),
+
+        # prompt for existing program or new program
+        console:print(arr(
+            object(
+                'text', 'Type ',
+                'style', 'italic'
+            ),
+            object(
+                'text', "'e'",
+                'style', 'italic',
+                'fore', 'yellow'
+            ),
+            object(
+                'text', ' to run an ',
+                'style', 'italic'
+            ),
+            object(
+                'text', 'existing program',
+                'style', 'italic',
+                'fore', 'green'
+            ),
+            object(
+                'text', '.',
+                'style', 'italic'
+            )
+        )),
+        print(),
+        console:print(arr(
+            object(
+                'text', 'Type ',
+                'style', 'italic'
+            ),
+            object(
+                'text', "'n'",
+                'style', 'italic',
+                'fore', 'yellow'
+            ),
+            object(
+                'text', ' to run a ',
+                'style', 'italic'
+            ),
+            object(
+                'text', 'new program',
+                'style', 'italic',
+                'fore', 'green'
+            ),
+            object(
+                'text', '.',
+                'style', 'italic'
+            )
+        )),
+        print(),
+        # quitting
+        console:print(arr(
+            object(
+                'text', 'Type ',
+                'style', 'italic'
+            ),
+            object(
+                'text', "'q'",
+                'style', 'italic',
+                'fore', 'yellow'
+            ),
+            object(
+                'text', ' to ',
+                'style', 'italic'
+            ),
+            object(
+                'text', 'quit',
+                'style', 'italic',
+                'fore', 'red'
+            ),
+            object(
+                'text', '.',
+                'style', 'italic'
+            )
+        )),
+
+        # handle input
+        @ page:run:input = strip(input()),
+
+        # existing program
+        if (page:run:input.equals('e'), (
+            
+            # get a new page
+            new_page(),
+            
+            # starting message
+            console:print(arr(
+                object(
+                    'text', 'Running an ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'existing program',
+                    'style', 'bold',
+                    'fore', 'green'
+                )
+            )),
+            print(),
+
+            # listing the files in the current directory
+
+            # run the python snippet to get the current working directory
+            py.run(page:run:getcwd),
+
+            # get the current working directory
+            @page:run:dir = py.cwd(),
+
+            # print the current working directory
+            console:print(arr(
+                object(
+                    'text', 'Searching in:',
+                    'style', 'bold'
+                )
+            )),
+
+            # print current working directory
+            page:run:dir.print('', '\\'),
+            print(),
+
+            # get the path for files to run
+            @ page:run:files = file.listdir(page:run:dir),
+
+            # runnable files
+            @ page:run:runnable_filenames = [],
+
+            # index
+            @ page:run:i = 1,
+
+            # for each file 
+            page:run:files.each('page:run:filename', (
+                
+                # if the file endswith .msn2
+                if (page:run:filename.endswith('.msn2'), (
+                    # print the file name
+                    console:print(arr(
+                        object(
+                            'text', cat(page:run:i, ': ',page:run:filename),
+                            'style', 'bold',
+                            'fore', 'green'
+                        )
+                    )),
+                    # add the file name to the runnable files
+                    page:run:runnable_filenames.append(page:run:filename),
+                    @ page:run:i += 1
+                ))
+            )),
+            print(),
+            # get user input for a file to run
+            console:print(arr(
+                object(
+                    'text', 'Type the name of the ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'runnable file ',
+                    'style', 'bold',
+                    'fore', 'green'
+                ),
+                object(
+                    'text', 'or ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', "'q'",
+                    'style', 'bold',
+                    'fore', 'red'
+                ),
+                object(
+                    'text', ' to ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'quit',
+                    'style', 'bold',
+                    'fore', 'red'
+                ),
+                object(
+                    'text', '.',
+                    'style', 'bold'
+                )
+            )),
+
+            # get user input
+            @ page:run:input = strip(input()),
+
+            if (page:run:input.equals('q'), (
+                console:print(arr(
+                    object(
+                        'text', 'Quitting...',
+                        'style', 'bold',
+                        'fore', 'red'
+                    )
+                )),
+                goto('r')
+            )),
+
+            # function to add the extension if needed
+            def('page:run:add_ext', 'page:run:add_ext:input', (
+                if (not(page:run:add_ext:input.endswith('.msn2')), (
+                    page:run:add_ext:input.add('.msn2')
+                ), page:run:add_ext:input)
+            )),
+
+            # set the input to the file name with the extension
+            @ page:run:input = page:run:add_ext(page:run:input),
+
+
+            # if the input is in the runnable files
+            while (not(page:run:runnable_filenames.contains(page:run:input)), (
+                
+                # print error message
+                console:print(arr(
+                    object(
+                        'text', ' ***  File not found  *** ',
+                        'style', 'bold',
+                        'fore', 'red'
+                    )
+                )),
+
+                # get user input
+                @ page:run:input = page:run:add_ext(strip(input()))
+                
+            )),
+            print(),
+
+            # get the command
+            @ page:run:command = cat(get(settings(), 'runner_alias'), ' msn2.py ', page:run:input),
+
+            # get a new page
+            new_page(),
+
+            # running the command
+            console:print(arr(
+                object(
+                    'text', '>>> ',
+                    'style', 'bold'   
+                ),
+                object(
+                    'text', page:run:command,
+                    'style', 'bold',
+                    'fore', 'cyan'
+                )
+            )),
+
+            # run the file
+            console(page:run:command)
+
+        # new program
+        ), if(page:run:input.equals('n'), (
+            
+            # get a new page
+            new_page(),
+
+            # starting message
+            console:print(arr(
+                object(
+                    'text', 'Running a ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'new program',
+                    'style', 'bold',
+                    'fore', 'green'
+                )
+            )),
+            print(),
+
+            # creating a new file
+            console:print(arr(
+                object(
+                    'text', 'Type the name of the ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'new file',
+                    'style', 'bold',
+                    'fore', 'green'
+                ),
+                object(
+                    'text', ' or ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', "'q'",
+                    'style', 'bold',
+                    'fore', 'red'
+                ),
+                object(
+                    'text', ' to ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'quit',
+                    'style', 'bold',
+                    'fore', 'red'
+                ),
+                object(
+                    'text', '.',
+                    'style', 'bold'
+                )
+            )),
+
+            # get user input
+            @ page:run:input = strip(input()),
+
+            # if quitting
+            if (page:run:input.equals('q'), (
+                console:print(arr(
+                    object(
+                        'text', 'Quitting...',
+                        'style', 'bold',
+                        'fore', 'red'
+                    )
+                )),
+                goto('r')
+            )),
+
+            # add .msn2 if needed
+            def('page:run:add_ext', 'page:run:add_ext:input', (
+                if (not(page:run:add_ext:input.endswith('.msn2')), (
+                    page:run:add_ext:input.add('.msn2')
+                ), page:run:add_ext:input)
+            )),
+
+            # add extension if needed
+            @page:run:input = page:run:add_ext(page:run:input),
+
+            # while the file exists
+            while (file.exists(page:run:input), (
+                
+                # print error message
+                console:print(arr(
+                    object(
+                        'text', ' ***  File already exists  *** ',
+                        'style', 'bold',
+                        'fore', 'red'
+                    )
+                )),
+
+                # get user input
+                @ page:run:input = strip(input()),
+
+                # add extension if needed
+                @page:run:input = page:run:add_ext(page:run:input)
+            )),
+
+            # create file
+            file.create(page:run:input),
+
+            # print that the file was created
+            console:print(arr(
+                object(
+                    'text', 'Created ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', page:run:input,
+                    'style', 'bold',
+                    'fore', 'green'
+                )
+            )),
+            print(),
+            
+            # write some msn2 code in the file
+            console:print(arr(
+                object(
+                    'text', 'Type some ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'msn2 code',
+                    'style', 'bold',
+                    'fore', 'green'
+                ),
+                object(
+                    'text', ' in the file, then',
+                    'style', 'bold'
+                )
+            )),
+
+            # run '{python_alias} msn2.py <program> <args>'
+            console:print(arr(
+                object(
+                    'text', 'type ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', cat(get(settings(), 'runner_alias'), ' msn2.py ', page:run:input.slice(, -5), ' <args>'),
+                    'style', 'italic',
+                    'fore', 'yellow'
+                ),
+                object(
+                    'text', ' to run the ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'new program',
+                    'style', 'bold',
+                    'fore', 'green'
+                ),
+                object(
+                    'text', '.',
+                    'style', 'bold'
+                )
+            )),
+            print(),
+
+            # or, run the program from the menu option below
+            console:print(arr(
+                object(
+                    'text', 'Or, ',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'run the program',
+                    'style', 'bold',
+                    'fore', 'green'
+                ),
+                object(
+                    'text', ' from the menu option below.',
+                    'style', 'bold'
+                )
+            )),
+            
+
+        ), goto('r')))
+    ), goto('0'))
+
+))

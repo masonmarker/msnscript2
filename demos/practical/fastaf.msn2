@@ -1,0 +1,61 @@
+# fast way of creating and manipulating a api endpoint in MSNScript2
+#
+# author : Mason Marker
+# date : 11/18/2022
+
+# fresh console
+import ('lib/os')
+os:clear()
+
+# starts an endpoint on a new thread
+thread('t', ENDPOINT('/', {}))
+
+# posts json of random people and random combinations of colors
+POST('127.0.0.1', 5000, '/', =>(
+    {
+        'likes': {
+            'john': ['brown', 'green', 'yellow'],
+            'bill': ['red', 'yellow', 'green'],
+            'joe': ['blue', 'red', 'green'],
+            'bob': ['blue', 'green', 'yellow'],
+            'jim': ['red', 'green', 'yellow'],
+            'jerry': ['blue', 'green', 'yellow'],
+            'jimmy': ['red', 'green', 'yellow'],
+        }
+    }
+))
+
+# gets from localhost
+print(GET('127.0.0.1', 5000, '/'))
+
+# posts a few updates
+POST('127.0.0.1', 5000, '/', =>(
+    {
+        'likes': {
+
+            # change the colors
+            'john': ['red', 'green', 'yellow'],
+            'bill': ['blue', 'yellow', 'green'],
+            'joe': ['blue', 'red', 'green'],
+            'bob': ['blue', 'green', 'yellow'],
+            'jim': ['red', 'green', 'yellow'],
+            'jerry': ['blue', 'green', 'yellow'],
+            'jimmy': ['red', 'green', 'yellow'],
+
+            # add a new person
+            'jane': ['red', 'green', 'yellow'],
+        }
+    }
+))
+
+# gets from localhost
+print(GET('127.0.0.1', 5000, '/'))
+
+# # deletes at localhost
+# DELETE('127.0.0.1', 5000, '/')
+
+# gets from localhost
+print(GET('127.0.0.1', 5000, '/'))
+
+# terminate program and endpoint
+stop()

@@ -1,0 +1,24 @@
+# shows how the macro creation library can weave new syntax
+#
+# author : Mason Marker
+# date : 12/12/2022
+
+import ('lib/syntax/macrocreation.msn2')
+import ('lib/os.msn2')
+os:clear()
+
+# creates a postmacro that separates and executes the arguments specified with macro_args()
+postmacro(';', '__line', macro_args(':::', __line))
+
+# sorts an array
+macro('SORT', '__line', sorted(-(__line)))
+macro('REV', '__line', << |-(__line)|[::-1] >>)
+
+
+
+print('[+] starting program with new syntax') ::: print('[+] sequential operator working');
+
+
+print(SORT [6, 5, 43, 3, 2, 1]) ::: print(SORT [3, 2, 1]);
+print(REV SORT [5, 4, 3, 7, 8, 9, 10]) ::: print(SORT REV SORT REV SORT [5, 4, 3 , 4345, 623]);
+print(REV 'hello')

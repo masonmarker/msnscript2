@@ -1,0 +1,100 @@
+# HTML and JavaScript for the interface
+#
+# author : Mason Marker
+# date : 6/27/2023
+
+# import css
+import ('tests/lang/html/calc/style')
+
+# HTML path
+@ html_path = 'tests\\lang\\html\\calc\\interface.html'
+
+# render the HTML
+function('interface:render', file.write(html_path, HTML(
+    <html>
+        <head>
+            <title>Calculator</title>
+        </head>
+
+        # apply imported style
+        <style>
+            {=
+                css
+            =}
+        </style>
+
+        # JavaScript
+        <script>
+            # post the expression to the Flask endpoint
+    
+            # local path
+            const path = 'http:\/\/127.0.0.1:8080/';
+            # common header
+            const header = {
+                'Content-Type': 'application/json'
+            };
+
+            # waits for a calculation to be completed
+            # by the C program with setTimeout
+            function wait() {
+                fetch(path, {
+                    method: 'GET',
+                    headers: header
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result == '') {
+                        document.getElementById('result').innerHTML = 'awaiting output from C...';
+                        setTimeout(wait, 0.05);
+                    } else {
+                        document.getElementById('result').innerHTML = data.result;
+                    }
+                });
+            } 
+
+            # post the problem to the Flask endpoint
+            # to be solved by C
+            function calculate() {
+                fetch(path, {
+                    method: 'POST',
+                    headers: header,
+                    body: JSON.stringify({
+                        exp: document.getElementById('expression').value
+                    })
+                }).then(() => {
+                    wait();
+                });
+            }
+        </script>
+
+        # body
+        <body>
+            <h1>Calculator</h1>
+            <p id='enter'>Enter an expression to send to C.</p>
+            <div>
+                # input for problem
+                <input type="text" id="expression" />
+                # button to calculate
+                <button onclick="calculate()">Calculate</button>
+                # result
+                <p id="result"></p>
+            </div>
+        </body>
+
+    </html>
+)))
+
+# function to launch Chrome
+function('interface:show', (
+    # create Chrome instance
+    @ chrome = app(
+        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'),
+    chrome.start(),
+    chrome.write(+(
+        'C:\\Users\\mason\\OneDrive\\
+        Desktop\\TheMsnProject\\msnscript2\\', html_path)),
+    chrome.enter()
+))
+
+# render the HTML
+interface:render()

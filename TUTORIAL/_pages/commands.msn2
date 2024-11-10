@@ -1,0 +1,101 @@
+# Commands tutorial page.
+#
+# author : Mason Marker
+# date : 8/14/2023
+# version : 2.0.384
+
+# commands page
+@ page:commands = script((
+
+    # welcome message
+    console:print(arr(
+        object(
+            'text', 'The MSN2 ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'launcher',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' offers a variety of ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'commands',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' to assist with your development.',
+            'style', 'bold'
+        )
+    )),
+    print(),
+
+    # command usage
+    console:print(arr(
+        object(
+            'text', 'Command usage: '
+        ),
+        object(
+            'text', '{python_alias} msn2cli.py <command> [OPTIONS]|{python_alias} msn2.py <command>',
+            'style', 'italic',
+            'fore', 'green'
+        )
+    )),
+    print(),
+
+    console:print(arr(
+        object(
+            'text', 'As of MSN2 ',
+            'style', 'bold'
+        ),
+        object(
+            'text', version,
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ', these commands are:',
+            'style', 'bold'
+        )
+    )),
+    print(),
+
+
+    # current commands
+    @ page:commands:commands = {
+        'elements': 'Assists with element discovery during automation\\n
+                    this command launches the file at tests/practical/auto/clicked.msn2',
+        'help': "Displays the help pages (You're here now!)",
+        'test': 'Quick command to run a test script.\\n
+                runs the file at tests/misc.msn2',
+        'verify': 'Launches the validation script, testing the integrity of this msn2 version.\\n
+                  this file is at tests/validator.msn2',
+        'int': 'If int is specified, the launcher will start the msn2 interpreter in the command line.',
+        'file': 'If file is specified, the launcher will prompt for a file with a .msn2 extension to run.'
+    },
+
+    # for each command pair
+    page:commands:commands.foreach('page:commands:key', 'page:commands:value', (
+        
+        # list the name of the command
+        console:print(arr(object(
+            'text', +('   ', page:commands:key, '   '),
+            'style', 'bold',
+            'fore', 'green',
+            'back', 'black'
+        ))),
+
+        # print what the command does
+        console:print(arr(object(
+            'text', page:commands:value,
+            'style', 'italic'
+        ))),
+
+        # print a blank line
+        print()
+    ))
+))

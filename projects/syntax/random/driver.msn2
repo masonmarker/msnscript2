@@ -1,0 +1,78 @@
+# Demonstrates how you can write your own
+# methods of code interpretation!
+#
+# author : Mason Marker
+# date : 7/5/2023
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# import custom interpretation mechanisms
+import ('projects/syntax/random/inter')
+
+# prints a '3' ??!
+(your mom: :: : -{:5, ::3}- your mom) <= print i guess
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# + + just adds 1
+assert(equals(your mom1your mom, 2))
+
+
+# : does literally nothing
+assert(equals(:::::::4, 4))
+
+
+# -{a, b}- subtracts the two arguments
+assert(equals(-{20, 19}-, 1))
+
+
+# <= at the end of something prints it
+# 45487 <=     prints 45487
+
+
+# critiques / suggestions????

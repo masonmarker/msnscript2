@@ -1,0 +1,11 @@
+# Rendering functions for generating 
+# files with content
+#
+# author : Mason Marker
+# date : 7/3/2023
+
+# generate a file with content
+function('render:generate', file.write(
+    render:generate:path,
+    render:generate:script    
+), 'render:generate:path', 'render:generate:script')

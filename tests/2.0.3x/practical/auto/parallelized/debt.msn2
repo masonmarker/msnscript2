@@ -1,0 +1,75 @@
+# Demonstrates speed boosts of multithreading
+# by utilizing a production and waiting thread
+# to perform overlapping tasks.
+#
+# author : Mason Marker
+# date : 6/10/2023
+
+# imports the timer library
+import('lib/timer')
+
+# defines and starts Google Chrome
+@ chrome = app('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe')
+chrome.start()
+
+# navigates to the U.S. national debt clock
+chrome.write('https://www.usdebtclock.org/')
+chrome.enter()
+
+# web thread: scrapes the U.S. national debt
+# as fast as possible
+thread('web', (
+
+    # continuously scrape the U.S. national debt
+    # for 30 seconds
+    interval(0, (
+        # if the debt was successfully scraped,
+        # print it to the console
+        if (@ debt = as('doc',
+            # wait for the page to load,
+            # then sleep to temporarily grant
+            # grant more processing power
+            # to other threads
+            wait(chrome.document(0),, 0.003),
+
+            # once loaded, extract the first "word"
+            # from the debt clock, as this will
+            # always be the U.S. national debt
+            first(split(strip(doc.text()), ' '))
+        ), print('web:', debt))
+    ), 30),
+
+    # let notepad finish writing the debt,
+    # then close Chrome and stop the program
+    sleep(4), chrome.stop(), stop()
+))
+
+# notepad thread: writes the U.S. national debt
+# to the notepad with the current program runtime
+thread('notepad', (
+
+    # define and start the notepad
+    @ notepad = app('notepad.exe'),
+    notepad.start(),
+
+    # starts the timer
+    timer:start(),
+
+    # constantly write the U.S. national debt
+    # for 15 seconds
+    while(1, (
+
+        # wait for the debt to be scraped,
+        # check every 0.005 seconds,
+        # checking for less time requires more
+        # resources, slowing down other active threads
+        wait(debt,, 0.005),
+
+        # write the debt to the notepad
+        # alongside the current program runtime
+        notepad.write(cat(debt, ' at ', timer:runtime(), 's')),
+        # go to the next line of the notepad,
+        # and reset the debt
+        notepad.enter(), @ debt = None
+    ))
+))

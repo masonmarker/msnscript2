@@ -1,0 +1,22 @@
+# Tests colored printing.
+#
+# author : Mason Marker
+# date : 8/24/2023
+
+# import test resources
+import ('tests/resources/start')
+
+# printing with colors
+# print:color(
+#     object(
+#         'text', 'Hello, ',
+#         'fore', 'red'
+#     ),
+#     object(
+#         'text', 'World!',
+#         'fore', 'blue',
+#         'back', 'green'
+#     )
+# )
+
+# uncomment and rerun to see the styled printing in the console

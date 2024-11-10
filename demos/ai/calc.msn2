@@ -1,0 +1,37 @@
+# Solves math expressions using Python fallback
+#
+# author : Mason Marker
+# date : 10/14/2023
+
+# import ChatGPT library
+import ('lib/auto/chatgpt')
+
+# create ChatGPT instance
+@gpt = chatgpt:instance()
+
+
+
+# only allow answer
+gpt.answer_only()
+
+# prompt
+@ prompt = 'give JUST THE PYTHON EXPRESSION STR ARGUMENT FOR EVAL() WITH THE NUMBERS PLUGGED IN for the pythagorean theorem with a=3 and b=4'
+
+# get the index and the expression
+@ ind = len(@ expression = gpt.ask(prompt))
+
+# log the lines
+@ lines = expression.lines()
+
+while (try((
+    @expression = eval(gpt.ask(lines.get(ind))),
+    1
+), (
+    ind.sub(1)
+)), (
+    print(+('got ', expression)),
+    print('trying again...')
+))
+
+
+print(eval(expression))

@@ -1,0 +1,19 @@
+# Starting messages for tests
+#
+# author : Mason Marker
+# date : 9/6/2023
+# updated in 2.0.387
+
+# starting message
+print:color(
+    object(
+        'text', '[*] ',
+        'style', 'bold',
+        'fore', 'black'
+    ),
+    object(
+        'text', 'Starting tests...',
+        'style', 'bold',
+        'fore', 'magenta'
+    )
+)

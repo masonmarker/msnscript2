@@ -1,0 +1,198 @@
+# Tests basic Excel operations.
+#
+# author : Mason Marker
+# date : 6/3/2023
+
+# obtains an existing Excel Workbook
+@ book = excel('C:\\Users\\mason\\OneDrive\\Desktop\\msn\\book.xlsx')
+
+# creates an Excel sheet
+# (or gets it if it already exists)
+@ sheet = book.sheet('sheet1')
+
+# clear from last run
+sheet.clear()
+
+# creating a 2D array of cell
+# numbers
+@ cells = (
+    [
+        [0, 0], 
+        [0, 1], 
+        [0, 2], 
+        [0, 3], 
+        [0, 4],
+        [1, 0], 
+        [2, 0], 
+        [3, 0],
+        [4, 0]
+    ])
+
+# set each cell to 'hi!'
+cells.each('cell', sheet.set(
+    cell.get(0), 
+    cell.get(1), 
+    'hi!'
+))
+
+# assert the cells are all 'hi!'
+cells.each('cell', assert(
+    equals(sheet.get(
+        cell.get(0),
+        cell.get(1)
+    ), 'hi!')
+))
+
+# assert an empty cell is None
+assert(
+    equals(sheet.get(10, 10), None),
+    not(sheet.get(10, 10))
+)
+
+
+# getting populated columns and rows
+assert(equals(
+    sheet.column(0), 
+    sheet.row(0),
+    ['hi!', 'hi!', 'hi!', 'hi!', 'hi!']
+))
+
+# clear the sheet
+sheet.clear()
+
+# set a column of values
+sheet.set_column(0, [1, 1, 1, 1, 1])
+
+# assert the column is all 1s
+assert(equals(
+    sheet.column(0), 
+    [1, 1, 1, 1, 1]
+))
+
+# set a row of values
+sheet.set_row(0, [2, 2, 2, 2, 2])
+
+# assert the row is all 2s
+assert(equals(
+    sheet.row(0), 
+    [2, 2, 2, 2, 2]
+))
+
+# clears the sheet
+sheet.clear()
+
+# adding values to a column
+5(sheet.add_to_column(3, 'hey'))
+
+# assert the column is all 'hey'
+assert(equals(
+    sheet.column(3), 
+    ['hey', 'hey', 'hey', 'hey', 'hey']
+))
+
+# clear the sheet
+sheet.clear()
+
+# adding values to a row
+5(sheet.add_to_row(1, 'hey2'))
+
+# assert the row is all 'hey'
+assert(equals(
+    sheet.row(1), 
+    ['hey2', 'hey2', 'hey2', 'hey2', 'hey2']
+))
+
+# clear the sheet
+sheet.clear()
+
+# sets the column
+sheet.set_column(1, ['hello', 'world', 'goodbye'])
+
+
+# gets a column by title
+assert(equals(
+    sheet.column('hello'), 
+    ['hello', 'world', 'goodbye']
+))
+
+# sets a row
+sheet.set_row(1, ['hello', 'world', 'goodbye'])
+
+# gets a row by title
+assert(equals(
+    sheet.row('hello'), 
+    ['hello', 'world', 'goodbye']
+))
+
+
+# setting a column with a title
+sheet.set_column('hello', ['hello', 'USA', 'nerds'])
+
+# assert the column is set
+assert(equals(
+    sheet.column('hello'), 
+    ['hello', 'USA', 'nerds']
+))
+
+# setting a row with a title
+sheet.set_row('hello', ['hello', 'USA', 'nerds'])
+
+# assert the row is set
+assert(equals(
+    sheet.row('hello'), 
+    ['hello', 'USA', 'nerds']
+))
+
+# adding to a column by name
+sheet.add_to_column('hello', 'world')
+
+# assert the column is set
+assert(equals(
+    sheet.column('hello'), 
+    ['hello', 'USA', 'nerds', 'world']
+))
+
+# adding to a row by name
+sheet.add_to_row('hello', 'world')
+
+# assert the row is set
+assert(equals(
+    sheet.row('hello'), 
+    ['hello', 'USA', 'nerds', 'world']
+))
+
+# creating new sheets
+@ sheet2 = book.sheet('sheet2')
+@ sheet3 = book.sheet('sheet3')
+
+# clear from last run
+sheet2.clear()
+sheet3.clear()
+
+# assert the sheets are empty
+assert(equals(sheet2.column(0), []))
+assert(equals(sheet3.column(0), []))
+
+# set a column in sheet2
+sheet2.set_column(0, ['hello', 'world'])
+
+# assert the column is set
+assert(equals(sheet2.column(0), ['hello', 'world']))
+
+# set a column in sheet3
+sheet3.set_column(0, ['goodbye', 'world'])
+
+# assert the columns are different
+assert(not(equals(sheet2.column(0), sheet3.column(0))))
+
+# assert what the columns are
+assert(equals(sheet2.column(0), ['hello', 'world']))
+assert(equals(sheet3.column(0), ['goodbye', 'world']))
+
+
+
+# save the book
+book.save()
+
+# close the bookd
+book.close()

@@ -1,0 +1,10 @@
+# pulls and pushes this project to GitHub
+# 
+# author : Mason Marker
+# date : 12/21/2022
+
+
+console('git pull')
+console('git add --all')
+console('git commit -m "MSN2 update"')
+console('git push')

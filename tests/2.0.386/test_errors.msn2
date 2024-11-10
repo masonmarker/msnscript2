@@ -1,0 +1,43 @@
+# Tests new error implementation.
+#
+# author : Mason Marker
+# date : 8/25/2023
+
+import ('tests/resources/start')
+
+# defining a function with 0 arguments
+def('thing', print('thing ran'))
+
+# test with incorrect arguments
+try(thing('t'), assert(1))
+
+# try with deeper arguments
+try(print(print(assert(thing(1, 2, 3, 4, 5, 6)))), assert(1))
+
+# raising an exception
+try(exception('This is an exception.', 'whats up?', 'hello'))
+assert:err(exception('This is an exception.', 'whats up?', 'hello'))
+
+# seeing traceback of a large line of code
+try((
+    def('test_func', 'test_func:arg1', if(test_func:arg1.greater(10), get([1, 2, 3, 4], 5))),
+    assert(1),
+    test_func(11)
+))
+
+# python error
+\\
+import math
+# using the math module incorrectly
+print(math.sqrt('hello'))
+py_script \\
+
+# must be real number, not str
+try(py.run(py_script))
+
+
+
+
+
+
+

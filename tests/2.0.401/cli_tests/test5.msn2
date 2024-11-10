@@ -1,0 +1,1 @@
+file.write('tests/2.0.401/cli_tests/test5.txt', "Hello, World!")

@@ -1,0 +1,278 @@
+# Documentation tutorial page.
+#
+# author : Mason Marker
+# date : 8/14/2023
+# version : 2.0.384
+
+# docs website 
+@ docs:website = 'masonmarker.com/projects/msn2'
+
+# documentation page
+@ page:docs = script((
+    # function to display the page
+    def('page:docs:display', (
+        # list the website of the documentation
+        console:print(arr(
+            object(
+                'text', 'MSN2 ',
+                'style', 'bold'   
+            ),
+            object(
+                'text', 'documentation',
+                'style', 'bold',
+                'fore', 'cyan'
+            ),
+            object(
+                'text', ': ',
+                'style', 'bold'
+            ),
+            object(
+                'text', docs:website,
+                'style', 'bold',
+                'fore', 'yellow'
+            )
+        )),
+        print(),
+        # or press 'w' to go to the documentation website
+        console:print(arr(
+            object(
+                'text', 'Type ',
+                'style', 'italic'
+            ),
+            object(
+                'text', "'w'",
+                'style', 'italic',
+                'fore', 'yellow'
+            ),
+            object(
+                'text', ' to go to the ',
+                'style', 'italic'
+            ),
+            object(
+                'text', 'documentation',
+                'style', 'italic',
+                'fore', 'cyan'
+            ),
+            object(
+                'text', ' website.',
+                'style', 'italic'
+            )
+        )),
+        print(),
+        # 'q' to quit
+        console:print(arr(
+            object(
+                'text', 'Type ',
+                'style', 'italic'
+            ),
+            object(
+                'text', "'q'",
+                'style', 'italic',
+                'fore', 'yellow'
+            ),
+            object(
+                'text', ' to ',
+                'style', 'italic'
+            ),
+            object(
+                'text', 'quit',
+                'style', 'italic',
+                'fore', 'red'
+            ),
+            object(
+                'text', '.',
+                'style', 'italic'
+            )
+        )),
+
+        # receive input
+        @ page:docs:input = input(),
+
+        # open a new help page
+        new_page(),
+
+        # if the user types 'd'
+        if (0,, 
+            # if the user types 'w'
+        if (page:docs:input.equals('w'), (
+            
+            # import the chrome automation package
+            import ('lib/auto/chrome'),
+
+            # prompt for path, or accept default Chrome path
+            console:print(arr(
+                object(
+                    'text', 'Default ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'Chrome',
+                    'style', 'italic',
+                    'fore', 'cyan'
+                ),
+                object(
+                    'text', ' path: ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', chrome:default_path,
+                    'style', 'italic',
+                    'fore', 'yellow'
+                )
+            )),
+            print(),
+            
+            # message for input
+            console:print(arr(
+                object(
+                    'text', 'Type a ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'new Chrome path',
+                    'style', 'italic',
+                    'fore', 'cyan'
+                ),
+                object(
+                    'text', ', or press ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', '[ENTER]',
+                    'style', 'italic',
+                    'fore', 'yellow'
+                ),
+                object(
+                    'text', ' to accept the default path.',
+                    'style', 'italic'
+                )
+            )),
+
+            # prompt for path
+            @ page:docs:chrome_path = if(
+                @page:docs:_=input(), 
+                page:docs:_, chrome:default_path),
+
+            print(),
+            # print opening message
+            console:print(arr(
+                object(
+                    'text', 'Opening msn2 ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'documentation',
+                    'style', 'italic',
+                    'fore', 'cyan'
+                ),
+                object(
+                    'text', ' in ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'Chrome',
+                    'style', 'italic',
+                    'fore', 'cyan'
+                ),
+                object(
+                    'text', '...',
+                    'style', 'italic'
+                )
+            )),
+            # note that opening in Chrome may not work on some devices
+            console:print(arr(
+                object(
+                    'text', 'Note: ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'opening in ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'Chrome',
+                    'style', 'italic',
+                    'fore', 'cyan'
+                ),
+                object(
+                    'text', ' may not work on some devices.',
+                    'style', 'italic'
+                )
+            )),
+            print(),
+
+            # open the documentation in Chrome
+            try(chrome:open(page:docs:chrome_path, docs:website), (
+                print(),
+                # since there was an error, set the error message
+                # and go to documentation page
+                console:print(arr(
+                    object(
+                        'text', 'Error',
+                        'style', 'bold',
+                        'fore', 'red'
+                    ),
+                    object(
+                        'text', ' opening ',
+                        'style', 'bold'
+                    ),
+                    object(
+                        'text', 'Chrome',
+                        'style', 'bold',
+                        'fore', 'cyan'
+                    ),
+                    object(
+                        'text', '. ',
+                        'style', 'bold'
+                    ),
+                    object(
+                        'text', 'Make sure the ',
+                        'style', 'bold'
+                    ),
+                    object(
+                        'text', 'path',
+                        'style', 'bold',
+                        'fore', 'yellow'
+                    ),
+                    object(
+                        'text', ' is correct.',
+                        'style', 'bold'
+                    )
+                )),
+                # if the path is correct, either navigate to masonmarker.com/projects/msn2
+                # yourself, or load the documentation via 'd'
+                console:print(arr(
+                    object(
+                        'text', 'If the path is correct, ',
+                        'style', 'bold'
+                    ),
+                    object(
+                        'text', 'navigate to ',
+                        'style', 'bold'
+                    ),
+                    object(
+                        'text', docs:website,
+                        'style', 'bold',
+                        'fore', 'cyan'
+                    ),
+                    object(
+                        'text', ' yourself.',
+                        'style', 'bold'
+                    )
+                )),
+                print(),
+
+                # re-render the page
+                page:docs:display(),
+
+            ))
+        ), if(page:docs:input.equals('q'), goto('0'), goto('4'))))
+    )),
+    page:docs:display()
+
+    
+    
+    
+    
+
+))

@@ -1,0 +1,50 @@
+# changelog
+
+
+
+
+
+
+@ page:changelog = script((
+    console:print(arr(
+        object(
+            'text', ' ***  Changelog  *** ',
+            'style', 'bold',
+            'fore', 'green'
+        )
+    )),
+    print(),
+
+    # read in recent changes
+    @ page:changelog:changes = -(file.read('system/changes.json')),
+
+    # print the changes for each version
+    page:changelog:changes.each('page:changelog:version', (
+        print(),
+        # version number
+        console:print(arr(
+            object(
+                'text', page:changelog:version,
+                'style', 'bold',
+                'fore', 'yellow'
+            )
+        )),
+        # print the changes made in this version
+        page:changelog:changes.get(page:changelog:version)
+            .foreach('page:changelog:item', 'page:changelog:desc', (
+                console:print(arr(
+                    object(
+                        'text', ('>> ').add(str(page:changelog:item)).add('. '),
+                        'fore', 'black'
+                    ),
+                    object(
+                        'text', page:changelog:desc,
+                        'fore', 'white'
+                    )
+                ))
+        ))
+    ))
+    
+
+))
+

@@ -1,0 +1,67 @@
+# Offers more file operations.
+#
+# author : Mason Marker
+# date : 9/6/2023
+# updated in 2.0.387
+
+
+# helper for copydir()
+function('files:recurse', (
+        # if file is directory, create directory in new location
+    if (file.isdir(recurse:old), (
+
+        # make new directory
+        file.mkdir(recurse:newpath),
+
+        # copy files from old directory to new directory
+        @ recurse:thisdir_files = file.listdir(recurse:old),
+
+        # create old path
+        recurse:thisdir_files.each('fl2', (
+
+            # obtain working file path
+            @ recurse:old2 = cat(recurse:old, '/', fl2),
+            @ recurse:newpath2 = cat(recurse:newpath, '/', fl2),
+            # if file is directory, recurse, otherwise copy .msn2 library file
+            if (file.isdir(recurse:old2), 
+                private(files:recurse(recurse:old2, recurse:newpath2)),
+                # else
+                file.copy(recurse:old2, recurse:newpath2)
+            )
+        ))       
+
+    # otherwise, copy file to new location  
+    ), file.copy(recurse:old, recurse:newpath))
+), 'recurse:old', 'recurse:newpath')
+
+# copies a directory tree to a new location
+function('files:copydir', (
+
+    @ copydir:files = file.listdir(copydir:src),
+
+    copydir:files.each('fl', (
+
+        # obtain working file path
+        @ copydir:old = cat(copydir:src, '/', fl),
+        @ copydir:newpath = cat(copydir:dest, '/', fl),
+
+            # adds adds all files from the lib folder
+        private(files:recurse(copydir:old, copydir:newpath))
+    ))
+
+), 'copydir:src', 'copydir:dest')
+
+
+# file class, for simplified file operations.
+# 7/26/2023
+class('msn2file', (
+    # initial path to the file
+    @ path = '',
+    
+    # no constructor needed
+
+    # writes to the file
+    function('write', 
+        file.write(self.path(), f:write:data), 
+    'self', 'f:write:data')
+))

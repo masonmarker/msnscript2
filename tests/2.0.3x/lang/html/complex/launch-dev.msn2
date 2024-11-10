@@ -1,0 +1,68 @@
+# Launches the development environment.
+#
+# author : Mason Marker
+# css author : https://codepen.io/omarsherifs
+# date : 6/22/2023
+
+# import css
+import ('tests/lang/html/complex/css')
+
+# write the HTML to a file
+@ html_path = 'tests/lang/html/complex/site.html'
+function('render', (file.write(html_path, HTML(
+    <html>
+        <head>
+            <title>MSN2</title>
+
+            # applying styles
+            <style>
+                {=
+                    css
+                =}
+            </style>
+        </head>
+
+        <body>
+
+            # search box
+            <div class="searchBox">
+                <input class="searchInput" type="text" name="" placeholder="Search">
+                <button class="searchButton" href="#" onclick=
+                    "
+                    # post the question to the endpoint
+                    fetch('http://127.0.0.1:8080/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'ask_gpt_questions': [
+                                document.querySelector('.searchInput').value
+                            ]
+                        })
+                    })
+                    ">
+                    <i class="material-icons">
+                        GPT!
+                    </i>
+                </button>           
+            </div>
+            <p class="answer">
+                {=
+                    render:gpt-answer
+                =}
+            </p>
+        </body>
+    </html>
+)), chrome.refresh()), 'render:gpt-answer')
+# render the file
+render('Reply: Waiting for question...')
+
+# open the file in Chrome
+@ chrome = app("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe")
+chrome.start()
+chrome.write(+(
+    "C:\\Users\\mason\\OneDrive\\Desktop\\TheMsnProject\\msnscript2\\", 
+    html_path
+))
+chrome.enter()

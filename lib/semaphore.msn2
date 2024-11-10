@@ -1,0 +1,10 @@
+# simulates similar behavior to a semaphore
+# author : Mason Marker
+# date : 11/10/2022
+# updated in 2.0.387
+
+# semaphore class
+class('semaphore', (
+    var('held', False),
+    var('message', None)
+))

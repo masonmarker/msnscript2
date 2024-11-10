@@ -1,0 +1,84 @@
+# used specifically as an msnint2 line by line interpreter in the console
+#
+# author : Mason Marker
+# date : 11/23/2022
+# version : 3.0.386
+
+# fresh console
+if (windows(), console('cls'), console('clear'))
+
+# user shell mechanism
+import ('lib/user')
+# import console for pretty printing
+import ('lib/console')
+
+
+# print the title
+console:print(arr(
+    object(
+        'text', 'MSN2',
+        'style', 'bold',
+        'fore', 'green'
+    ),
+    object(
+        'text', ' Interpreter - ',
+        'style', 'bold'
+    ),
+    object(
+        'text', version(),
+        'style', 'bold',
+        'fore', 'green'
+    )
+))
+
+# Type 'stop()' to exit the interpreter
+console:print(arr(
+    object(
+        'text', 'Type ',
+        'style', 'bold'
+    ),
+    object(
+        'text', 'stop()',
+        'style', 'bold',
+        'fore', 'red'
+    ),
+    object(
+        'text', ' to exit the interpreter,',
+        'style', 'bold'
+    )
+))
+
+# otherwise, write your code, line by line, below
+# the interpreter will execute each line as it is written
+console:print(arr(
+    object(
+        'text', 'otherwise, write ',
+        'style', 'bold'
+    ),
+    object(
+        'text', 'MSN2',
+        'style', 'bold',
+        'fore', 'green'
+    ),
+    object(
+        'text', ' code',
+        'style', 'bold',
+        'fore', 'green'
+    ),
+    object(
+        'text', ', line by line, below.',
+        'style', 'bold'
+    )
+))
+
+# divider
+console:print(arr(
+    object(
+        'text', '----------------------------------------',
+        'style', 'bold',
+        'fore', 'green'
+    )
+))
+
+private(user:shell(' '))
+

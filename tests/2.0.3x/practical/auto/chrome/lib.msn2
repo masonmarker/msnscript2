@@ -1,0 +1,16 @@
+# Tests the msn2 Chrome library.
+#
+# author : Mason Marker
+# date : 8/28/2023
+
+# import the library
+import ('lib/auto/chrome')
+
+# create an instance of Chrome
+@ chrome = chrome:instance(chrome:default_path)
+
+# start chrome
+chrome.start()
+
+# start chrome
+chrome.search_in_new_tab('www.google.com')

@@ -1,0 +1,32 @@
+# collection of free, public API URLs for general use
+# 
+# author : Mason Marker
+# date : 11/11/2022
+# updated in 2.0.387
+
+# ------------------------------- BOOK ARCHIVE -------------------------------
+# Book library endpoint
+var('stdapis:__books_endpoint', 'http://openlibrary.org/search.json?q=')
+
+
+# gets information about a book from OpenLibrary.org
+# query should be a keyword / sentence about the book, such as title, author, etc.
+def('stdapis:apis_book', 'stdapis:query', (
+    var('stdapis:__apis_splitquery', split(stdapis:query, ' ')),
+    var('stdapis:__apis_end', ''),
+    for (0, len(stdapis:__apis_splitquery), 'stdapis:__apis_i', =>(
+        var('stdapis:__apis_curr_word', stdapis:__apis_splitquery.get(stdapis:__apis_i)),
+        if (not(equals(stdapis:__apis_i, -(len(stdapis:__apis_splitquery), 1))), 
+            stdapis:__apis_end.add(+(stdapis:__apis_curr_word, '+', stdapis:__apis_curr_word))
+        )
+    )),
+    # return the request
+    request(+(stdapis:__books_endpoint, stdapis:__apis_end))
+))
+# ----------------------------------------------------------------------------
+
+
+
+
+
+

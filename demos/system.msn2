@@ -1,0 +1,105 @@
+
+# simulates a small system of threads
+# implements a loading bar mechanism during 'work hours'
+#
+# author : Mason Marker
+# date : 11/7/2022
+
+# fresh console
+import ('lib/os')
+os:clear()
+
+
+# thread completion
+var('main_finished', False)
+var('worker_start', False)
+var('worker_finished', False)
+var('loading_start', False)
+var('loading_finished', False)
+
+# work completed
+var('work', 0)
+
+# system booting message
+print('boot: system booting...')
+
+
+# SYSTEM LAUNCH
+
+# loading display thread
+# private environment allows for unique variables and methods
+private((thread('loading', (
+
+        # waits to be started by main thread
+        wait(loading_start),
+
+        # main has started the loader, print initial message
+        print('loader: loading'),
+
+        # start the worker to wait on
+        var('worker_start', True),
+
+        # waits on the worker to finish
+        # prints a loading 'animation' as it waits
+        var('inc', 1),
+        while (not(worker_finished), (
+            if(inc.equals(1), print('\t\t\tloading: .')),
+            if(inc.equals(2), print('\t\t\tloading: ..')),
+            # we use =>() to force msn2 interpretation, as
+            # using () would result in a Python interpretation
+            # of '(print("\t\t\tloading: ...""), ', reading as
+            # a tuple, causing print() to print twice
+            if(inc.equals(3), =>(
+                print('\t\t\tloading: ...'),
+                var('inc', 1)
+            ), 
+            inc.add(1))
+        )),
+
+        # loading has completed
+        var('loading_finished', True)
+    )),
+
+    # worker thread
+    thread('worker', (
+
+        # waits for the signal to start working
+        wait(worker_start),
+
+        # prints starting message
+        print('worker: starting'),
+
+        # performs work
+        20 ((
+            work.inc(),
+            print('worker: did 1 work')
+        )),
+
+        # worker has finished work
+        var('worker_finished', True),
+
+        # finished message
+        print('worker: work completed'),
+    )),
+
+
+    # 'main' thread
+    thread('main', (    
+
+        # starting message
+        print('main: program starting'),
+
+        # starts the loading thread
+        # indirectly starts the worker thread
+        var('loading_start', True),
+
+        # waits for the loader to finshed
+        wait(loading_finished),
+        
+        # signal to boot that main has finished
+        var('main_finished', True)
+))))
+
+
+
+

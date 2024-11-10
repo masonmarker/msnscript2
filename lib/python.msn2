@@ -1,0 +1,43 @@
+# Additional Python method support
+#
+# author : Mason Marker
+# date : 8/17/2023
+# version : 2.0.385
+
+
+# python script class
+# version : 2.0.385
+class ('python:script', (
+
+    # actual Python script as a string
+    @ script = None,
+    
+    # list of variable names for this script
+    @ varnames = None,
+
+    # run this script with set variables
+    #
+    # python:script:variables : list of arguments to
+    #                           map to the corresponding
+    #                           variable names
+    def('run', 'self', 'python:script:args', (
+        # loopvar
+        @ python:script:i = 0,
+
+        # set each variable name to the respective arg
+        each(self.varnames(), 'python:script:vn', (
+            # set the varname to the corresponding arg
+            var(python:script:vn, 
+                python:script:args.get(python:script:i)),
+
+            # inc loopvar
+            python:script:i.inc()
+        )),
+
+        # run the script
+        py.run(self.script())
+    ))
+
+))
+
+# runs python with arguments

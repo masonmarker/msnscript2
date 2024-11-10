@@ -1,0 +1,31 @@
+# Finds the maximum or minimum in an array.
+#
+# author : Mason Marker
+# date : 9/4/2023
+
+# timer
+import ('lib/timer')
+
+# start the timer
+timer:start()
+
+
+# create array
+@ array = [1, 2, 3, 4, 5, 6]
+
+# log min and max
+@ min = @ max = array.get(0)
+
+
+# loop through elements
+array.each('el', (
+    @ min = if (el.l(min), el, min),
+    @ max = if (el.g(max), el, max)
+))
+
+# print min and max
+min.print('min: ')
+max.print('max: ')
+
+# print runtime
+print('found both in', x(timer:runtime(), 100), 'ms')

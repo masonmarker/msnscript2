@@ -1,0 +1,50 @@
+# Plays Cookie Clicker!
+#
+# author : Mason Marker
+# date : 6/5/2023
+
+# do 3 trials with different thread counts
+3 (
+    # number of threads to use
+    @ num_threads = int(input('How many threads to click? ')),
+
+    # define and open Google Chrome
+    @ chrome = app('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'),
+    chrome.start(),
+
+    # navigate to Cookie Clicker
+    chrome.write('https://orteil.dashnet.org/cookieclicker/'),
+    chrome.enter(),
+
+    # wait for the Copyright link to appear
+    wait(chrome.find_links('Orteil')),
+
+    # ----------- page loaded! -----------
+
+    # get the picture of the main Cookie
+    @ cookie = chrome.image(1),
+    cookie.hover(),
+
+    # creating a bunch of threads to spam click
+    # start 'num_threads' amount of threads
+    num_threads(
+        # create and start a thread
+        thread((
+            # every 0 seconds, perform the block
+            # for a total of 10 seconds
+            interval(0, (
+
+                # click the cookie
+                pointer.click(),
+
+                # jiggle the mouse to increase
+                # mouse event count
+                pointer.up(1), pointer.down(1),
+
+            ), 10),
+
+            # close Chrome
+            chrome.stop()
+        ))
+    )
+)

@@ -1,0 +1,40 @@
+# demonstrates get usage for http server interaction
+# author : Mason Marker
+# date : 11/10/2022
+
+# fresh console
+import ('lib/os')
+os:clear()
+
+# import http operations
+import ('lib/http.msn2')
+
+# api endpoint for jokes
+var('url', 'https://official-joke-api.appspot.com/random_joke')
+
+# stop at any time with ctrl-c
+print:color(
+    object(
+        'text', '[*] press ctrl-c to stop',
+        'style', 'bold',
+        'fore', 'cyan'
+    )
+)
+print()
+
+# send and store http request for location data
+# updated in 2.0.387
+def('tell_joke', (
+    @request = request(url, {}),
+    print(+('setup: ', request.setup())),
+    sleep(2),
+    print(+('punchline: ', request.punchline())),
+    True
+))
+
+# tell jokes!
+10((
+    assert(tell_joke()),
+    sleep(3),
+    2(print())
+))

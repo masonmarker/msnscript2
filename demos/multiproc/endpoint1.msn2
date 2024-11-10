@@ -1,0 +1,17 @@
+# first api endpoint
+# 
+# author : Mason Marker
+# date : 11/18/2022
+
+
+# starting message
+print('endpoint 1 started')
+
+# api / http specific resources
+import('lib/apis/api.msn2')
+import('lib/http.msn2')
+
+
+# starts endpoint 1 on localhost:5000
+private(api:start(api:api_local))
+

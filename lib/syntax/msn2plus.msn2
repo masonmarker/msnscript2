@@ -1,0 +1,29 @@
+# optimal syntax library
+# 
+# author : Mason Marker
+# date : 12/17/2022
+# updated in 2.0.387
+
+# imports
+import('lib/serial')
+import('lib/processes')
+
+# setup
+serial:open('msn2plus_thread')
+
+# threads
+# starts a thread with an ardered name 't0, t1..'
+macro('/t', 'slashT::line', (
+    var('slashT::name', cat('t', serial:next('msn2plus_thread'))),
+    thread(slashT::name, -(val('slashT::line'))),
+    slashT::name
+))
+
+# faster assertions
+postmacro('??', 'doubleQuestion::line', (
+    @doubleQuestion::block = doubleQuestion::line,
+    @doubleQuestion::ev = -(doubleQuestion::block),
+    if(not(doubleQuestion::ev), 
+        print('[-] assertion error :', doubleQuestion::block)),
+    doubleQuestion::ev
+))

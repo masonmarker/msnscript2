@@ -1,0 +1,51 @@
+# Demonstrates argument passing by name.
+#
+# author : Mason Marker
+# date : 9/15/2023
+# version : 2.0.387
+
+# print starting message
+print:color(
+    {
+        'text': 'Starting Tests...',
+        'style': 'bold',
+        'fore': 'green'
+    }
+)
+
+# define a function with 4 parameters,
+# the third and fourth parameters having a default value
+def('func', 'arg1', 'arg2', &arg3='Default', &arg4='Default', (
+    # assert all of the arguments
+    # were passed correctly
+    assert(
+        arg1.equals('Hello'),
+        arg2.equals('World'),
+        # the last two arguments should equal each other
+        arg3.equals(arg4),
+        # redundant, proving a point
+        arg4.equals(arg3)
+    )
+))
+
+# call the function with only the first two arguments
+func('Hello', 'World')
+
+# call the function, specifying named arguments 
+func(&arg2='World', &arg1='Hello')
+
+# call the function, specifying last two arguments
+func('Hello', 'World', &arg4='Default2', &arg3='Default2')
+
+# call the function specifying all arguments in
+# different orders
+func(&arg4='Default3', &arg3='Default3', &arg2='World', &arg1='Hello')
+
+# asserts an error is thrown with different arguments
+assert:err(
+    func('Hello'),
+    func('Helo', 'World'),
+    func('Hello', 'Worl'),
+    func('Hello', 'World', &arg4='Default2', &arg3='Default3'),
+    func('Hello', 'World', &arg3='Default2', &arg4='Default3')
+)

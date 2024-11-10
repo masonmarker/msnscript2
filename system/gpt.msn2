@@ -1,0 +1,36 @@
+# Initiates a conversation with ChatGPT.
+#
+# author : Mason Marker
+# date : 9/18/2023
+
+# clear the screen
+import ('lib/os')
+os:clear()
+
+# conversation
+@ convo = ''
+
+# starting message
+print:color(
+    {'text': 'ChatGPT Interactive Demo\n', 'style': 'bold', 'fore': 'yellow'},
+    {'text': '-------------------------\n', 'style': 'bold', 'fore': 'yellow'},
+    # press enter to quit
+    {'text': 'Press enter to', 'style': 'bold', 'fore': 'yellow'},
+    {'text': ' quit', 'style': 'bold', 'fore': 'red'},
+    {'text': ' at any time.\n', 'style': 'bold', 'fore': 'yellow'},
+    {'text': '-------------------------\n', 'style': 'bold', 'fore': 'yellow'}
+)
+
+# while the user is inputting text
+while (@ user_input = input('user >> '), (
+    convo.add(+('USER:', user_input, '\n---------\n')),
+    convo.add(+(@ response = ai.basic(convo), '\n---------\n')),
+    print:color(
+        object('text', response, 'style', 'bold', 'fore', 'green'),
+        object('text', '\n---------', 'style', 'bold', 'fore', 'yellow')
+    ),
+    print:color(
+        object('text', 'convo length: ', 'style', 'bold', 'fore', 'yellow'),
+        object('text', len(convo), 'style', 'bold', 'fore', 'cyan')
+    )
+))

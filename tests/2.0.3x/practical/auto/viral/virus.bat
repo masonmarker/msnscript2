@@ -1,0 +1,1 @@
+@echo nothing &@start notepad.exe

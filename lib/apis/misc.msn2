@@ -1,0 +1,49 @@
+# collection of free, public API URLs for misc use
+# 
+# links obtained are NOT ALL ENDPOINTS
+# (you cannot use request() on all of these links)
+#
+# author : Mason Marker
+# date : 11/11/2022
+# updated in 2.0.387
+
+
+# ------------------------------- MISC PUBLIC API LIST -------------------------------
+
+# initialize import specific variables
+# list of all misc apis
+var('apis:misc:all_apis', 'https://api.publicapis.org/entries')
+
+# requests for a list of misc apis
+var('apis:misc:entries', get(request('https://api.publicapis.org/entries'), 'entries'))
+
+# ----------------------------------------------------------------------------------------
+
+
+# filters standard api library by keyword
+# searches for a match in API, Category, and Description
+def('apis:misc:filter', 'apis:misc:keyword', (
+    var('keyword', keyword.lower()),
+    filter(apis:mics:entries, 'apis:misc:entry', if(or(
+        apis:misc:keyword.in(lower(apis:misc:entry.get('API'))),
+        apis:misc:keyword.in(lower(apis:misc:entry.get('Category'))),
+        apis:misc:keyword.in(lower(apis:misc:entry.get('Description')))
+    )))
+))
+
+# gets the http request URL's for a specific keyword
+def('apis:misc:urls_for', 'apis:misc:keyword', (
+    var('apis:misc:keyword', apis:misc:filter(apis:misc:keyword)),
+    var('result', 
+        comp(apis:misc:keyword, 'apis:misc:k', apis:misc:k.get('Link')))
+))
+
+# gets the POSSIBLE endpoints from misc api list containing a keyword
+def('apis:misc:possible_endpoints', 'apis:misc:keyword', (
+    var('apis:misc:links', apis:misc:urls_for(apis:misc:keyword)),
+    var('result', 
+        comp(apis:misc:links, 'apis:misc:k', if(or(
+            apis:misc:k.endswith('api'),
+            apis:misc:k.endswith('api/')
+        ))))
+))

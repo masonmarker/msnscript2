@@ -1,0 +1,190 @@
+# Tests the new type checking system for system functions.
+#
+# author : Mason Marker
+# date : 9/16/2023
+
+# test resources
+import('tests/resources/start')
+
+# tests type checking logic for def()
+# create a working function
+assert(def('f', None)),
+
+# invalid type name for function name
+assert:err(def(1, None)),
+
+# invalid type name for parameter name
+assert:err(def('f', 1, None))
+
+# invalid attribute
+@ string = 'hello'
+# cannot copy a string
+assert:err(string.copy())
+
+# invalid casting
+assert:err(
+    string.int(), 
+    string.float(), 
+    string.complex())
+
+# ----------- .if() -----------
+# variable name must be a string
+@ array = [1, 2, 3, 'hello']
+# this line is the same as array.if!('el', isint(el))
+@ array = array.if('el', isint(el))
+assert(array.equals([1, 2, 3]))
+# variable name must be a string
+assert:err(array.if!(1, isint(el)))
+# ----------- .slice() -----------
+# both arguments must be integers
+@ array = [1, 2, 3, 4, 5]
+assert(equals(
+    array.slice(1, 4),
+    [2, 3, 4]
+))
+# test not integers
+assert:err(
+    array.slice('', 4),
+    array.slice(1, ''),
+    array.slice('', ''),
+    array.slice(1.1, 4),
+    array.slice(1, 4.1),
+    array.slice([], {})
+)
+# 
+# -------------- OPERATION ERROR --------------
+# operation errors appear when applying an operator
+# to incompatible types
+@ value = 1
+# this is OK
+value.+!(1)
+assert(value.equals(2))
+# this is not OK
+assert:err(value.+([]))
+# -------------- .reverse() --------------
+# reverse can only be applied to strings, arrays, and tuples
+@ string = 'hello'
+@ array = [1, 2, 3]
+@ tuple = (1, 2, 3)
+# this is OK
+assert(
+    equals(string.reverse(), 'olleh'),
+    equals(array.reverse(), [3, 2, 1]),
+    equals(tuple.reverse(), (3, 2, 1))
+)
+# this is not OK
+@ d = {'hello': 34598734}
+assert:err(d.reverse())
+# .in()
+# ----------------------------- .in() -----------------------------
+# .in() can only be applied to iterables
+@ string = '12345'
+@ array = [1, 2, 3]
+@ tuple = (1, 2, 3)
+@ d = {1: 34598734}
+@ s = set(1, 2, 3)
+@ number = 1
+assert(
+    number.in(array),
+    number.in(tuple),
+    number.in(d),
+    number.in(s)
+)
+# cannot search for any other type in string
+assert:err(number.in(string))
+# ------------------------- .+(), ... operations -------------------------
+# testing .+() on certain values
+@ string = "hello"
+assert:err(string.+([]))
+# ------------------------- .greater()... operations -------------------------
+@ number = 5
+assert(number.greater(4))
+assert:err(number.greater([]))
+# ------------------------- .avg() -------------------------
+@ array = []
+assert:err(array.avg())
+array.add(1, 2, 3, 4, 'erkfuhawekiufhwaef')
+assert:err(array.avg())
+# ------------------------- .removen() -------------------------
+@ array = [1, 2, 3, 4, 5, 5, 5, 5, 5]
+array.removen(2, 5)
+assert(array.equals([1, 2, 3, 4, 5, 5, 5]))
+assert:err(array.removen(1, 6))
+array.remove(3)
+assert(array.equals([1, 2, 4, 5, 5, 5]))
+# ------------------------- .join() -------------------------
+@ array = [1, 2, 3, 4, 5]
+assert(equals(array.join(''), '12345'))
+# ------------------------- .set() -------------------------
+# working with dictionaries
+@ d = {'hello': 1, 'world': 2}
+assert(d.get('hello'))
+assert:err(d.get('awef'))
+# ------------------------- .foreach() -------------------------
+# still working with dictionaries
+@ d = {'hello': 1, 'world': 2}
+d.foreach('key', 'value', assert(
+    or(key.equals('hello'), key.equals('world')),
+    or(value.equals(1), value.equals(2))
+))
+# ------------------------- object() -------------------------
+# creating an object / dictionary
+@ d = {}
+assert(d.equals({}))
+# creating a dictionary
+@ d = object('hello', 342534)
+assert(d.equals({'hello': 342534}))
+# creating a dictionary with odd numbers of arguments (not allowed)
+assert:err(object('hello'))
+# ------------------------- sum() -------------------------
+@ array = [1, 2, 3, 4, 5]
+assert(equals(sum(array, 5), 20))
+# invalid argument to sum
+assert:err(sum(array, 'efw'))
+# ------------------------- casting -------------------------
+@ string = 'e'
+assert:err(
+    # cannot cast string to int
+    equals(int(string), 3453),
+    # cannot cast string to float
+    equals(float(string), 3453.0),
+    # cannot cast string to complex
+    equals(complex(string), 3453.0 + 0j)
+)
+
+# ------------------------- op class -------------------------
+assert:err(print(op.add(3, 'asdf')))
+# ------------------------- ->() -------------------------
+@ array = [1, 2, 3, 4, 5]
+assert(equals(->(array, 3), 4))
+# non indexable
+assert:err(->(4h, 2))
+# out of bounds error
+assert:err(->(array, 100))
+# ------------------------- syntax() -------------------------
+syntax('!!!', '_line', assert(-(_line)))
+!!! 1 !!!
+# assert type error
+assert:err(syntax('!!', 4, None))
+# ------------------------- copy() -------------------------
+# get a copy of a variable
+@ array = [1, 2, 3, 4, 5]
+assert(array.equals(array.copy()))
+# cannot copy an int
+@ integer = 3
+assert:err(integer.copy())
+# ------------------------- greater()... etc -------------------------
+assert(greater(5, 4))
+assert:err(greater('sadfas', 5))
+# ------------------------- keys() -------------------------
+@ d = {'hello': 1, 'world': 2}
+assert(equals(list(keys(d)), ['hello', 'world']))
+# cannot get keys of array
+assert:err(keys([1, 2, 3, 4, 5]))
+# ------------------------- +()... etc -------------------------
+assert(equals(+(2, 3), 5))
+assert:err(+(2, 'asdf'))
+# ------------------------- strip() -------------------------
+@ string = '  hello  '
+assert(equals(strip(string), 'hello'))
+assert:err(strip(4))

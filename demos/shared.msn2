@@ -1,0 +1,51 @@
+# Demonstrates a shared resource between threads.
+# Pongs the resource between two threads.
+#
+# author : Mason Marker
+# date : 5/30/2023
+# updated in 2.0.387
+
+# clearing the console
+import ('lib/os')
+os:clear()
+
+# shared resource
+@ message = '1'
+
+# iterations
+@ iterations = 10
+
+# starting thread 1
+thread('t1', (
+    
+    # perform the operation a certain amount of times
+    iterations((
+        
+        # wait for the second thread to release the resource
+        wait(message.endswith('2')),
+
+        # write to the resource
+        message.add('1'),
+    ))
+))
+
+
+# starting thread 2
+thread('t2', (
+
+    # perform the operation a certain amount of times
+    iterations((
+
+        # wait for the first thread to release the resource
+        wait(message.endswith('1')),
+
+        # write to the resource
+        message.add('2')
+    ))
+))
+
+# join the threads
+join('t1', 't2')
+
+# print the message
+message.print('message: ')

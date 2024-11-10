@@ -1,0 +1,31 @@
+# Launches the development environment
+# for testing speed of multiple languages.
+#
+# author : Mason Marker
+# date : 6/27/2023
+
+
+# workspace path
+@ wsp = 'tests\\lang\\html\\speed\\'
+
+
+# import the interface (HTML and JavaScript UI)
+import (+(wsp, 'interface'))
+
+# import server-side (Flask)
+import (+(wsp, 'server'))
+
+# import the page event handler
+# (just a thread watching for changes)
+import (+(wsp, 'handler'))
+
+
+
+
+
+# start the server
+server:start()
+# show the interface
+interface:show()
+# start the handler
+handler:start()

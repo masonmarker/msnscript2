@@ -1,0 +1,199 @@
+# This folder offers capabilities as a portable MSNScript2 Interpreter.
+#
+# Dependencies are not automatically installed within the new location,
+# so verify the dependencies in ../dependencies.txt are installed in the new directory.
+#
+# PORTABLE MSN2:
+#
+#     .msn2 programs can be run in any location, not just in the msnscript2 respository.
+#   
+#     Run "{python_alias} msn2cli.py portable" to create a package named "msn2"
+#     within the portable directory that can be copied to your project directories
+#     so you can run .msn2 code in your own environments.
+#
+#     Anytime a package is created, this package is created with the most recent
+#     versions of the MSN2 Interpreter. 
+#
+#
+# when executed, this file (port.msn2) will create a package named "msn2" in the
+# portable directory. This package can be copied to any directory and used to run
+# .msn2 programs in that directory.
+#
+# the new location of the msn2 package should contain the same dependencies as this 
+# repository, meaning the new directory for the msn2 package should:
+#
+# - be able to run .py programs
+# - have installed the dependencies listed in ../dependencies.txt
+# <thats literally all>
+# 
+# you should then be able to run "python msn2cli.py -f xxxx.msn2" in your own directories / project folders
+#
+# updated in 2.0.402
+
+import ('lib/console')
+import ('lib/os')
+
+# clear
+os:clear()
+
+
+# start msg
+console:print(arr(
+    object(
+        "text", "[+] ",
+        "fore", "green"
+    ),
+    object(
+        "text", "Creating portable MSN2 package...",
+        "fore", "green"
+    )
+))
+print()
+
+# new directories
+@ package_dir = 'portable/msn2'
+
+# remove the previous directory for replacement
+file.rmdir(package_dir)
+
+# create a new directory named "msn2" in the portable directory
+file.mkdir(package_dir)
+
+# helper for copydir()
+function('files:recurse', (
+        # if file is directory, create directory in new location
+    if (file.isdir(recurse:old), (
+        if (not(recurse:newpath.contains("__pycache__")), (
+            # make new directory
+            file.mkdir(recurse:newpath),
+
+            # copy files from old directory to new directory
+            @ recurse:thisdir_files = file.listdir(recurse:old),
+
+            # create old path
+            recurse:thisdir_files.each('fl2', (
+
+                # obtain working file path
+                @ recurse:old2 = cat(recurse:old, '/', fl2),
+                @ recurse:newpath2 = cat(recurse:newpath, '/', fl2),
+                # if file is directory, recurse, otherwise copy .msn2 library file
+                if (file.isdir(recurse:old2), 
+                    private(files:recurse(recurse:old2, recurse:newpath2)),
+                    # else
+                    file.copy(recurse:old2, recurse:newpath2)
+                )
+            ))         
+        ))
+    # otherwise, copy file to new location  
+    ), file.copy(recurse:old, recurse:newpath))
+), 'recurse:old', 'recurse:newpath')
+
+# copies a directory tree to a new location
+function('files:copydir', (
+
+    @ copydir:files = file.listdir(copydir:src),
+
+    copydir:files.each('fl', (
+
+        # obtain working file path
+        @ copydir:old = cat(copydir:src, '/', fl),
+        @ copydir:newpath = cat(copydir:dest, '/', fl),
+
+            # adds adds all files from the lib folder
+        private(files:recurse(copydir:old, copydir:newpath))
+    ))
+
+), 'copydir:src', 'copydir:dest')
+
+# copies resources from the repository to the new directory
+def ('port:include_resource', 'port:resource', 'port:message', (
+    # copying message
+    console:print(arr(object(
+        "text", port:message,
+        "fore", "blue"
+    ))),
+    if (file.isdir(port:resource), (
+        file.mkdir(+(@port:systemdir=+(package_dir, '/', port:resource))),
+        private(files:copydir(port:resource, port:systemdir))
+    ), (
+        file.copy(port:resource, package_dir)
+    ))
+))
+
+# copy resources to portable package location
+each([
+        ['core', "[*] Copying core files..."],
+        ['lib', "[*] Copying library..."],
+        ['system', "[*] Copying system files..."],
+        ['msnint2.py', "[*] Copying MSN2 Interpreter..."],
+        ['msn2.py', "[*] Copying MSN2 driver..."],
+        ['dependencies.txt', "[*] Copying dependencies..."],
+        ['requirements.txt', "[*] Copying requirements..."],
+        ['msn2python.py', '[*] Copying msn2python script...'],
+        ['msn2_settings.json', '[*] Copying settings...'],
+        ['msn2cli.py', '[*] Copying CLI...']
+    ], 'r', port:include_resource(r.get(0), r.get(1)))
+
+
+# readme message
+console:print(arr(
+    object(
+        "text", "[*] ",
+        "fore", "blue"
+    ),
+    object(
+        "text", "Creating README.txt...",
+        "fore", "blue"
+    )
+))
+# write readme.md for the portable package offerings and directions
+file.write(@readme=+(package_dir, '/README.md'), ls(
+    This directory {=package_dir=} can now be copied into<nl>
+    your project folders / directories.<nl><nl>
+
+    The destination folder environment of this package<nl>
+    should have access to the following:<nl>
+    - capability to execute .py programs<nl>
+    - installed the few dependencies in dependencies.txt<nl><nl>
+
+    You should create your .msn2 program files within the same directory<nl>
+    as this README.md {=package_dir=}.<nl><nl>
+
+    This package has access to an MSN2 library,<nl>
+    therefore, your created .msn2 program files can import files<nl>
+    in the exact manner of those existing outside of this package.<nl><nl>
+
+    ex: import <lp>"lib/timer.msn2"<rp><nl><nl>
+
+    Run .msn2 programs from this directory with the following syntax:<nl>
+    "{python_alias} msn2cli.py -f ____.msn2" <lp>extension is optional<rp><nl><nl>
+
+    Good luck!
+))
+
+print()
+console:print(arr(
+    object(
+        "text", "[+] ",
+        "fore", "green"
+    ),
+    object(
+        "text", "Created MSN2 package!",
+        "fore", "green"
+    )
+))
+print()
+console:print(arr(
+    object(
+        "text", "See ",
+        "fore", "green"
+    ),
+    object(
+        "text", readme,
+        "fore", "green"
+    ),
+    object(
+        "text", " for help with the portable MSN2 package.",
+        "fore", "green"
+    )
+))

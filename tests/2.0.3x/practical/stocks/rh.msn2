@@ -1,0 +1,78 @@
+# Invests in stocks in Robinhood.
+#
+# author : Mason Marker
+# date : 6/8/2023
+
+# all file operations do not require manual opening and closing
+# as this is done automatically, also, these operations are
+# thread-safe as each operation utilizes a reserved global lock
+# to prevent unwanted results regarding file manipulation.
+#
+# read the stock file for the
+# tickers in which to invest and
+# respective amounts.
+@ stocks = split(
+    file.read('tests/practical/stocks/list.txt'), '\n')
+
+# declare and open Chrome,
+# then go to Robinhood investing dashboard
+@ chrome = app(
+    'C:/Program Files/Google/Chrome/Application/chrome.exe')
+chrome.start()
+
+# go to Robinhood
+chrome.write('https://robinhood.com/')
+chrome.enter()
+
+# for each line of the file
+stocks.each('line', (
+
+    # split the line into the ticker and
+    # the amount to invest
+    unpack(line.split(), 'ticker', 'purchase'),
+    print('[+] investing', purchase, 'dollars in', ticker),
+
+    # searches all children for exact text
+    # equalling 'ALL', signaling the main graph
+    # has loaded
+    chrome.wait_for_text_exact_all('ALL'),
+
+    # wait for the search bar to load and
+    # write the ticker symbol
+    @ search_bar = chrome.wait_for_input_exact('Search'),
+
+    # remove existing text and write new ticker
+    # with a slight delay to prevent search errors
+    search_bar.backspace(len(ticker)),
+    search_bar.write(ticker, 0.05),
+
+    # wait for a result to appear containing
+    # the extracted ticker, then click it.
+    # clicking is performed via hovering and
+    # clicking the pointer button as speed affects
+    # the result of the click.
+    @ result = chrome.wait_for_listitem(ticker),
+    result.hover(), pointer.click(),
+
+    # find the Amount input box
+    @ amount = chrome.wait_for_input_exact('Amount'),
+    # wait for the focus animation to finish,
+    # and type the amount to invest with a slight delay
+    amount.focus(), sleep(2), amount.write(purchase, 0.05),
+
+    # wait for Review button
+    @ review_button = chrome.wait_for_button('Review Order'),
+    review_button.click(),
+
+    # wait for Buy button
+    @ submit_button = chrome.wait_for_button_exact('Buy'),
+    submit_button.hover(),
+    print('[+] purchased', ticker, 'for', purchase, 'dollars'),
+
+    # click the Investing navigation button
+    @ investing_button = first(chrome.find_links('Investing')),
+    investing_button.click()
+))
+
+# close Chrome
+chrome.stop()

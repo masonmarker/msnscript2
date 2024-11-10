@@ -1,0 +1,43 @@
+# Updates a NextJS project with MSN2 code.
+#
+# author : Mason Marker
+# date : 12/26/2023
+# version : 2.0.400
+
+# import MSN2 react library
+import ('lib/web/react')
+
+# create an index page
+react:page(
+    # NextJS index.jsx is at the path below
+    'tests/next_2.0.400/my-app/pages/index.jsx', 
+    # MSN2 script to convert to React-compliant code
+    script((
+
+        # define api
+        defineapi('getstuff', 
+            # function options for this api function
+            'req', 'res', (
+                res.status(200).json({
+                    'name': 'John Doe'
+                })
+            )
+        ),
+
+        hcenter(
+            onClick=do(prnt('goodbye')),
+            style={
+                'color': 'red'
+            },
+            h1('Hello World!'),
+            p('goodbye world!'),
+            button(
+                style={
+                    'color': 'blue'
+                },
+                onClick=do(prnt(apiget('getstuff'))),
+                'Click Me!'
+            )
+        )
+    ))
+)

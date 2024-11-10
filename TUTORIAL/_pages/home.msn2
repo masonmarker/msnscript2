@@ -1,0 +1,76 @@
+# Tutorial home page
+#
+# author : Mason Marker
+# date : 8/6/2023
+# version : 2.0.382
+
+# home page component
+@ page:home = script((
+    console:print(
+        arr(object(
+            'text', 'MSN2 Help Home',
+            'style', 'bold'
+        ))
+    ),
+    print(),
+    console:print(
+        arr(object(
+            'text', 'Welcome to the MSN2 help pages!',
+            'style', 'italic'
+        ))
+    ),
+    print(),
+    console:print(arr(
+        object(
+            'text', "It's recommended to enlarge your"
+        ),
+        object(
+            'text', ' console ',
+            'fore', 'green'            
+        ),
+        object(
+            'text', 'to view these pages.',
+            'style', 'italic'
+        )
+    )),
+    console:print(
+        arr(
+            object(
+                'text', 'These pages will guide you in understanding MSN2 '
+            ),
+            object(
+                'text', version,
+                'fore', 'green'
+            )
+        )
+    ),
+    console:print(arr(
+        object(
+            'text', 'This includes '
+        ),
+        object(
+            'text', 'potential, syntax, extensions, use cases, and packaging.',
+            'style', 'bold'
+        )
+    )),
+    print(),
+    console:print(arr(
+        object(
+            'text', 'To use these '
+        ),
+        object(
+            'text', 'pages',
+            'fore', 'green'
+        ),
+        object(
+            'text', ', type a page '
+        ),
+        object(
+            'text', 'reference',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' below!'
+        )
+    ))
+))

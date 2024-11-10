@@ -1,0 +1,93 @@
+# Updates this NextJS project with MSN2 translated code.
+#
+# test 2
+#
+# author : Mason Marker
+# date : 12/16/2023
+
+# msn2 general imports go here
+# import React MSN2 library
+import ('lib/web/react')
+
+# create page at the given path
+# we only need to specify the entire path once when creating pages
+react:page('tests/next_2.0.400/my-app/pages/index.jsx', script((
+
+    # define an api script, does not translate to any in-page code
+    defineapi('getstuff', 'req', 'res', (
+        # send a response
+        res.status(200).json({'name': 'John Doe'})
+    )),
+
+    # import a react component
+    import ('components/Navbar'),
+
+    # create some variables
+    const value = 3,
+    const value3 = 50,
+    const('Navigation', <Navbar />),
+    state('value2', 4),
+    state('value4', 'thing'),
+
+    # return component
+    center(
+        vstack(
+            hstack(
+                Navigation
+            ),
+            hstack(
+                button(
+                    # needs async() to react out to api
+                    onClick=do(async(
+                        value2.set(value2 + 1),
+                        prnt(apiget('getstuff'), value2)
+                    )),
+                    'press me'
+                )
+            ),
+            h1(value2),
+            grid(2, 2,
+                # minor hiccup with children after style tag, style
+                # should be last child, or encased in '()' like below
+                style=({
+                    'border': '5px solid black',
+                    'padding': '10px',
+                    'margin': '10px'
+                }),
+                # mapping over an array
+                map(['1', '2', '3', '4'], 'el', 
+                    button(
+                        # print this button's innerText
+                        onClick=do('el', 
+                            console.log(el.target.innerText)
+                        ),
+                        # on mouse enter, print this button's innerText
+                        onMouseEnter=do('el', 
+                            console.log('mouse moved over', el.target.innerText)
+                        ),
+                        # el as react insert
+                        {el}
+                    )
+                ),
+            ),
+            # link to another page
+            linkto('/user/mason', style=({'fontSize': '10rem'}), 'go to the mason page'),
+        )
+   )
+)))
+
+# # since we've specified the full entry path once,
+# # we only need to write the path from "next_project_path()/pages/"
+# # msn2 will create all nested folders and files as needed
+# react:page('user/mason.jsx', script((
+#     center(
+#         vstack(
+#             h1(
+#                 style={'color': 'red'},
+#                 'this is at users/mason.jsx'
+#             ),
+#             # go back home
+#             linkto('/', 'go back home')
+#         )
+#     )
+# )))

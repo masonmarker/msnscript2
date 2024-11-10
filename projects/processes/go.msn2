@@ -1,0 +1,48 @@
+# Demonstrates how two processes can commmunicate
+# through a local storage: 'projects/processes/local.txt'.
+#
+# author : Mason Marker
+# date : 5/30/2023
+
+# process forking capabilities
+# including fork()
+import ('lib/processes.msn2')
+
+#  clear console
+console('cls')
+
+# path
+@ path = 'projects/processes/local.txt'
+
+# write an initial message to signal one
+# of the processes to start first
+file.write(path, '2')
+
+# creates a new process
+proc('p1', (
+    @ path = 'projects/processes/local.txt',
+    for (0, 5, 'i', private((
+        # check if needs to exit
+        wait(as('_t', file.read(path), _t.endswith('2'))),
+        file.append(path, '1')
+    ))),
+    print('p1 done')
+))
+
+# creates another process
+proc('p2', (
+    @ path = 'projects/processes/local.txt',
+    for (0, 5, 'i', private((
+        # check if needs to exit
+        wait(as('_t', file.read(path), _t.endswith('1'))),
+        file.append(path, '2')
+    ))),
+    print('p2 done')
+))
+
+# main thread waits for processes to finish
+wait(equals(len(file.read(path)), 11))
+
+# print the contents of the file
+print(file.read(path))
+

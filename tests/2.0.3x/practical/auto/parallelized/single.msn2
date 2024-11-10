@@ -1,0 +1,58 @@
+# Tests basic actions within the automation capabilities
+# of the language. Uses a single thread of execution
+# to find elements
+#
+# author : Mason Marker
+# date : 5/23/2023
+
+# import timer
+import ('lib/timer')
+
+# get the Google Chrome application
+@ chrome = app('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe')
+chrome.start()
+chrome.write('www.calculator.net')
+chrome.enter()
+
+# wait for the calculator to load
+wait(@ five_button = first(chrome.find_all_children_exact('5')))
+
+# ------------------- PAGE LOADED -------------------
+
+# start timer
+timer:start()
+
+# gets the operator buttons
+@ plus_button = first(chrome.find_all_children_exact('+'))
+@ equals_button = first(chrome.find_all_children_exact('='))
+
+# gets all children where the width is the same
+# size as the 5 button and the text is a digit
+@ numbers = filter(chrome.all_children(), 'child', and(
+    equals(child.width(), five_button.width()),
+    isdigit(child.text())
+))
+
+# sorts the numbers by a child's text
+@ numbers = reverse(sortby(numbers, 'child', child.text()))
+
+print('numbers ready in ', timer:runtime(), 'seconds')
+
+# type in the equation
+each(numbers.slice(0, 5), 'button', button.click())
+plus_button.click()
+each(numbers.slice(5, 10), 'button', button.click())
+
+# solve the equation
+equals_button.click()
+
+# extract the result
+@ back_button = plus_button.element_right(45)
+@ result_text_box = back_button.element_above(30)
+print('Calculator says', int(result_text_box.text()))
+
+# print runtime
+print('single thread took', timer:runtime(), 'seconds')
+
+# stops chrome
+chrome.stop()

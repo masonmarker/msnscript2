@@ -1,0 +1,164 @@
+# Testing long strings.
+#
+# ls() and longstring()
+#
+#
+# It's important to know the limitations of the two functions.
+#
+# ls() and longstring() perform the same logic as script(), however to deal with
+# commas, the arguments are just concatenated together as a single, long string.
+#
+# This removes the requirement to escape commas in script() with (,)
+
+# start tests
+import ('tests/resources/start')
+
+# macro for testing long strings
+macro('TESTLS ', 'tests:long_string:line', (
+    @tests:long_string:split = tests:long_string:line.split('|'),
+    assert(equals(
+        # interpret both arguments
+        -(tests:long_string:split.get(0)), 
+        -(tests:long_string:split.get(1))
+    ))
+))
+
+# testing empty string
+TESTLS ls() | ""
+TESTLS ls (   )  |  ""
+
+# creating a generic long string
+TESTLS longstring(This is a long string, but it also has a comma.) | "This is a long string, but it also has a comma."
+
+# long string spanning a couple lines
+TESTLS longstring(
+    This is also a long string, but it also has a comma.
+    It also has a newline, 
+) | "This is also a long string, but it also has a comma.It also has a newline,"
+# verifying unequal is detected
+assert:err(TESTLS longstring(
+    This is also a long string, but it also has a comma.
+    It also has a newline, 
+) | "This is also a long string, but it also has a comma.It also has a newline,,")
+
+# testing a longer string with more commas
+TESTLS ls(This is just a super long string,it has some commas without spaces after,
+    and has some spaces at the beginning.) | "This is just a super long string,it has some commas without spaces after,and has some spaces at the beginning."
+assert:err(TESTLS ls(This is just a super long string,it has some commas without spaces after,
+    and has some spaces at the beginning.) | "This is just a super long string,it has some com mas without spaces after,and has some spaces at the beginning.")
+
+
+# testing a correctly formatted string
+TESTLS ls(
+    This is just a super long string,
+    # we insert a space with '< >'
+    it has some commas without spaces after,< >
+    and has some spaces at the beginning.
+) | "This is just a super long string,it has some commas without spaces after, and has some spaces at the beginning."
+
+
+# testing a super long, many lines string
+TESTLS ls(
+    This is just a super long string,
+    # we insert a space with '< >'
+    it has some commas without spaces after,< >
+    and has some spaces at the beginning.
+    This is just a super long string,
+    # we insert a space with '< >'
+    it has some commas without spaces after,< >
+    and has some spaces at the beginning.
+    This is just a super long string,
+    # we insert a space with '< >'
+    it has some commas without spaces after,< >
+    and has some spaces at the beginning.
+    This is just a super long string,
+    # we insert a space with '< >'
+    it has some commas without spaces after,< >
+    and has some spaces at the beginning.
+    This is just a super long string,
+    # we insert a space with '< >'
+    it has some commas without spaces after,< >
+    and has some spaces at the beginning.
+    This is just a super long string, 
+    # we insert a space with '< >'
+    it has some commas without spaces after,< >
+    and has some spaces at the beginning.
+    This is just a super long string,
+    # we insert a space with '< >'
+    it has some commas without spaces after,< >
+    and has some spaces at the beginning.
+    This is just a super long string,
+    # we insert a space with '< >'
+    it has some commas without spaces after,< >
+    and has some spaces at the beginning.
+) | "This is just a super long string,it has some commas without spaces after, and has some spaces at the beginning.This is just a super long string,it has some commas without spaces after, and has some spaces at the beginning.This is just a super long string,it has some commas without spaces after, and has some spaces at the beginning.This is just a super long string,it has some commas without spaces after, and has some spaces at the beginning.This is just a super long string,it has some commas without spaces after, and has some spaces at the beginning.This is just a super long string,it has some commas without spaces after, and has some spaces at the beginning.This is just a super long string,it has some commas without spaces after, and has some spaces at the beginning.This is just a super long string,it has some commas without spaces after, and has some spaces at the beginning."
+
+
+# testing a super long string with <nl> to insert newline characters
+TESTLS ls(
+    long string with some<nl>
+    newlines and also commas, <nl>
+    so its a pretty helpful tool to<nl>
+    have in the toolbox!
+) | "long string with some\nnewlines and also commas, \nso its a pretty helpful tool to\nhave in the toolbox!"
+
+
+# complex testing
+# <lp> = left parenthesis
+# <rp> = right parenthesis
+TESTLS ls(
+    jaw9348fjw9q834jhgf03w9fk09k43oije!@&&&^*&^*&*&^*^%&^%&%<lp><rp><nl>< >
+    ifjoauinogbunawpoefmpoawefmgoawnjefoinwafeOPIMNFOPIWNMDCPQWINFVOIUWNEOINQWODIMOGINOWIEMNF,
+    ipoanmerwvoijmnawoiefjoaiswefgjoiawefjwaefjiawef,,,,,,,gbaoiuwenfoaiwjnefoiaiwjnerfgoiajwef,,,,,
+    apoiewgjbopaijwefpoajwefpoajwepfoijawpeo
+) | "jaw9348fjw9q834jhgf03w9fk09k43oije!@&&&^*&^*&*&^*^%&^%&%()\n ifjoauinogbunawpoefmpoawefmgoawnjefoinwafeOPIMNFOPIWNMDCPQWINFVOIUWNEOINQWODIMOGINOWIEMNF,ipoanmerwvoijmnawoiefjoaiswefgjoiawefjwaefjiawef,,,,,,,gbaoiuwenfoaiwjnefoiaiwjnerfgoiajwef,,,,,apoiewgjbopaijwefpoajwefpoajwepfoijawpeo"
+assert:err(TESTLS ls(
+    aw9348fjw9q834jhgf03w9fk09k43oije!@&&&^*&^*&*&^*^%&^%&%<lp><rp><nl>< >
+    ifjoauinogbunawpoefmpoawefmgoawnjefoinwafeOPIMNFOPIWNMDCPQWINFVOIUWNEOINQWODIMOGINOWIEMNF,
+    ipoanmerwvoijmnawoiefjoaiswefgjoiawefjwaefjiawef,,,,,,,gbaoiuwenfoaiwjnefoiaiwjnerfgoiajwef,,,,,
+    apoiewgjbopaijwefpoajwefpoajwepfoijawpeo
+) | "jaw9348fjw9q834jhgf03w9fk09k43oije!@&&&^*&^*&*&^*^%&^%&%()\n ifjoauinogbunawpoefmpoawefmgoawnjefoinwafeOPIMNFOPIWNMDCPQWINFVOIUWNEOINQWODIMOGINOWIEMNF,ipoanmerwvoijmnawoiefjoaiswefgjoiawefjwaefjiawef,,,,,,,gbaoiuwenfoaiwjnefoiaiwjnerfgoiajwef,,,,,apoiewgjbopaijwefpoajwefpoajwepfoijawpeo")
+
+
+@ test_value = ls(
+    Hello, this is a supermassive long string with all of the inserts and characters
+    that should be highlighted correctly, but we'll see...<nl><nl>
+
+    I'm doing quite well I think to be honest, but we'll see how the day goes.< >
+    Things are always going well at this side of town to be honest.<lb>silly<rb><nl>
+    This is a set: <lcb>1, 2, 3, 4, 5, 6, 7, 8, 9, 10<rcb><nl>
+    This is a list: <lp>1, 2, 3, 4, 5, 6, 7, 8, 9, 10<rp><nl>
+    This is testing with complex inserts:<nl>
+    {=ls(This ls should be allowed)=}<nl><nl>
+
+    {=+("other string insertion ", "-")=}<nl>
+    {=[1, 2, 3, 4, 5]=}<nl>
+    {={1, 2, 3, 4, 5}=}<nl>
+    {={"key": {"key": "value"}}=}<nl><nl>
+
+    {=(
+        (1, 2, 3, 4, 5)
+    )=}<nl><nl>
+
+    Deep newline tag: <dnl><nl><nl>
+
+    Deeper nesting of things<nl>
+    {=(
+        @v=(1, 2, 3, 4),
+        # using with script in it, these insertions are actually inserted from the ls() method,
+        # 'v' also doesn't exist yet, so it should be None
+        "Hello!"
+    )=}<nl> # this should NOT be highlighted as a comment
+
+    # all other escape sequences
+    < >|<nl>|<lp>|<rp>|<or>|<lb>|<rb>|<lcb>|<rcb>|<lt>|<gt>|<dnl>|<tag>
+
+    # this is supposed to be a comment
+    # this is also supposed to be a comment
+    This is still the string!
+)
+@correct_value = "Hello, this is a supermassive long string with all of the inserts and charactersthat should be highlighted correctly, but we'll see...\n\nI'm doing quite well I think to be honest, but we'll see how the day goes. Things are always going well at this side of town to be honest.[silly]\nThis is a set: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}\nThis is a list: (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)\nThis is testing with complex inserts:\nThis ls should be allowed\n\nother string insertion -\n[1, 2, 3, 4, 5]\n{1, 2, 3, 4, 5}\n{'key': {'key': 'value'}}\n\n(1, 2, 3, 4, 5)\n\nDeep newline tag: \\n\n\nDeeper nesting of things\nHello!\n # this should NOT be highlighted as a comment |\n|(|)||||[|]|{|}|<|>|\\n|#This is still the string!"
+
+
+# syntax highlighting testing
+TESTLS test_value | correct_value

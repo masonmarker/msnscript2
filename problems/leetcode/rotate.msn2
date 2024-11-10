@@ -1,0 +1,16 @@
+# Rotates an array by k elements
+#
+# author : Mason Marker
+# date : 6/2/2023
+
+# rotates an array by k elements
+def('rotate_array', 'array', 'k', (
+    @ k = op.sub(0, k),
+    @ part1 = array.slice(0, k),
+    @ part2 = array.slice(k, array.len()),
+    part2.+(part1)
+))
+
+assert(equals(private(rotate_array([1, 2, 3, 4, 5, 6], 3)), [4, 5, 6, 1, 2, 3]))
+assert(equals(private(rotate_array([1, 2, 3, 4, 5, 6], 2)), [5, 6, 1, 2, 3, 4]))
+assert(equals(private(rotate_array([1, 2, 3, 4, 5, 6], 1)), [6, 1, 2, 3, 4, 5]))

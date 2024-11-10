@@ -1,0 +1,44 @@
+# Handles page events
+#
+# author : Mason Marker
+# date : 6/27/2023
+
+# import CORS local api information
+import ('lib/apis/api')
+@ local = cors_api()
+
+# new thread to wait for an expression
+function('handler:start', thread(interval(0.08, (
+
+    # reset result field
+    local.POSTENTRY('result', ''),
+
+
+    # wait for 'exp' field to be filled
+    wait(try(@ exp = get(local.GET(), 'exp'))),
+
+    print(exp),
+    # post C's evaluation of
+    # the expression under
+    # the 'result' field
+    local.POSTENTRY('result', get(C(
+        
+        # include i/o
+        <tag> include "stdio.h" <nl>
+
+        # main function
+        int main() {
+
+            # return C's evaluation
+            # of the expression
+            printf("%lf", (double)
+                {=
+                    exp
+                =}
+            );
+        }
+    ), 'out')),
+
+    # reset the fields
+    local.POSTENTRY('exp', '')
+))))

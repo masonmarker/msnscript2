@@ -1,0 +1,9 @@
+Demonstrates execution of a .msn2 script within a Python environment, 
+showing how a .msn2 script takes input, and gives it back.
+
+To run this small project, we begin from a Python environment,
+then use MSN2 capabilities to perform complex operations in less code,
+then return to the Python environment.
+
+To start the program, execute '{python_alias} TUTORIAL/python/start.py'
+from the msnscript2/ directory.

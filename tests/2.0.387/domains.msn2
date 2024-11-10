@@ -1,0 +1,39 @@
+# Tests variable handling via domains.
+#
+# author : Mason Marker
+# date : 9/6/2023
+
+# import test resources
+import('tests/resources/start')
+import ('lib/eng')
+
+# create a domain
+domain('domain1', (
+    # these variables will be rewritted to
+    # domain1:var1 
+    @var1= "hello this is a variable",
+    @ var2 = "hello this is another variable",
+
+    # same with the functions
+    def('func', 'hello!'),
+    def('func2', 'hello again!'),
+
+    # same with classes
+    class('thing', @v='hi!')
+))
+
+# reference objects from the domain
+assert(domain1:var1.equals("hello this is a variable"))
+assert(domain1:var2.equals("hello this is another variable"))
+assert(equals(domain1:func(), "hello!"))
+assert(equals(domain1:func2(), "hello again!"))
+
+# create an instance of the class
+@ thing = domain1:thing()
+assert(equals(thing.v(), "hi!"))
+
+
+
+# domains cannot have merged variables or functions,
+# else a Domain Error will be thrown
+try(domain('domain1', @var1=), assert(1))

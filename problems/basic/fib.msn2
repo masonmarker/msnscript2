@@ -1,0 +1,22 @@
+# Demonstrates the fibonacci sequence, iteratively and recursively
+#
+# author : Mason Marker
+# date : 3/11/23
+# updated in 2.0.387
+
+# ----------------------------- Algorithm 1 -----------------------------
+def('fib', 'n', 'i', (
+    if (i.equals(1), 
+        1,
+        if (i.equals(2), 
+            1,
+            # must recurse in a private context
+            # to avoid variable name collisions
+            +(private(fib(n, i - 1)), private(fib(n, i - 2)))
+        )
+    )
+))
+# -----------------------------------------------------------
+
+# running the recursive function
+for(1, 10, 'i', fib(1, i).print())

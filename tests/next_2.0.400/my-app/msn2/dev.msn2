@@ -1,0 +1,32 @@
+# Launches Chrome and attaches to the existing session.
+
+
+# working with Chrome
+import('lib/auto/chrome')
+import('lib/user')
+
+# get the current python alias
+@ dev:python_alias = get(settings(), 'runner_alias')
+
+# get the update script path from the system arguments
+@dev:update_script_path = in(1)
+
+# create a Chrome instance
+@ chrome = chrome:instance(chrome:default_path)
+chrome.start()
+# go to NextJS server
+chrome.search_in_new_tab('localhost:3000')
+
+# function to refresh the page
+def('refresh', (
+    @refresh:script = +(dev:python_alias, ' msn2.py ', dev:update_script_path),
+    # run the update script
+    console(refresh:script),
+    chrome.refresh(),
+    '[+] refreshed, see NextJS server outputs'
+))
+
+
+
+# start a shell instance that receives commands from the user
+user:shell('next')

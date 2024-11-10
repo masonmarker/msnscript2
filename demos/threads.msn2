@@ -1,0 +1,28 @@
+# Demonstrates basic thread control
+#
+# author : Mason Marker
+# date : 5/28/2023
+
+# work done
+@ work = 0
+
+# work needed to be done
+@ work_needed = int(input('How much work needs to be done? '))
+
+# work is dispersed for 4 threads
+@ threads = 4
+
+# starts a certain amount of threads
+threads(thread(while(
+    work.less(work_needed), work.inc())
+))
+
+# since the threads are not communicating, extra work may be done
+wait(work.ge(work_needed))
+
+# assert the work was finished
+# (even though it was technically asserted by the ending of the program)
+assert(work.ge(work_needed))
+
+# work is finished!
+print('Work is finished!')

@@ -1,0 +1,99 @@
+# Tests a more in-depth web page
+# with a Python backend.
+#
+# Also tests management of page events
+# with a single thread for processing
+# speed improvements
+#
+# date : 6/22/2023
+# author : Mason Marker
+
+# for asking ChatGPT questions
+# asks questions for free,
+# with no API key, and retaining
+# the entire past conversation
+# via algorithms written by OpenAI's
+# teams
+import ('lib/auto/chatgpt')
+
+# get local CORS endpoint
+# information
+import ('lib/apis/api')
+@ local = cors_api()
+
+# alias 'py' for Python runner
+alias('py')
+
+# start a local Flask endpoint in
+# a new process
+#
+# because this is a new process scope,
+# it cannot access existing variables
+# and methods, so we use {==}
+# inserts to pass data to the endpoint
+proc('flask', ENDPOINT(
+    '127.0.0.1',
+    8080,
+    '/',
+    # initial endpoint data
+    {
+        # questions to ask ChatGPT
+        'ask_gpt_questions': [],
+        # GPT's responses to the questions
+        'ask_gpt_responses': []
+    },
+    # using CORS
+    "CORS"
+))
+
+
+# launches the development environment
+# for the web page 
+import ('tests/lang/html/complex/launch-dev')
+
+# thread for handling page events
+# looks for change in page data
+# every 0.1 seconds
+thread(interval(0.08, (
+
+    # wait for a question to be posted
+    wait(@ question = 
+        get(local.GET(), 'ask_gpt_questions'),, 0.05),
+    
+    # try to find the ChatGPT button
+    if (try(@ ask_gpt_button = chrome.tabitem(1)),
+
+        # if found
+        (
+            # click the button
+            ask_gpt_button.click(),
+            # reopen inspect element
+            chrome.write('{F12}'),
+            # chatgpt:active_ask_gpt() does not need to retype the URL
+            @ needs_url = False
+        ),
+
+        # if not found
+        (
+            # go to a new tab
+            @ new_tab = first(chrome.find_buttons('New Tab')),
+            new_tab.click(),
+
+            # chatgpt:active_ask_gpt() does need to retype the URL
+            @ needs_url = True
+        )
+    ),
+
+    # ask v d the question
+    @ response = first(private(chatgpt:active_ask_gpt(chrome, question, needs_url))),
+    
+    # empty the question array
+    local.POSTENTRY('ask_gpt_questions', []),
+
+    # go back to the MSN2 tab
+    @ msn2_tab = first(chrome.find_tabitems('MSN2')),
+    msn2_tab.click(),
+
+    # re-render the HTML with the new response 
+    render(response)
+)))

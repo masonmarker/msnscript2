@@ -1,0 +1,111 @@
+# Retrieves a random Chess opening from ChatGPT,
+# and plays the opening in the Chess.com
+# analysis board, while writing the moves to Excel.
+#
+# author : Mason Marker
+# date : 6/11/2023
+
+# import ChatGPT library for
+# complete conversational capabilities
+# without an API key, or paying $$
+import ('lib/auto/chatgpt')
+
+# define and open Google Chrome
+@ chrome = app(
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe')
+chrome.start()
+
+# ask ChatGPT for a random Chess opening
+# we remove newlines from ChatGPT's response,
+# and split the response into a list of moves
+# in the requested format
+@ moves = split(
+    as('response', 
+        get(
+            chatgpt:active_ask_gpt(
+                chrome, 
+                [
+'give strictly an EXACT answer to this question with no other words,
+and include the example squares in your answer:
+give me a random chess opening starting with these squares and 6-
+8 more squares in this format: e2 e4, e7 e5...'
+                ]
+            , True), 
+        0), 
+    response.replace('\n', '')),
+', ')
+
+# go to a new Chrome tab
+@ new_tab = chrome.wait_for_button('New Tab')
+new_tab.click()
+
+# load an Excel Workbook for writing the moves
+@ workbook = excel('C:\\Users\\mason\\OneDrive\\Desktop\\msn\\moves.xlsx')
+# load the first Worksheet
+@ sheet = workbook.sheet("ChessMoves")
+
+# go to the Chess.com analysis board
+chrome.write('https://www.chess.com/analysis?tab=analysis')
+chrome.enter()
+
+# wait for the analysis board to load
+chrome.wait_for_text_all('White')
+chrome.page_up()
+
+# obtain the main board
+@ board = chrome.image(1)
+
+# makes a move on the board, and
+# writes the move to Excel,
+# computes the resulting square given
+# from the letter and number of the two
+# squares, e4 -> 'e' and '4', 
+# use the positions of both directional squares
+function('move_and_write', (
+
+    # strip the starting and ending squares
+    sq1.strip(), sq2.strip(),
+
+    # drags from one square to another
+     pointer.drag(
+        get(as('sq', first(board.find_children(sq1.get(0))), sq.center()), 0),
+        get(as('sq', first(board.find_children(sq1.get(1))), sq.center()), 1),
+        get(as('sq', first(board.find_children(sq2.get(0))), sq.center()), 0),
+        get(as('sq', first(board.find_children(sq2.get(1))), sq.center()), 1) 
+    # at the fastest possible speed
+    , 100),
+
+    # writes the move to Excel
+    sheet.add_to_column(color, cat(start, '->', end))
+), 'color', 'sq1', 'sq2')
+
+
+# for each move, make a move
+# and write the move to excel
+for (0, len(moves), 'i', (
+    # unpack this move into a starting and ending square
+    unpack(split(moves.get(i), ' '), 'start', 'end'),
+    
+    # if the index is even, its a move by White,
+    # otherwise its a move from Black
+    if (i.even(), 
+        move_and_write('White', start, end),
+        move_and_write('Black', start, end)
+    )
+))
+
+# sleep for 2 seconds
+sleep(2)
+
+# the opening is listed a page down
+chrome.page_down()
+
+# sleep for 5 seconds
+sleep(5)
+
+# close Chrome
+chrome.stop()
+
+# save and close the Workbook
+workbook.save()
+workbook.close()

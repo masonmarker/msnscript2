@@ -1,0 +1,382 @@
+# Settings tutorial page.
+#
+# author : Mason Marker
+# date : 8/17/2023
+
+
+# args for python script
+@ page:settings:setting = ''
+@ page:settings:setting_value = ''
+
+# python snippet to update the msn2_settings.json file
+\\
+
+# imports
+import json
+
+# read in the data from the settings file
+with open('msn2_settings.json', 'r') as f:
+    data = json.load(f)
+
+# update the settings
+data["settings"]["{=page:settings:setting=}"] = {=page:settings:setting_value=}
+
+# write the data to the settings file
+with open('msn2_settings.json', 'w') as f:
+    json.dump(data, f, indent=4)
+page:settings:update_settings \\
+
+# page component
+@ page:settings = script((
+
+    # settings menu
+    console:print(arr(
+        object(
+            'text', '   Settings   ',
+            'style', 'italic',
+            'back', 'green'
+        )
+    )),
+    print(),
+    # you can edit your msn2 settings in the file msn2_settings.json
+    console:print(arr(
+        object(
+            'text', 'You can edit your msn2 ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'settings',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' in the file ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'msn2_settings.json',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', ', ',
+            'style', 'italic'
+        ),
+        # or edit them below
+        object(
+            'text', 'or edit them below.',
+            'style', 'italic'
+        )
+    )),
+
+    # display current settings
+    print(),
+    # current settings:
+    console:print(arr(
+        object(
+            'text', 'Current settings - ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'msn2_settings.json',
+            'style', 'italic',
+            'fore', 'green'
+        )
+    )),
+    print(),
+
+    # display settings
+    as('page:settings:dict', settings(), 
+        page:settings:dict.foreach('page:settings:key', 'page:settings:val', (
+            console:print(arr(
+                object(
+                    'text', cat(' ', page:settings:key, ' '),
+                    'style', 'italic',
+                    'fore', 'cyan'
+                ),
+                object(
+                    'text', ': ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', cat(' ', page:settings:val, ' '),
+                    'style', 'italic',
+                    'fore', 'magenta'
+                )
+            )),
+
+            # depending on the key, print a description
+            if (page:settings:key.equals('has_ran'), (
+
+                console:print(arr(
+                    object(
+                        'text', '   Whether or not an msn2 ',
+                        'style', 'italic'
+                    ),
+                    object(
+                        'text', 'script',
+                        'style', 'italic',
+                        'fore', 'green'
+                    ),
+                    object(
+                        'text', ' has been ran in this environment. ',
+                        'style', 'italic'
+                    ),
+                    object(
+                        'text', 'This is used as a switch to determine if ',
+                        'style', 'italic'
+                    ),
+                    object(
+                        'text', 'dependencies',
+                        'style', 'italic',
+                        'fore', 'green'
+                    ),
+                    object(
+                        'text', ' should be installed or not upon executing a program.',
+                        'style', 'italic'
+                    )
+                )),
+                print()
+            # runner alias
+            ), if(page:settings:key.equals('runner_alias'), (
+                
+                # the alias for your python runner, default is normally 'python'
+                console:print(arr(
+                    object(
+                        'text', '   The alias for your ',
+                        'style', 'italic'
+                    ),
+                    object(
+                        'text', 'python',
+                        'style', 'italic',
+                        'fore', 'green'
+                    ),
+                    object(
+                        'text', ' runner, the default is normally ',
+                        'style', 'italic'
+                    ),
+                    object(
+                        'text', "'python'",
+                        'style', 'italic',
+                        'fore', 'green'
+                    ),
+                    object(
+                        'text', '. ',
+                        'style', 'italic'
+                    ),
+                    object(
+                        'text', 'This is used upon creating new ',
+                        'style', 'italic'
+                    ),
+                    object(
+                        'text', 'processes',
+                        'style', 'italic',
+                        'fore', 'green'
+                    ),
+                    object(
+                        'text', ' to determine which ',
+                        'style', 'italic'
+                    ),
+                    object(
+                        'text', 'runner',
+                        'style', 'italic',
+                        'fore', 'green'
+                    ),
+                    object(
+                        'text', ' to use.',
+                        'style', 'italic'
+                    )
+                )),
+
+            # another case, when necessary
+            )), ())
+
+        ))),
+
+    # editing settings
+    print(),
+
+    # Type 'e' to edit settings, or 'q' to quit.
+    console:print(arr(
+        object(
+            'text', 'Type ',
+            'style', 'italic'
+        ),
+        object(
+            'text', "'e'",
+            'style', 'italic',
+            'fore', 'yellow'
+        ),
+        object(
+            'text', ' to edit settings, or ',
+            'style', 'italic'
+        ),
+        object(
+            'text', "'q'",
+            'style', 'italic',
+            'fore', 'yellow'
+        ),
+        object(
+            'text', ' to ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'quit',
+            'style', 'italic',
+            'fore', 'red'
+        ),
+        object(
+            'text', '.',
+            'style', 'italic'
+        )
+    )),
+
+    # get user input
+    @ page:settings:input = strip(input()),
+
+
+    print(),
+    # if the user types 'e', edit settings
+    if (page:settings:input.equals('e'), (
+
+        # Type the name of the setting to edit
+        console:print(arr(
+            object(
+                'text', 'Type the ',
+                'style', 'italic'
+            ),
+            object(
+                'text', 'name',
+                'style', 'italic',
+                'fore', 'green'
+            ),
+            object(
+                'text', ' of the setting to edit, ',
+                'style', 'italic'
+            ),
+            object(
+                'text', 'or type ',
+                'style', 'italic'
+            ),
+            object(
+                'text', "'q'",
+                'style', 'italic',
+                'fore', 'yellow'
+            ),
+            object(
+                'text', ' to ',
+                'style', 'italic'
+            ),
+            object(
+                'text', 'quit',
+                'style', 'italic',
+                'fore', 'red'
+            ),
+            object(
+                'text', '.',
+                'style', 'italic'
+            )
+        )),
+
+        # get user input
+        @ page:settings:editing = strip(input()),
+        print(),
+
+        # if the editing setting exists in the settings
+        if (has(settings(), page:settings:editing), (
+            
+            # Editing Setting: <setting>
+            console:print(arr(
+                object(
+                    'text', 'Editing Setting: ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', cat(' ', page:settings:editing, ' '),
+                    'style', 'italic',
+                    'fore', 'green'
+                )
+            )),
+            # Type the new value for the setting
+            console:print(arr(
+                object(
+                    'text', 'Type the ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'new value',
+                    'style', 'italic',
+                    'fore', 'green'
+                ),
+                object(
+                    'text', ' for the setting, ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'or type ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', "'q'",
+                    'style', 'italic',
+                    'fore', 'yellow'
+                ),
+                object(
+                    'text', ' to ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'quit',
+                    'style', 'italic',
+                    'fore', 'red'
+                ),
+                object(
+                    'text', '.',
+                    'style', 'italic'
+                )
+            )),
+
+            # get user input
+            @ page:settings:new_value = strip(input()),
+
+            # if the user types 'q', quit
+            if (page:settings:new_value.equals('q'), goto('s')),
+
+            # set the setting to the new value
+            @ page:settings:setting = page:settings:editing,
+            @ page:settings:setting_value = +('"', page:settings:new_value, '"'),
+
+            # # update the settings
+            py.run(page:settings:update_settings),
+
+            print(),
+            # Settings Updated
+            console:print(arr(
+                object(
+                    'text', 'Changed ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', page:settings:setting,
+                    'style', 'italic',
+                    'fore', 'green'
+                ),
+                object(
+                    'text', ' to ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', page:settings:new_value,
+                    'style', 'italic',
+                    'fore', 'magenta'
+                )
+            ))
+
+        ), goto('0'))
+
+    ), goto('0'))
+
+
+
+
+))

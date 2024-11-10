@@ -1,0 +1,547 @@
+# Grants capabilities for automating ChatGPT's website.
+# 
+# Why use this as opposed to OpenAI's ChatGPT API?
+# A: 
+#   1. No API key
+#   2. No charge per request
+#   3. Model settings pre-determined and refined by OpenAI's team
+#   4. ChatGPT's algorithm for retaining and interpreting the previous messages
+#      is maintained (THIS IS ABSOLUTELY HUGE AND CRUCIAL TO 
+#      UTILIZING GPT'S COMPLETE CAPABILITIES)
+#
+# author : Mason Marker
+# date : 6/2/2023
+# updated in 2.0.387
+# updated again in 2.0.388
+
+# import automated JavaScript injection library
+import ('lib/auto/inject')
+
+# import the Chrome library for the default Chrome path
+import ('lib/auto/chrome')
+
+# asks ChatGPT questions, retrieving its answer
+# only works for dark mode as of 2.0.387
+function('chatgpt:ask_gpt', (
+
+    # opens Google Chrome to the ChatGPT website
+    @ ask_gpt:_chrome = app(chrome:default_path),
+    ask_gpt:_chrome.start(),
+    ask_gpt:_chrome.write('https://chat.openai.com/'),
+    ask_gpt:_chrome.enter(),
+    # waits for the message input to appear
+    @ ask_gpt:_message_input = ask_gpt:_chrome.wait_for_input('Send a message'),
+    # opens the inspect element panel
+    ask_gpt:_chrome.inspect(),
+    # responses from ChatGPT
+    @ ask_gpt:_responses = [],
+    # for each message
+    ask_gpt:_messages.each('ask_gpt:_message', (
+        # asks ChatGPT a question
+        ask_gpt:_message_input.focus(),
+        ask_gpt:_chrome.write(ask_gpt:_message),
+        ask_gpt:_chrome.enter(),
+        # wait for a response
+        ask_gpt:_chrome.wait_for_text('Regenerate'),
+        # opens and injects JavaScript into the application's element 
+        # inspection console
+        # arguments: browser, script, inspect element is open?
+        ask_gpt:_responses.add(inject:active_inject(ask_gpt:_chrome, script(
+            let m = document.getElementsByClassName(
+                'flex flex-col text-sm dark:bg-gray-800'
+            )[0];
+            let lm = m.children[m.children.length-2];
+            console.log(lm.innerText+"%$@".repeat(1000));
+        ), True))
+    )),
+    # returns the responses and the app instance opened
+    ret('chatgpt:ask_gpt', arr(ask_gpt:_chrome, ask_gpt:_responses))
+), 'ask_gpt:_messages')
+
+# asks ChatGPT a question on an open browser
+function('chatgpt:active_ask_gpt', (
+
+    # types in the URL and proceeds to the website
+    if (active_ask_gpt:_enterurl, (
+        active_ask_gpt:_appinstance.write('https://chat.openai.com/'),
+        active_ask_gpt:_appinstance.enter()
+    )),
+
+    # waits for the message input to appear
+    @ active_ask_gpt:_message_input = active_ask_gpt:_appinstance.wait_for_input('Send a message'),
+    # opens the inspect element panel
+    active_ask_gpt:_appinstance.inspect(),
+    # responses from ChatGPT
+    @ active_ask_gpt:_responses = [],
+
+    # for each message
+    active_ask_gpt:_messages.each('active_ask_gpt:_message', (
+
+        # asks ChatGPT a question
+        active_ask_gpt:_message_input.focus(),
+        active_ask_gpt:_appinstance.write(active_ask_gpt:_message),
+        active_ask_gpt:_appinstance.enter(),
+
+        # wait for a response
+        active_ask_gpt:_appinstance.wait_for_text('Regenerate response'),
+
+        # opens and injects JavaScript into the application's element 
+        # inspection console
+        # arguments: browser, script, inspect element is open?
+        active_ask_gpt:_responses.add(inject:active_inject(active_ask_gpt:_appinstance, script(
+            let m = document.getElementsByClassName(
+                'flex flex-col text-sm dark:bg-gray-800'
+            )[0];
+            let lm = m.children[m.children.length-2];
+            console.log(lm.innerText+"%$@".repeat(1000));
+        ), True))
+    )),
+
+    # returns the responses and the app instance opened
+    ret('chatgpt:active_ask_gpt', active_ask_gpt:_responses)
+), 'chatgpt:_appinstance', 'active_ask_gpt:_messages', 'active_ask_gpt:_enterurl')
+
+# Makes a query to the ChatGPT API.
+# implemented for named arguments
+# 2.0.388
+def('chatgpt:query', 
+    &chatgpt:query:prompt='who and what are you',
+    &chatgpt:query:model='gpt-3.5-turbo',
+    &chatgpt:query:temperature=0.9,
+    &chatgpt:query:max_tokens=150,
+    &chatgpt:query:top_p=1,
+    &chatgpt:query:frequency_penalty=0.0,
+    &chatgpt:query:presence_penalty=0.6,
+    &chatgpt:query:stop='###',
+    # make the query
+    ai.query(
+        chatgpt:query:model,
+        chatgpt:query:prompt,
+        chatgpt:query:temperature,
+        chatgpt:query:max_tokens,
+        chatgpt:query:top_p,
+        chatgpt:query:frequency_penalty,
+        chatgpt:query:presence_penalty,
+        chatgpt:query:stop
+    )
+)
+
+# This code defines the ChatGPT class, which grants greater control over a ChatGPT thread. 
+# It includes various parameters such as model, retain_context, 
+# messages, temperature, max_tokens, top_p, frequency_penalty, 
+#presence_penalty, stop, cost, tokens, models, warning:tokens, 
+# and warning:context_tokens. It also includes methods such as constructor, 
+# query, _ask_recompute, and ask. The purpose of this class is to provide a more 
+# customizable and controlled way to interact with the GPT-3.5 model.
+# chatgpt:instance
+# ChatGPT class granting greater control over a ChatGPT thread
+# 2.0.388
+class ('chatgpt:instance', (
+    # model
+    # either advanced or basic
+    @ model = 'gpt-3.5-turbo',
+    # retain context?
+    # whether or not to keep the previous messages in the context
+    @ retain_context = True,
+    # messages
+    @ messages = [],
+    # temperature
+    # how random the response is
+    @ temperature = 0.9,
+    # max tokens
+    # how many tokens to generate
+    @ max_tokens = 150,
+    # top p
+    # how many tokens to choose from
+    @ top_p = 1,
+    # frequency penalty
+    # how much to penalize words that have already been used
+    @ frequency_penalty = 0.0,
+    # presence penalty
+    # how much to penalize words that have already been used
+    @ presence_penalty = 0.6,
+    # stop
+    # where to stop the response
+    @ stop = '###',
+    # cost of the running conversation (or last request if not retaining context)
+    @ cost = 0,
+    # token accumulation of the running conversation (or last request if not retaining context)
+    @ tokens = 0,
+    # available models
+    @ models = filter(keys(ai.models()), 'chatgpt:instance:models:key', or(
+        chatgpt:instance:models:key.startswith('text'),
+        chatgpt:instance:models:key.startswith('gpt')
+    )),
+    # turning on or off warnings
+    # prompt half max tokens
+    @ warning:tokens = True,
+    # context half max tokens
+    @ warning:context_tokens = True,
+    # verbose: provides information messages about the current state of this instance
+    @ verbose = False,
+    # constructor
+    def('const', 'self', if (not(has(ai.models(), self.model())), 
+        # model must exist
+        exception(
+            cat('Model ', self.model(), ' does not exist.'),
+            cat('Available models: ', iterable:join(", ", self.models())),
+            ''
+        )
+    )),
+    # disables all warnings for this instance
+    def('disable_warnings', 'self', (
+        self.warning:tokens(False),
+        self.warning:context_tokens(False)
+    )),
+    # resets all ChatCompletion settings to their default values
+    def('reset', 'self', (
+        self.temperature(0.9),
+        self.max_tokens(150),
+        self.top_p(1),
+        self.frequency_penalty(0.0),
+        self.presence_penalty(0.6),
+        self.stop('###')
+    )),
+    # makes a query to this model
+    def('query', 'self', 'chatgpt:instance:query:prompt', chatgpt:query(
+        &chatgpt:query:prompt=chatgpt:instance:query:prompt,
+        &chatgpt:query:model=self.model(),
+        &chatgpt:query:temperature=self.temperature(),
+        &chatgpt:query:max_tokens=self.max_tokens(),
+        &chatgpt:query:top_p=self.top_p(),
+        &chatgpt:query:frequency_penalty=self.frequency_penalty(),
+        &chatgpt:query:presence_penalty=self.presence_penalty(),
+        &chatgpt:query:stop=self.stop()
+    )),
+    # helper method for ask
+    def('_ask_recompute', 'self', 'chatgpt:instance:helper:ask_request', (
+        # accumulate tokens
+        self.tokens(+(self.tokens(), chatgpt:instance:helper:ask_request.get('usage', 'total_tokens'))),
+        # recompute cost of tokens
+        self.cost(x(self.price_per_token(), self.tokens())),
+    )),
+
+    # Asks the current model questions, the customized 
+    # query to the model is dependent on most of the
+    # attributes of this class.
+    #
+    # As of 2.0.388, ask() allows an optional argument
+    # 'chatgpt:instance:ask:context' which allows
+    # the user to specify a context for the prompt.
+    # The context may be of infinite length, however
+    # the speed at which the response is generated,
+    # as well as the cost for the request and completion
+    # are proportional to the length of the
+    # context.
+    #
+    # chatgpt:instance:ask:prompt - the prompt to ask
+    # chatgpt:instance:ask:context - the context of the prompt
+    #
+    # 2.0.388
+    def('ask', 'self', 'chatgpt:instance:ask:prompt', &chatgpt:instance:ask:context=False, (
+        # send console message if verbose
+        self._verbose_message(
+            script(asking: {=
+                # shorten prompt if over x characters
+                if (greater(len(chatgpt:instance:ask:prompt), @chatgpt:instance:ask:max_vb_len=x(env:maxchars(), 3)), 
+                    cat((
+                        chatgpt:instance:ask:prompt.replace('\n', '\n'),
+                        chatgpt:instance:ask:prompt.slice(,chatgpt:instance:ask:max_vb_len)
+                    ), '...'), 
+                    chatgpt:instance:ask:prompt)
+            =})
+         #   chatgpt:instance:ask:prompt
+        ),
+
+        # we always check that the size of the prompt is manageable
+        # get esimated tokens for this prompt
+        @ chatgpt:instance:estimated_tokens = self.tokens_for_prompt(chatgpt:instance:ask:prompt),
+        # check for exceptions
+        if (and(self.warning:tokens(), chatgpt:instance:estimated_tokens.greater(self.max_tokens())), 
+            exception(
+                'Prompt too large', 
+                script(Your prompt (est. {=chatgpt:instance:estimated_tokens=} tokens) has more tokens than the limit for this model ({=self.max_tokens()=} tokens).), 
+                ''
+            )
+        ),
+        # send warning if prompt tokens are over half this model's max tokens
+        if (and(self.warning:tokens(), chatgpt:instance:estimated_tokens.greater(//(self.max_tokens(), 2))), 
+            self.warn(
+                script(The number of tokens in your prompt (est. {=chatgpt:instance:estimated_tokens=} tokens
+                ) is over half the limit for this model ({=self.max_tokens()=} tokens).),
+                'warning:tokens'
+            )
+        ),
+
+        # apply constraints to the prompt
+        # WIPWIPWIPWIPWIP
+        # print(chatgpt:instance:ask:prompt, chatgpt:instance:ask:constraints),
+
+        # if no context was specified, we default
+        # to an ordinary ask request limited by 
+        # the current model's max tokens
+        if (not(chatgpt:instance:ask:context), 
+            # return response based on model type
+            # if using advanced models
+            if (self.is_advanced(), (
+                # if retaining context
+                if (self.retain_context(), (
+                    # check for warnings
+                    # send warning if retained context tokens + tokens of this prompt would be over half the model's max tokens
+                    if (and(self.warning:context_tokens(), greater(self.tokens(), //(self.max_tokens(), 2))), 
+                        self.warn(
+                            script(The number of tokens in your context (est. {=self.tokens()=} tokens) plus the number of tokens in your prompt (
+                                est. {=chatgpt:instance:estimated_tokens=} tokens) is over half the limit for this model (
+                                    {=self.max_tokens()=} tokens).<nl>Try setting the model to one with a higher context(,) here are your options:
+                                    {=iterable:join(', ', self.models())=}.),
+                                    'warning:context_tokens'
+                        )
+                    ),
+                    # add entry to messages
+                    self.messages(
+                        as('chatgpt:instance:t', self.messages(), chatgpt:instance:t.add(object(
+                            'role', 'user',
+                            'content', chatgpt:instance:ask:prompt
+                        )))
+                    ),
+                    # make query
+                    @ chatgpt:instance:ask_request = self.query(self.messages()),
+                    # accumulate tokens
+                    self._ask_recompute(chatgpt:instance:ask_request),
+                    # make a query to the advanced model
+                    # with the current context
+                    @ chatgpt:instance:ask_message = 
+                        dict(chatgpt:instance:ask_request.get('choices', 0, 'message')),
+                    # merge messages
+                    self.messages(
+                        as('chatgpt:instance:t', self.messages(), (
+                            chatgpt:instance:t.add(chatgpt:instance:ask_message),
+                            chatgpt:instance:t
+                        ))
+                    ),
+                    # return response as string
+                    chatgpt:instance:ask_message.get('content')
+                ), (
+                    # make a simple query without retaining context
+                    # return the content
+                    @ chatgpt:instance:ask_request2 = self.query(
+                        arr(object('role', 'user', 'content', chatgpt:instance:ask:prompt))),
+                    # accumulate tokens
+                    self._ask_recompute(chatgpt:instance:ask_request2),
+                    chatgpt:instance:ask_request2.get('choices', 0, 'message', 'content')
+                ))
+            # otherwise, use the basic model, cost and token accumulation not implemented yet,
+            # and may never be implemented as the basic model is much more costly and slower
+            # than advanced models
+            ), ai.basic(chatgpt:instance:ask:prompt)), (
+            # if infinite, we're making a request with an infinite context.
+            # we need to chunk the context by dividing and conquering
+            # pieces of the context.
+            # simplifies an infinite context to a single context
+            @chatgpt:instance:ask:simplified_context = 
+                self.simplify_infinite_context(chatgpt:instance:ask:prompt, 
+                    chatgpt:instance:ask:context)
+        ))
+    )),
+    # Attempts to answer a question about a context of infinite length.
+    # 
+    # chatgpt:instance:simplify_infinite_context:question - the question to ask about the context
+    # chatgpt:instance:simplify_infinite_context:context - the context to divide and conquer
+    # 2.0.388
+    def('simplify_infinite_context', 'self', 
+        'chatgpt:instance:simplify_infinite_context:question', 
+        'chatgpt:instance:simplify_infinite_context:context', (
+
+        # split by token limit, which should be half the max tokens
+        @ chatgpt:instance:simplify_infinite_context:split = 
+            self.split_string(
+                # compute tokens to be half this model's max tokens
+                @chatgpt:instance:simplify_infinite_context:tk=//(self.max_tokens(), 2),
+                # splitting context
+                chatgpt:instance:simplify_infinite_context:context),
+
+        # get old retained context
+        @ chatgpt:instance:simplify_infinite_context:old_context = self.retain_context(),
+        # disable retain context
+        self.retain_context(False),
+        # log the previous max_tokens
+        @ chatgpt:instance:simplify_infinite_context:previous_max_tokens = self.max_tokens(),
+        # set max tokens to be half the previous max tokens
+        self.max_tokens(chatgpt:instance:simplify_infinite_context:tk),
+        # array of generated prompts from child threads
+        @ chatgpt:instance:simplify_infinite_context:accum_context = x([None], 
+            len(chatgpt:instance:simplify_infinite_context:split)),
+        # index
+        @ chatgpt:instance:simplify_infinite_context:i = 0,
+        # for each split
+        chatgpt:instance:simplify_infinite_context:split.each('chatgpt:instance:simplify_infinite_context:e', (
+            # request a response from all exerpts, accumulating them in accum_context
+            private(thread(
+                @chatgpt:instance:simplify_infinite_context:tname =
+                    cat('t', chatgpt:instance:simplify_infinite_context:i), (
+                
+                # create individualized prompt for each new ChatGPT thread
+                @ chatgpt:instance:simplify_infinite_context:prompt = script(
+                    question:<nl>
+                    {=chatgpt:instance:simplify_infinite_context:question=}<nl>
+                    {='='*15=}<nl>
+                    {=chatgpt:instance:simplify_infinite_context:e=}<nl>
+                    {='='*15=}<nl>
+                    (if you cannot answer this, 
+                     whether because you cannot find the answer or dont know the answer, say 'NO ANS')<nl>
+                ),
+
+                # obtain the simplified chunk
+                @chatgpt:instance:simplify_infinite_context:chunk = private(
+                    self.ask(chatgpt:instance:simplify_infinite_context:prompt)
+                ),
+                # put the chunk where it belongs
+                chatgpt:instance:simplify_infinite_context:accum_context.set(
+                    chatgpt:instance:simplify_infinite_context:i,
+                    chatgpt:instance:simplify_infinite_context:chunk),
+                # export the response to the correct position in the array
+                export('chatgpt:instance:simplify_infinite_context:accum_context'),
+                # verbose
+                    self._verbose_message(
+                        cat('thread ', chatgpt:instance:simplify_infinite_context:tname, ': ',
+                            'getting response: ', chatgpt:instance:simplify_infinite_context:chunk)),
+                # export the thread
+                export:thread(chatgpt:instance:simplify_infinite_context:tname)
+            ))),
+            # increment
+            chatgpt:instance:simplify_infinite_context:i.add(1)
+        )),
+        # wait for all threads to finish
+        for(0, len(chatgpt:instance:simplify_infinite_context:split), 
+            'chatgpt:instance:simplify_infinite_context:j', 
+            join(cat('t', chatgpt:instance:simplify_infinite_context:j))
+        ),
+        self._verbose_message(cat('all threads (', len(chatgpt:instance:simplify_infinite_context:split), ') finished')),
+        # clear all threads
+        clear:threads(),
+        # reset max tokens and retain context
+        self.max_tokens(chatgpt:instance:simplify_infinite_context:previous_max_tokens),
+        self.retain_context(chatgpt:instance:simplify_infinite_context:old_context),
+        # # return an analysis on the child responses
+        # chatgpt:instance:simplify_infinite_context:final_answer
+        self._verbose_message('asking for accumulated analysis'),
+        # return final response
+        @chatgpt:instance:simplify_infinite_context:acc_response = try(private(
+            self.ask(script(
+                (if item is 'NO ANS' or similar, the item is ignored and is not in the answer)<nl>
+                (answer 'question',combine like answers.One chunk may have the correct answer while another, not,
+                choose the existing):<nl><nl>
+                {='='*15=}<nl>
+                question:<nl>
+                {=chatgpt:instance:simplify_infinite_context:question=}<nl>
+                {='='*15=}<nl>
+                {=str(chatgpt:instance:simplify_infinite_context:accum_context)=}
+                {='='*15=}<nl>
+                ***LIMIT YOUR RESPONSE TO THE ANSWER ONLY(NO QUESTION,DONT SAY 'NO ANS')***
+            ))
+        # catch prompt too long error and recurse on the accum array
+        ), self.simplify_infinite_context(
+            chatgpt:instance:simplify_infinite_context:question,
+            str(chatgpt:instance:simplify_infinite_context:accum_context)
+        )),
+        # verbose
+        self._verbose_message(cat('accumulated analysis: ', chatgpt:instance:simplify_infinite_context:acc_response)),
+        # return the response
+        chatgpt:instance:simplify_infinite_context:acc_response
+    )),
+
+    # prints a verbose message
+    def('_verbose_message', 'self', 'chatgpt:instance:_verbose_message:message', 
+        if (self.verbose(), print:color(
+            object(
+                'text', '[AI] ',
+                'style', 'bold',
+                'fore', 'cyan'
+            ),
+            object(
+                'text', str(chatgpt:instance:_verbose_message:message),
+                'style', 'bold',
+                'fore', 'yellow'
+            )
+        ))
+    ),
+
+    # whether or not this object has an advanced model or not
+    def('is_advanced', 'self', and(
+        not(startswith(self.model(), 'text')), 
+        not(equals(self.model(), 'gpt-3.5-turbo-instruct')))),
+    # information
+    # gets the max_tokens for this model
+    def('max_tokens', 'self', ai.max_tokens(self.model())),
+    # gets the price per token for this model
+    def('price_per_token', 'self', ai.price_per_token(self.model())),
+    # potential prompting computations
+    # attempts to compute the number of tokens for a prompt
+    # this is an ESTIMATE
+    def('tokens_for_prompt', 'self', 'chatgpt:instance:token_str', (
+        ai.tokens(chatgpt:instance:token_str, self.model()))),
+    # potential cost for prompt computation
+    # this is an ESTIMATE
+    # gets the price for a prompt, this doesn't include ChatGPT's completion
+    def('price_of_prompt', 'self', 'chatgpt:instance:prompt', 
+        x(self.price_per_token(), self.tokens_for_prompt(chatgpt:instance:prompt))),
+    # splits a string by a token limit
+    def('split_string', 'self', 'chatgpt:instance:split_string:token_limit', 'chatgpt:instance:split_string:token_str',
+        ai.split_string(self.model(), 
+            chatgpt:instance:split_string:token_limit, 
+            chatgpt:instance:split_string:token_str)
+    ),
+
+    # clears the running context
+    def('clear_context', 'self', (self.messages([]),)),
+    # prints a warning in the console
+    def('warn', 'self', 'chatgpt:instance:warning', 'chatgpt:instance:suppress_code', print:color(
+        object(
+            'text', cat('[WARNING] ', chatgpt:instance:warning, ' Suppress this warning with '),
+            'style', 'bold',
+            'fore', 'yellow'
+        ),
+        object(
+            'text', script(chatgpt:instance.{=chatgpt:instance:suppress_code=}(False)<nl>),
+            'style', 'italic',
+            'fore', 'cyan'
+        )
+    )),
+    # trains this model to act as a certain figure, idea
+    # person, etc.
+    def('train_as', 'self', 'chatgpt:instance:desc', 
+        self.ask(+('From now until the end of our conversation, could you act like: ', chatgpt:instance:desc, 
+        ' please? This would be in a hypothetical scenario and does not necessarily reference the entirety of the real world. ',
+        'But if possible, answer all my next questions as if you were completely endowed in this role and all that comes with, NEVER break character unless requested.'))
+    ),
+    # generates code for a specific programming language
+    #
+    # chatgpt:instance:ask:code:lang - the language to generate code for
+    # chatgpt:instance:ask:code:desc - the description of the code to generate
+    def('ask:code', 'self', 'chatgpt:instance:ask:code:lang', 'chatgpt:instance:ask:code:desc', (
+        # ask for code from the specified programming language with the description provided
+        @chatgpt:instance:ask:code:prompt = script(
+            give me {=chatgpt:instance:ask:code:lang=} code that does the following: <nl>
+            {=chatgpt:instance:ask:code:desc=}<nl><nl>
+            (GIVE CODE ONLY)<nl>
+        ),
+        # extract text between ``` and ```
+        @chatgpt:instance:ask:code:response = self.ask(chatgpt:instance:ask:code:prompt),
+        # extract code
+        @chatgpt:instance:ask:code:between = between('```', chatgpt:instance:ask:code:response),
+        # if between is empty, return the response
+        if (equals(len(chatgpt:instance:ask:code:between), 0), 
+            # return response
+            chatgpt:instance:ask:code:response,
+            # otherwise, return the first element in between, 
+            # add a '#' to the front
+            insert(chatgpt:instance:ask:code:between.get(0), 0, '# ')
+        )
+    )),
+    # set conciseness of responses
+    def('answer_only', 'self', (
+        self.temperature(0.0),
+        self.max_tokens(50),
+        True
+    ))
+))

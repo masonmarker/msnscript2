@@ -1,0 +1,24 @@
+# serialization support
+#
+# author : Mason Marker
+# date : 11/28/2022
+
+# serial specific resources
+var('serial:serials', {})
+
+
+# opens a serialization slot
+def('serial:open', 'serial:open:name', (
+    serial:serials.set(serial:open:name, 0),
+    serial:open:name
+))
+
+
+# gets the next serialized value
+~ serial_next(name) -> __serial_return
+    -- serial:serials.set(name, ?serial:serials?[?name?] + 1)
+    -- var('__serial_return', ?serial:serials?[?name?])
+def('serial:next', 'serial:next:name', (
+    serial:serials.set(serial:next:name, +(serial:serials.get(serial:next:name), 1)),
+    serial:serials.get(serial:next:name)
+))

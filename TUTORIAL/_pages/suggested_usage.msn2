@@ -1,0 +1,142 @@
+# Suggested usage page
+#
+# author : Mason Marker
+# date : 8/13/2023
+# version : 2.0.384
+
+# suggested usage page component
+@ page:suggested_usage = script((
+    
+    # read the current suggested usage .msn2 file
+    @ page:suggested_usage:msn2 = file.read('TUTORIAL/suggestedusage2.msn2'),
+
+    # if we're in a page
+    @ page:suggested_usage:in_page = False,
+
+    # on first page?
+    @ first_page = True,
+
+    # goes to the next page
+    def('page:suggested_usage:next', (
+        console:print(arr(
+            object(
+                'text', 'Press ',
+                'style', 'italic',
+                'fore', 'green'
+            ),
+            object(
+                'text', '[ENTER]',
+                'style', 'italic',
+                'fore', 'yellow'
+            ),
+            object(
+                'text', ' to continue...',
+                'style', 'italic',
+                'fore', 'green'
+            )
+        )),
+        console:print(arr(
+            object(
+                'text', 'or type ',
+                'style', 'italic'
+            ),
+            object(
+                'text', "'q'",
+                'style', 'italic',
+                'fore', 'yellow'
+            ),
+            object(
+                'text', ' to ',
+                'style', 'italic'
+            ),
+            object(
+                'text', 'quit',
+                'style', 'italic',
+                'fore', 'red'
+            )
+        )),
+        if(equals(input(), 'q'), goto('0'), new_page())
+    )),
+
+
+    # if we're at the first page
+    @ first_page = True,
+
+
+    # for each line
+    each(page:suggested_usage:msn2.split("\n"), 'page:suggested_usage:line', (
+        # # if we're in a page and in page
+        if (and(page:suggested_usage:in_page, page:suggested_usage:line.startswith('# ---')), (
+            @ page:suggested_usage:in_page = False
+        ),
+        # if the line starts with '# ---', then it is a new page
+        if (page:suggested_usage:line.startswith('# ---'), (
+
+            # if this is the first page, 
+            # print a beginning message
+            ? first_page ((console:print(arr(
+                object(
+                    'text', 'The ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'suggested usage ',
+                    'style', 'italic',
+                    'fore', 'green'
+                ),
+                object(
+                    'text', 'pages will guide you in programming with ',
+                    'style', 'italic'
+                ),
+                object(
+                    'text', 'MSN2. ',
+                    'style', 'italic',
+                    'fore', 'green'
+                ),
+                object(
+                    'text', 'and demonstrates the most updated syntax and semantics.',
+                    'style', 'italic'
+                )
+            )), print(), @ first_page = False)),
+
+            # if we're not on the first page
+            page:suggested_usage:next(),
+
+            # get the line without the first two words
+            # and without the last word
+            @ page:suggested_usage:line = 
+                iterable:join(' ', slice(page:suggested_usage:line.split(' '), 2, -1)),
+
+            console:print(arr(
+                object(
+                    'text', +('   ', page:suggested_usage:line, '   '),
+                    'style', 'italic',
+                    'back', 'green'
+                )
+            )),
+            @ inpage = True
+        ), if (inpage, (
+            
+            # if the line has a '\' in it
+            # add another right beside it
+            if (not(equals(@page:suggested_usage:index = page:suggested_usage:line.find('\\'), -1)), (
+                page:suggested_usage:line.shove('\\\\', page:suggested_usage:index)
+            )),
+
+            # if this line is a comment
+            if (page:suggested_usage:line.startswith('#'), console:print(
+                arr(object(
+                    'text', page:suggested_usage:line,
+                    'style', 'italic',
+                    'fore', 'green'
+                ))
+            ), console:print(arr(
+                object(
+                    'text', page:suggested_usage:line,
+                    'style', 'bold'
+                )
+            )))
+        ))))
+    ))
+
+))

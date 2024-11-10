@@ -1,0 +1,23 @@
+# demonstrates web scraping capabilities
+#
+# author : Mason Marker
+# date : 12/14/2022
+# updated in 2.0.387
+
+
+# specifically for clearing the console
+import ('lib/os')
+os:clear()
+
+@url='http://www.values.com/inspirational-quotes'
+print('[+] scraping from', url)
+
+# creates an html object
+var('elements', html.from(url))
+
+# WIPWIPWIPWIPWIP
+
+
+
+# env(True)
+

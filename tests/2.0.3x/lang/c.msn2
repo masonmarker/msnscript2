@@ -1,0 +1,74 @@
+# Assisted C programming.
+#
+# author : Mason Marker
+# date : 6/17/2023
+
+# lang directory cleanup
+import ('lib/lang/dir')
+
+# constructs an include directive
+function(@_inc='Include', ret(_inc, script(
+    <tag>include {=_library=}<nl>
+)), '_library')
+
+# main function
+function(@_main="Main", ret(_main, script(
+    int main() {
+        {=
+            _main_body
+        =}
+    }
+)), '_main_body')
+
+# initializes an int[]
+function(@_ia="IntArray", ret(_ia, (
+
+    # creates an instance of the variable in
+    # MSN2 context
+    var(__intarrname, content),
+    @ content = str(content),
+    # slice from 1:
+    @ content = content.slice(1,),
+
+    # converts to a line of code
+    +('int ', __intarrname, '[]=', 
+        +('{', str(content.slice(,-1)),'}'), ';')
+)), '__intarrname', 'content')
+
+# prints an int array
+function(@_pia='PrintIntArray', ret(_pia, script(
+    for (int i = 0; i < {=len(val(__printintarrayname))=}; i++) {
+        printf("%d ", {=__printintarrayname=}[i]);
+    }
+)), '__printintarrayname')
+
+
+
+# run C program
+@ env = C(
+
+    # incorporate MSN2
+    # elements into the C program
+    {=
+        # include stdio
+        # for printing
+        Include('stdio.h')
+    =}
+
+    # int main() {}
+    {=
+        Main(+(
+            IntArray('array', list(range(10))),
+            PrintIntArray('array')
+        ))
+    =}
+)
+
+# print the C program's STDOUT
+print(env.out())
+
+
+
+
+# cleanup
+# __lang_dir_.end()

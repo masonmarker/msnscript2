@@ -1,0 +1,20 @@
+without threads: 4.563069105148315
+with threads: 1.0899922847747803
+
+
+without threads: 5.097674369812012
+with threads: 1.0559625625610352
+
+
+without threads: 3.9515786170959473
+with threads: 1.0170280933380127
+
+
+without threads: 3.6568400859832764
+with threads: 7.753039121627808
+
+
+without threads: 3.517193078994751
+with threads: 1.2981786727905273
+
+

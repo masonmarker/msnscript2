@@ -1,0 +1,48 @@
+# Library for creating macros
+#
+# author : Mason Marker
+# date : early 2023
+# updated in 2.0.387 
+
+
+# basic variable setting mechanism, less error protection
+def('basic_variable_set', 'basic_variable_set:middle_token', 'basic_variable_set:macro_line', (
+    @ basic_variable_set:adding_varname = basic_variable_set:macro_line.split(basic_variable_set:middle_token),
+    var('basic_variable_set:vn', basic_variable_set:adding_varname.get(0)),
+    basic_variable_set:vn.strip(),
+    var('basic_variable_set:ev', -(basic_variable_set:adding_varname.get(1))),
+    var(basic_variable_set:vn, basic_variable_set:ev)
+))
+
+# safer variable setting approach (but not the best)
+def('advance_variable_set', 'advance_variable_set:middle_token', 'advance_variable_set:macro_line', (
+    @ advance_variable_set:vn = '',
+    @ advance_variable_set:vl = '',
+    @ advance_variable_set:at_vl = False,
+    advance_variable_set:macro_line.each('advance_variable_set:c', (
+        if (advance_variable_set:c.equals(advance_variable_set:middle_token), (
+            @ advance_variable_set:vn = advance_variable_set:vl,
+            @ advance_variable_set:vl = '',
+            @ advance_variable_set:at_vl = True
+        )),
+        if (not(advance_variable_set:c.equals(advance_variable_set:middle_token)), (
+            advance_variable_set:vl.add(advance_variable_set:c),
+        ), if (and(advance_variable_set:at_vl, 
+            not(equals(advance_variable_set:c, advance_variable_set:middle_token))), 
+            advance_variable_set:vl.add(advance_variable_set:c)))
+    )),
+    advance_variable_set:vn.strip(),
+    try(advance_variable_set:vl.set(val(advance_variable_set:vl.stripped())), advance_variable_set:vl.set(-(advance_variable_set:vl))),
+    var(advance_variable_set:vn, advance_variable_set:vl)
+))
+
+
+
+# executes two arguments as MSNScript2 separated by a token
+def('macro_args', 'macro_args:middle_token', 'macro_args:macro_line', (
+    @ macro_args:split = macro_args:macro_line.split(macro_args:middle_token),
+    @ macro_args:split.set(0, strip(macro_args:split.get(0))),
+    @ macro_args:split.set(1, strip(macro_args:split.get(1))),
+    macro_args:split.each('macro_args:el', -(macro_args:el))
+))
+

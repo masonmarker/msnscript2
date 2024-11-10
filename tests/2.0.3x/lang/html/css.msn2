@@ -1,0 +1,32 @@
+# css for HTML test.
+#
+# author : https://codepen.io/Yakudoo
+
+# css for main HTML
+@ css = script(
+   @import url('https://fonts.googleapis.com/css?family=Rakkas');
+    button {
+        background-color: gray;
+        transition: 0.3s;
+    }
+    button:hover {
+        transform: scale(1.1);
+        background-color: darkgray;
+    }
+
+    body{
+        background-color: <tag>232728;
+        overflow:hidden;
+        font-family:'Rakkas';
+    }
+
+    .title{
+        position:absolute;
+        left:50%;
+        top:50%;
+        text-align:center;
+        transform:translate(-50%, -50%);
+        color:white;
+        font-size:5em;
+    }
+)

@@ -1,0 +1,33 @@
+
+
+
+
+
+
+
+\\
+import streamlit as st
+
+
+def main():
+    st.title("This is a test app")
+main_script \\
+
+
+@ streamlit_container = container(
+    object(
+        'name', 'streamlit',
+        'image', object('asdf', 'awef'),
+        'commands', ['streamlit', 'run', 'main.py'],
+        'mounting', arr(
+            object(
+                'extension', 'py',
+                'body', main_script
+            )
+        )
+    )
+)
+
+
+streamlit_container.print()
+

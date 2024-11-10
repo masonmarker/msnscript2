@@ -1,0 +1,9 @@
+# Reads emails from Gmail.
+#
+# author : Mason Marker
+# date : 5/30/2023
+
+# get the html from the URL of my Gmail inbox
+@ html = html.from('https://mail.google.com/mail/u/2/#inbox')
+
+# TODO

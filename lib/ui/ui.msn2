@@ -1,0 +1,75 @@
+# Basic UI interaction with the user.
+#
+# author : Mason Marker
+# date : 9/11/2023
+# version : 2.0.387
+
+# Python script to prompt the user for a value
+\\
+
+# imports
+import tkinter as tk
+window = tk.Tk()
+# settings
+window.geometry('{=ui:script:width=}x{=ui:script:height=}')
+window.title('MSN2 Prompt')
+window.resizable(True, True)
+# add form elements
+user_input = ''
+label = tk.Label(window, text='{=ui:script:label=}')
+entry = tk.Entry(window)
+# for button
+def get_input():
+    global entry
+    global window
+    global user_input
+    user_input = entry.get()
+    window.destroy()
+    return user_input
+# add the button with onClick command
+button = tk.Button(window, text='{=ui:script:button=}', command=get_input)
+label.pack()
+entry.pack()
+button.pack()
+window.mainloop()
+ui:user_input_script \\
+
+# import Python scripts with arguments
+import ('lib/python')
+
+# create a script object from this script
+# this is to run the script with arguments being passed in
+# denoted by {==} script() insertion as shown in the Python
+# script above
+@ ui:script = python:script(
+    ui:user_input_script, [
+        'ui:script:label', 
+        'ui:script:height', 
+        'ui:script:width', 
+        'ui:script:button'])
+
+
+# creates a UI.
+#
+# This method is a WIP, though fully functional, lacks customization.
+#
+# version : 2.0.387
+def(
+    'ui:create',
+    # default args
+    &ui:label='Your Label Text',
+    &ui:height=100,
+    &ui:width=300,
+    &ui:button='OK',
+    # create the UI
+    (
+        ui:script.run(arr(
+            ui:label, 
+            ui:height, 
+            ui:width, 
+            ui:button
+        )),
+        # return the user input
+        py.user_input()
+    )
+)

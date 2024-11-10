@@ -1,0 +1,138 @@
+# Demonstrates interpretation capabilities when
+# faced with several interweaved languages.
+#
+# No practical implementation, this is just for
+# fun, and testing whats possible.
+#
+# author : Mason Marker
+# date : 6/22/2023
+
+# shared resource
+@ v = list(range(0, 10))
+
+
+# assert several languages return the same output
+@ result = get(JS(
+
+    # reverses an array
+    function reverse(array) {
+        var output = [];
+        for (var i = array.length - 1; i >= 0; i--) {
+            output.push(array[i]);
+        }
+        return output;
+    }
+    
+    # call internal language support
+    # and reverse retrieved array,
+    # then print the result so it
+    # can be retrieved by msn2 (Python)
+    console.log(JSON.stringify(reverse(
+
+        # use msn2 for a language switch
+        {=
+            # retrieving STDOUT
+            # from JAVA
+            get(JAVA(
+
+                # import Arrays
+                import java.util.Arrays;
+
+                # new class for rotating arrays
+                public class ArrayRotation {
+
+                    # rotate an array a certain number of positions
+                    public static void rotateArray(int[] array, int positions) {
+                        int length = array.length;
+                        positions = positions % length;
+                        
+                        int[] temp = new int[length];
+                        for (int i = 0; i < length; i++) {
+                            temp[(i + positions) % length] = array[i];
+                        }
+                        
+                        for (int i = 0; i < length; i++) {
+                            array[i] = temp[i];
+                        }
+                    }
+                    
+                    # main method
+                    public static void main(String[] args) {
+                        
+                        # retrieve an input array from C
+                        int[] numbers = 
+
+                            # use msn2 for a language switch
+                            {=
+                                get(C(
+
+                                    # stdio for printing
+                                    <tag> include "stdio.h" <nl>
+
+                                    # prints an array with braces
+                                    void printArray(int array[], int length) {
+                                        printf("{");
+                                        for (int i = 0; i < length; i++) {
+                                            printf("%d", array[i]);
+                                            if (i < length - 1) {
+                                                printf(", ");
+                                            }
+                                        }
+                                        printf("}");
+                                    }
+
+                                    # main method
+                                    int main() {
+
+                                        # retrieve an input array from
+                                        # msn2 base code (Python)
+                                        int numbers[] = 
+
+                                            # use msn2 for a language switch
+                                            {=(
+                                                # modify the array
+                                                v.map('e', e.add(2)),
+                                                # log length
+                                                @ length = len(v),
+                                                # make safe for C
+                                                @ v = v.str(),
+                                                v.replace('[', '{'),
+                                                v.replace(']', '}')
+                                            )=}
+                                        ;
+
+                                        # send result to JAVA
+                                        printArray(numbers, 
+                                                {=
+                                                    length
+                                                =}
+                                        );
+                                    }
+
+                                ), 'out')
+                            =}
+                        ;
+
+                        # rotate the array 2 positions
+                        int rotations = 2;
+                        rotateArray(numbers, rotations);
+
+                        # return the array to JavaScript
+                        System.out.println(Arrays.toString(numbers));
+                    }
+                }
+                
+                # Java file name must match class name
+            , 'ArrayRotation'), 'out')
+        =}
+    )));
+), 'out')
+
+
+# print the result
+print(result)
+
+# import lang directory
+# for cleanup
+import('lib/lang/dir')
+__lang_dir_.end()

@@ -1,0 +1,85 @@
+# Updates this NextJS project with MSN2 code.
+#
+# author : Mason Marker
+# date : 12/26/2023
+# version : 2.0.400
+
+# import MSN2 react library
+import ('lib/web/react')
+
+# create an index page
+react:page(
+    # NextJS index.jsx is at the path below
+    'tests/next_2.0.400/my-app/pages/index.jsx', 
+    # MSN2 script to convert to React-compliant code
+    script((
+        
+        # creates a css module for this page
+        css('styles', 
+            # make all p's red
+            .p {color: red;}
+            # make some classes
+            .class1 {color: blue;}
+            .class2 {font-size: 20px;}
+        ),     
+
+        # define entire api script
+        defineapiscript('getthings', 
+            # initial script
+            const value = 7;
+        , 'req', 'res', (
+            res.status(200).json({
+                'name': 'John Doe'
+            })
+        )),
+
+        # define another api
+        defineapi('getstuff', 
+            # function options for this api function
+            'req', 'res', (
+                res.status(200).json({
+                    'name': 'stuff'
+                })
+            )
+        ),
+
+        # creates a state capable of effectful initial value
+        # generates functions setApiresponse and apiresponseLoading
+        effectful(
+            # name of the state (set function is setApiresponse)
+            'apiresponse',
+            # effectful initial value to retrieve
+            apiget('getthings'),
+            # initial value while loading second argument
+            'loading'
+        ),
+
+        # effect(
+        #     const v = document.getElementById('button');
+        #     # set color to red
+        #     v.style.color = 'red';
+        #     console.log(v);
+        # , []),
+
+        # return this page's component
+        center(
+            button(
+                id='button',
+                'button'
+            ),
+            hcenter(
+                style={'gap': '10px'},
+                # whether or not the api is loading
+                p(
+                    # adding a className to this p
+                    # from the defined css module
+                    className=(styles.p),
+                    # children
+                    {apiresponse.name}
+                ),
+                p({apiresponseLoading ? 'loading' : 'ready'}),
+            ),
+            text('hello!')
+        )
+    ))
+)

@@ -1,0 +1,62 @@
+# Launches the development environment,
+# and asks ChatGPT for answers to a problem.
+#
+# author : Mason Marker
+# date : 7/3/2023
+
+# Google Chrome interaction
+import ('lib/auto/chrome')
+
+# ChatGPT interaction,
+# indirectly imports injection library
+import ('lib/auto/chatgpt')
+
+
+# problem name
+@ name = 'mixStart'
+
+# navigate to the problem
+@ chrome = chrome:open(
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    'https://codingbat.com/prob/p151713'
+)
+
+# go to a new tab
+@ new_tab = first(chrome.find_buttons('New Tab'))
+new_tab.click()
+
+# ask ChatGPT for the answer to the problem
+@ response = get(chatgpt:active_ask_gpt(
+    chrome,
+    arr(
+        +('I want just the Java solution for the CodingBat problem: ', 
+            name)
+    ),
+    True
+), 0)
+
+# get a slice between the response's "Copy code"
+# and the last instance of a '}' to extract code
+@ code = response.slice(
+    +(response.find(@_f='Copy code'), len(_f)),
+    +(response.rfind('}'), 1)
+)
+
+# go back to the first tab control
+@ coding_bat_tab = first(chrome.find_tabitems('CodingBat'))
+coding_bat_tab.click()
+
+
+
+# type the solution into the coding box
+@ go_button = chrome.wait_for_button('Go')
+go_button.hover()
+pointer.down(40)
+chrome.press('VK_CONTROL', 'a')
+chrome.press('BACKSPACE')
+
+# write the code into CodingBat
+chrome.write_special(code)
+
+# run!!!
+go_button.click()

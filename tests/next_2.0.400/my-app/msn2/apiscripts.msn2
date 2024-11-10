@@ -1,0 +1,67 @@
+# Updates this NextJS project with code defining an api script and using it in the same file.
+#
+# author : Mason Marker
+# date : 6/12/2024
+# version : 2.0.400
+
+# import React
+import ('lib/web/react')
+
+# create an index page
+react:page(
+    # NextJS index.jsx is at the path below
+    'tests/next_2.0.400/my-app/pages/index.jsx',
+    # MSN2 script to convert to React-compliant code
+    script((
+
+        # define an api
+        defineapi('getRandomFact', 
+            # function options for this api function
+            'req', 'res', 
+            res.status(200).json((await (await fetch(
+                'https://uselessfacts.jsph.pl/api/v2/facts/random?language=en'
+            )).json()))
+        ),
+
+        # create a subcomponent that will be used in the main component
+        def('ApiResponse', 'key', (
+            # generates response, setResponse and responseLoading
+            effectful(
+                # name of the state (set function becomes setApiresponse)
+                'response',
+                # effectful initial value to retrieve
+                apiget('getRandomFact'),
+                # initial value while loading second argument
+                'API response loading...'
+            ),
+            hstack(
+                # setting the unique key as a prop for this component
+                key=(key),
+                h4('API responded with:'),
+                h4(
+                    style={"color": "lightgreen"}, 
+                    {response.text}
+                )
+            )
+        )),
+
+        # return front end component
+        center(vstack(
+            
+            # page title header
+            h1(
+                'MSN2 with ',
+                span(
+                    style={'fontWeight': 'bold', 'color': 'red'},
+                    'NextJS'
+                )
+            ),
+
+            # display a few api responses
+            div(
+                # render a few api responses
+                render([0, 0, 0], '_', ApiResponse(uniquehash()))
+            )
+        ))
+    )
+))

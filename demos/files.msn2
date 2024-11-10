@@ -1,0 +1,38 @@
+# demonstrates simple file operations
+# MSNScript2 file operations don't require opening and closing of files
+#
+# author : Mason Marker
+# date : 11/20/2022
+
+
+# system class 'file' offers all necessary file operations
+
+
+var('path', './hello/world.txt')
+
+# creates a directory
+file.mkdir("./hello")
+
+# creates a file
+file.create(path)
+
+# appends to file twice
+2(file.append(path, "hello world\n"))
+
+# asserts text was written
+assert(file.read(path).equals("hello world\nhello world\n"))
+
+# erases all text in the file
+file.clear(path)
+
+# asserts file is empty
+assert(equals(file.read(path), ""))
+
+# removes all files in directory
+file.emptydir("./hello")
+
+# removes directory
+file.rmdir("./hello")
+
+
+

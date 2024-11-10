@@ -1,0 +1,91 @@
+# Updates this NextJS project with MSN2 translated code
+#
+# author : Mason Marker
+# date : 12/16/2023
+
+# import React MSN2 library
+import ('lib/web/react')
+
+# create page at the given path
+react:page('tests/next_2.0.400/my-app/pages/index.jsx', script((
+
+    # -----------------------------------------------
+    # creating variables / states
+    state('value', 0),
+    state('value2', 50),
+    const('value3', 'test'),
+    const('node', div(
+        h2('Hi!'),
+        h1(style={'color': 'green'}, value)
+    )),
+    # -----------------------------------------------
+    # sub component
+    # creates a 'function()' call in js
+    def('SubComponent', 'props', vstack(
+        style={
+            'textAlign': 'center',
+            # add a border
+            'border': '1px solid black',
+        },
+        h1(style={'fontStyle': 'bold'}, {props['title']}),
+        h5(style={'fontStyle': 'italic'}, {props['subtitle']})
+    )),
+    # save a call to this component
+    const('component1', 
+        <SubComponent title="subcomponent" 
+                      subtitle="a reusable component" />),
+
+
+    # -----------------------------------------------
+    # create an api reacher
+    apiroute('getstuff', 
+        # api function
+        'req', 'res', (
+            res.status(200).json({'name': 'John Doe'})
+        ),
+        # function options for fetcher in client side code
+        'body', async(
+            apiget('getstuff')
+        )
+    ),
+    # -----------------------------------------------
+
+    # -----------------------------------------------
+    # MSN2 useEffect insertion
+    effect(async(
+        # get from endpoint with a single api:get()
+        const('response', apiget('getstuff')),
+        value.set(response.name)
+    ), []),
+    # -----------------------------------------------
+
+    # -----------------------------------------------
+    # return a div with the style
+    center(
+        className=(
+            const('g', 10),
+            const('h', 20),
+            'center'
+        ),
+        h5('list of things:'),
+        vstack(style={'fontStyle': 'italic'},
+            h1(style={'color': 'red'}, value),
+            h2('hello'),
+            div(node),
+            hr(style={
+                'backgroundColor': 'green', 
+                'height': '10px',
+                'width': '100%'
+            }),
+            div(
+                div(
+                    h2('hello again'),
+                    component1,
+                    <SubComponent title="subcomponent2" 
+                                  subtitle="a reusable component2" />
+                )
+            )
+        )
+    )
+    # -----------------------------------------------
+)))

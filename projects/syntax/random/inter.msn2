@@ -1,0 +1,32 @@
+# Interpretation macros
+#
+# author : Mason Marker
+# date : 7/5/2023
+
+# prints whatever is inside
+postmacro('<= print i guess', '<=:before', print(-(<=:before)))
+
+# returns the number '3'
+macro('t', 't:unused', 3)
+
+# subtracts the two arguments inside,
+# separated by a comma
+# -{20, 19}-   returns =>   1
+enclosedsyntax('-{', '}-', '-:inside', (
+    # split by comma,
+    # and strip each side
+    @ _split = map(split(-:inside, ','), '_split:el', 
+        _split:el.strip()),
+
+    # return the difference
+    -(-(_split.get(0)), -(_split.get(1)))
+))
+
+# macro that does nothing,
+# just returns the interpretation
+# of its line
+macro(':', '_unused', -(_unused))
+
+# syntax that adds 1 to whatever is interpreted on
+# the inside
+syntax('your mom', 'pl', op.add(-(pl), 1))

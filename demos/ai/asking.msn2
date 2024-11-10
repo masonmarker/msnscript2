@@ -1,0 +1,151 @@
+# Demonstrates asking a question.
+#
+# author : Mason Marker
+# date : 12/16/2022
+
+# specifically for clearing the console
+import ('lib/os')
+os:clear()
+
+# simple ai call
+# print(ai.basic('what is 2 + 2'))
+
+# advanced model ai call
+# returns object similar to:
+# {
+#   "id": "chatcmpl-81QNLLuXNIvsj4lcOf41arhWSpY6p",
+#   "object": "chat.completion",
+#   "created": 1695350407,
+#   "model": "gpt-3.5-turbo-16k-0613",
+#   "choices": [
+#     {
+#       "index": 0,
+#       "message": {
+#         "role": "assistant",
+#         "content": "2 + 2 equals 4."
+#       },
+#       "finish_reason": "stop"
+#     }
+#   ],
+#   "usage": {
+#     "prompt_tokens": 14,
+#     "completion_tokens": 8,
+#     "total_tokens": 22
+#   }
+# }
+# print(ai.advanced('what is 2 + 2'))
+
+# importing ChatGPT library
+import ('lib/auto/chatgpt')
+
+
+# create ChatGPT instance
+@ gpt = chatgpt:instance('gpt-3.5-turbo')
+
+# determine if advanced
+# print(gpt.is_advanced())
+
+# get max tokens for this model
+# print(gpt.max_tokens())
+
+# gets price per token for this model
+# print(gpt.price_per_token())
+
+# estimates number of tokens for a prompt for the current model
+# print(gpt.tokens_for_prompt('what is 2 + 2'))
+
+# estimates the price for a prompt for the current model
+# print(cat('$', format(gpt.price_of_prompt('what is 2 + 2' * 5434), 10)))
+
+# gets the number of tokens in a string for this model
+# print(gpt.ask('what is 2 + 2'))
+
+# makes a query to the model, retrieves the text response from the 
+# ask request, also starts retaining context, as well as
+# cost and token accumulation
+# print(gpt.ask('what is 2 + 2'))
+# # print(gpt.cost(), gpt.tokens())
+
+# # prove retaining context
+# print(gpt.ask('what was the answer again?'))
+# print(gpt.ask('what was the answer again?'))
+# print(gpt.ask('what was the answer again?'))
+# print(gpt.ask('what was the answer again?'))
+
+# # clearing context
+# print(gpt.clear_context())
+# # ai will not know what the answer is
+# print(gpt.ask('what was the answer again?'))
+
+
+# would suppress warning for next line
+# gpt.warning:tokens(False)
+
+# sending a warning if over half of model max token limit
+# print(gpt.ask('what is 2 + 2' * 550))
+
+# would suppress warning for next line
+# gpt.warning:context_tokens(False)
+
+# sending a warning if retained context tokens over half of model's max token limit
+# add a large previous conversation (also raises prompt warning)
+# print(gpt.ask('what is 2 + 2' * 550))
+
+# raises context is getting large warning,
+# suggests raising context size by changing model
+# gpt.ask('hello!')
+
+# should throw an exception
+# assert:err(gpt.ask('what is 2 + 2' * 9999))
+
+# trains a model as a certain person, figure, character, item, etc.
+# takes one argument as a description of the person, figure, character, item, etc.
+# this method can be called multiple times within a single conversation
+# to train the model to respond as different people, figures, characters, items, etc.
+# 
+# gpt.train_as('Garfield the Cat')
+
+# answers the question as the figure requested
+# print(gpt.ask('what is your least favorite thing?'))
+# print(gpt.ask('who do you like more, jon or odie?'))
+
+# starting cost and tokens
+# print('starting:', gpt.cost(), gpt.tokens())
+
+# multithreaded responses for double the response generation
+# speed
+
+# thread(@thread1='t1', private((
+#     print(cat(thread1, ': ', gpt.ask('tell me a joke'))),
+#     print(cat(thread1, ': cost: ', gpt.cost(), ', tokens: ', gpt.tokens())) 
+# )))
+# thread(@thread2='t2', private((
+#     print(cat(thread2, ': ', gpt.ask('what is your favorite food?'))),
+#     print(cat(thread2, ': cost: ', gpt.cost(), ', tokens: ', gpt.tokens()))
+# )))
+#
+# join the two threads
+# join('t1', 't2')
+# print the final cost and tokens,
+# despite being in a private context, objects are still shared
+# print('final:', gpt.cost(), gpt.tokens())
+
+
+# disabling warnings
+# gpt.warning:tokens(False)
+# gpt.warning:context_tokens(False)
+
+# upping the ante
+# generating hundreds of ChatGPT responses in parallel
+# and printing the cost and tokens
+# >:)
+
+# we clear context and no longer retain
+# to avoid unneccessarily large charges from OPENAI
+gpt.clear_context()
+gpt.retain_context(False)
+
+# create 10 private threads to make requests
+20(thread(private(
+    print(gpt.ask('tell me a random joke'))
+)))

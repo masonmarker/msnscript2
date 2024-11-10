@@ -1,0 +1,22 @@
+# Functions for creating and running tests.
+#
+# author : Mason Marker
+# date : 8/27/2023
+# version : 2.0.386
+
+# Gets an advanced test array.
+#
+#
+def('tests:array:advanced', 'test:array:advanced:len', comp(
+    range(0, 100),
+    'tests:array:advanced:el',
+    random(0, 100,)
+))
+
+# Runs a test based on actual and expected values.
+#
+# test:expected : the expected value
+# test:actual : the actual value
+# returns : true if the test passed, false otherwise
+def('tests:run', 'tests:expected', 'tests:actual', assert(
+    tests:expected.equals(tests:actual)))

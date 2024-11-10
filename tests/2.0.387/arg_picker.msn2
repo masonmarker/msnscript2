@@ -1,0 +1,436 @@
+# Tests a couple argument picking mechanism.
+#
+# The argument pickers can specify arguments
+# by name or by position.
+#
+# invocation by name
+#  func(&arg2='hello', &arg1='world')
+#
+# author : Mason Marker
+# date : 9/9/2023
+# updated : 9/27/2023
+
+import ('tests/resources/start')
+
+# create some test variables
+for (0, 5, 'i', var(cat('v', i), i))
+
+
+# # test 1
+# # define a function with 2 arguments
+# def('func', 'arg1', 'arg2', (
+#     assert(
+#         arg1.equals('hello'), arg2.equals('world')
+#     ),
+#     # kill variables, we're working in one independent context
+#     destroy('arg1', 'arg2')
+# ))
+
+# # control
+# func('hello', 'world')
+
+# # testing invocation with references to both arguments
+# # invoke the function
+# func(&arg2='world', &arg1='hello')
+# # different order
+# func(&arg1='hello', &arg2='world')
+
+
+# # testing invocation with references to one argument
+# # invoke the function with the first argument referenced
+# func(&arg1='hello', 'world')
+# # invoke the function with the second argument referenced
+# func('hello', &arg2='world')
+
+# # test 2
+# # more complex tests
+# # define a function with 3 arguments
+# def('func2', 'arg1', 'arg2', 'arg3', assert(
+#     arg1.equals('hello'), arg2.equals('world'), arg3.equals('!'),
+#     destroy('arg1', 'arg2', 'arg3')
+# ))
+
+# # testing invocation with references to all arguments
+# # invoke the function
+# func2(  & arg2 ='world'   , &  arg1  =  'hello',   &  arg3  =  '!')
+# # different order
+# func2(&arg3 = '!'    , & arg2 = 'world' , & arg1=  'hello')
+# func2(&arg1='hello', &arg3='!', &arg2='world')
+# func2(&arg3='!', &arg1='hello', &arg2='world')
+# func2(&arg2='world', &arg3='!', &arg1='hello')
+# func2(&arg1='hello', &arg2='world', &arg3='!')
+
+# # using only some of the arguments
+# func2(&arg1='hello', 'world', '!')
+# func2('hello', &arg2='world', '!')
+# func2('hello', 'world', &arg3='!')
+# func2(&arg1='hello', 'world', &arg3='!')
+# func2('hello', &arg2='world', &arg3='!')
+# func2(&arg1='hello', &arg2='world', '!')
+# func2(&arg1='hello', &arg2='world', &arg3='!')
+
+# # test 3
+# # working with argument default values
+# # setting a default argument value
+# def('func3', 'arg1', 'arg2', &arg3='!', (
+#     assert(
+#         arg1.equals('hello'), 
+#         arg2.equals('world'), 
+#         arg3.equals('!')
+#     ),
+#     destroy('arg1', 'arg2', 'arg3')
+# ))
+
+
+# # control
+# func3('hello', 'world', '!')
+
+# # testing a single default value    
+# func3('hello', 'world')
+
+# # testing failures
+# def('test_err', 'test_err:script', (
+#     @ error = True,
+#     try((
+#         -(test_err:script),
+#         @ error = False
+#     )),
+#     assert(error)
+# ))
+
+# # assert errors are thrown
+# test_err(script(
+#     func3('hello', 'world', '!ewf')
+# ))
+# test_err(script(
+#     func3('hello', 'world', '!ewf', 'wef')
+# ))
+# test_err(script(
+#     func3('hedf', 'world', '!')
+# ))
+# test_err(script(
+#     func3('hello', 'wef', '!')
+# ))
+# test_err(script(
+#     func3('hello', 'world', '!', 'wef')
+# ))
+# test_err(script(
+#     func3('hello', 'world', '!', 'wef', 'wef')
+# ))
+
+
+# # test 4
+# # testing multiple default values
+# def('func4', 'arg1', &arg2='world', &arg3='!', (
+#     assert(
+#         arg1.equals('hello'), 
+#         arg2.equals('world'), 
+#         arg3.equals('!')
+#     ),
+#     destroy('arg1', 'arg2', 'arg3')
+# ))
+
+# # control
+# func4('hello', 'world', '!')
+
+# # assert default arguments are placed properly
+# func4('hello', 'world')
+# func4('hello')
+
+# # assert one default argument with one arg ommitted
+# func4('hello', &arg3='!')
+# func4('hello', &arg2='world')
+
+# # assert 2 named arguments
+# func4('hello', &arg2='world', &arg3='!')
+# func4('hello', &arg3='!', &arg2='world')
+# func4('hello', &arg3='!', &arg2='world')
+
+# # test 5
+# # testing multiple default values
+# def('func5', &arg1='hello', &arg2='world', &arg3='!', (
+#     assert(
+#         arg1.equals('hello'),
+#         arg2.equals('world'), 
+#         arg3.equals('!')
+#     ),
+#     destroy('arg1', 'arg2', 'arg3')
+# ))
+
+# # control
+# func5('hello', 'world', '!')
+# func5()
+
+# # default arguments placed
+# func5('hello', 'world')
+# func5('hello')
+
+# # one named argument
+# func5('hello', &arg3='!')
+# func5('hello', &arg2='world')
+
+# # 2 named arguments
+# func5('hello', &arg2='world', &arg3='!')
+# func5('hello', &arg3='!', &arg2='world')
+# func5(&arg3='!', &arg2='world')
+# func5(&arg3='!', &arg2='world', &arg1='hello')
+# func5(&arg3='!', &arg1='hello', &arg2='world')
+# func5(&arg1='hello', &arg3='!', &arg2='world')
+# func5(&arg1='hello', &arg2='world', &arg3='!')
+# func5(&arg1='hello', &arg2='world')
+# func5(&arg1='hello')
+# func5(&arg2='world')
+# func5(&arg3='!')
+# func5(&arg3='!', &arg1='hello')
+# func5(&arg2='world', &arg1='hello')
+# func5(&arg2='world', &arg3='!')
+# func5(&arg2='world', &arg3='!', &arg1='hello')
+# func5(&arg2='world', &arg1='hello', &arg3='!')
+# func5(&arg1='hello', &arg2='world', &arg3='!')
+
+# # more complex example
+# # test 6
+# # 6 function arguments with 6 named arguments
+# def('func6', &arg1='hello', &arg2='wo', &arg3='r', &arg4='l', &arg5='d', &arg6='!', (
+#     assert(
+#         arg1.equals('hello'), 
+#         arg2.equals('wo'), 
+#         arg3.equals('r'), 
+#         arg4.equals('l'), 
+#         arg5.equals('d'), 
+#         arg6.equals('!')
+#     ),
+#     destroy('arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6')
+# ))
+
+# # controls
+# func6('hello', 'wo', 'r', 'l', 'd', '!')
+# func6()
+
+# # default arguments placed
+# func6('hello', 'wo', 'r', 'l', 'd')
+# func6('hello', 'wo', 'r', 'l')
+# func6('hello', 'wo', 'r')
+# func6('hello', 'wo')
+# func6('hello')
+
+# # one named argument
+# func6('hello', &arg6='!')
+# func6('hello', &arg5='d')
+# func6('hello', &arg4='l')
+# func6('hello', &arg3='r')
+# func6('hello', &arg2='wo')
+# func6('hello', &arg1='hello')
+
+# # 2 named arguments
+# func6('hello', &arg2='wo', &arg6='!')
+# func6('hello', &arg6='!', &arg2='wo')
+# func6('hello', &arg3='r', &arg6='!')
+# func6('hello', &arg6='!', &arg3='r')
+# func6('hello', &arg4='l', &arg6='!')
+# func6('hello', &arg6='!', &arg4='l')
+# func6('hello', &arg5='d', &arg6='!')
+# func6('hello', &arg6='!', &arg5='d')
+# func6('hello', &arg1='hello', &arg6='!')
+# func6('hello', &arg6='!', &arg1='hello')
+
+# # 3 named arguments
+# func6('hello', &arg2='wo', &arg3='r', &arg6='!')
+# func6('hello', &arg6='!', &arg2='wo', &arg3='r')
+# func6('hello', &arg3='r', &arg4='l', &arg6='!')
+# func6('hello', &arg6='!', &arg3='r', &arg4='l')
+# func6('hello', &arg4='l', &arg5='d', &arg6='!')
+# func6('hello', &arg6='!', &arg4='l', &arg5='d')
+
+# # 4 named arguments
+# func6('hello', &arg2='wo', &arg3='r', &arg4='l', &arg6='!')
+# func6('hello', &arg6='!', &arg2='wo', &arg3='r', &arg4='l')
+# func6('hello', &arg3='r', &arg4='l', &arg5='d', &arg6='!')
+# func6('hello', &arg6='!', &arg3='r', &arg4='l', &arg5='d')
+
+# # 5 named arguments
+# func6('hello', &arg2='wo', &arg3='r', &arg4='l', &arg5='d', &arg6='!')
+# func6('hello', &arg6='!', &arg2='wo', &arg3='r', &arg4='l', &arg5='d')
+
+# # 6 named arguments
+# func6('hello', &arg2='wo', &arg3='r', &arg4='l', &arg5='d', &arg6='!')
+# func6(&arg6='!', &arg2='wo', &arg3='r', &arg4='l', &arg5='d')
+# func6(&arg3='r', &arg4='l', &arg5='d', &arg6='!', &arg2='wo')
+# func6(&arg4='l', &arg5='d', &arg6='!', &arg2='wo', &arg3='r')
+# func6(&arg5='d', &arg6='!', &arg2='wo', &arg3='r', &arg4='l')
+# func6(&arg6='!', &arg2='wo', &arg3='r', &arg4='l', &arg5='d')
+
+
+# # test 7
+# # function with 6 arguments and 4 named arguments
+# def('func7', 'arg1', 'arg2', &arg3='r', &arg4='l', &arg5='d', &arg6='!', (
+#     assert(
+#         arg1.equals('hello'), 
+#         arg2.equals('wo'), 
+#         arg3.equals('r'), 
+#         arg4.equals('l'), 
+#         arg5.equals('d'), 
+#         arg6.equals('!')
+#     ),
+#     destroy('arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6')
+# ))
+
+# # control
+# func7('hello', 'wo', 'r', 'l', 'd', '!')
+# func7('hello', 'wo', 'r', 'l', 'd')
+# func7('hello', 'wo', 'r', 'l')
+# func7('hello', 'wo', 'r')
+# func7('hello', 'wo')
+
+# # too little arguments
+# test_err(script(func7('hello')))
+# # too many arguments
+# test_err(script(func7('awef', 'awef', 'awef', 'awef', 'awef', 'awef', 'awef')))
+
+# # one named argument
+# func7('hello', 'wo', &arg6='!')
+# func7('hello', 'wo', &arg5='d')
+# func7('hello', 'wo', &arg4='l')
+# func7('hello', 'wo', &arg3='r')
+# func7('hello', 'wo', &arg2='wo')
+# func7('hello', 'wo', &arg1='hello')
+
+# # 2 named arguments
+# func7('hello', 'wo', &arg2='wo', &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg2='wo')
+# func7('hello', 'wo', &arg3='r', &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg3='r')
+# func7('hello', 'wo', &arg4='l', &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg4='l')
+# func7('hello', 'wo', &arg5='d', &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg5='d')
+# func7('hello', 'wo', &arg1='hello', &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg1='hello')
+
+# # 3 named arguments
+# func7('hello', 'wo', &arg2='wo', &arg3='r', &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg2='wo', &arg3='r')
+# func7('hello', 'wo', &arg3='r', &arg4='l', &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg3='r', &arg4='l')
+# func7('hello', 'wo', &arg4='l', &arg5='d', &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg4='l', &arg5='d')
+
+# # 4 named arguments
+# func7('hello', 'wo',   &  arg2  =  'wo'  ,  &  arg3 =  'r',   & arg4=   'l', & arg6 =    '!'    )
+# # include random space to test syntax like the line above
+# func7('hello', 'wo', &  arg2    ='wo',    &arg3   =     'r',   &        arg4='l'    , &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg2='wo', &arg3='r', &arg4='l')
+# func7('hello', 'wo', &arg3='r', &arg4='l', &arg5='d', &arg6='!')
+# func7('hello', 'wo', &arg6='!', &arg3='r', &arg4='l', &arg5='d')
+
+
+# # test 8
+# # testing with more complex default values
+# def('func8', 'arg1', &arg2=+('w', 'o'), &arg3=+('r', 'l'), &arg4=+('d', '!'), (
+#     assert(
+#         arg1.equals('hello'), 
+#         arg2.equals('wo'), 
+#         arg3.equals('rl'), 
+#         arg4.equals('d!')
+#     ),
+#     destroy('arg1', 'arg2', 'arg3', 'arg4')
+# ))
+
+# # control
+# func8('hello', 'wo', 'rl', 'd!')
+
+# # default arguments placed
+# func8('hello', 'wo', 'rl', 'd!')
+# func8('hello', 'wo', 'rl')
+# func8('hello', 'wo')
+# func8('hello')
+
+# # one named argument
+# func8('hello', &arg4='d!')
+# func8('hello', &arg3='rl')
+# func8('hello', &arg2='wo')
+# func8('hello', &arg1='hello')
+
+# # 2 named arguments
+# func8('hello', &arg2='wo', &arg4='d!')
+# func8('hello', &arg4='d!', &arg2='wo')
+# func8('hello', &arg3='rl', &arg4='d!')
+# func8('hello', &arg4='d!', &arg3='rl')
+
+# # 3 named arguments
+# func8('hello', &arg2='wo', &arg3='rl', &arg4='d!')
+# func8('hello', &arg4='d!', &arg2='wo', &arg3='rl')
+# func8('hello', &arg3='rl', &arg4='d!', &arg2='wo')
+# func8('hello', &arg4='d!', &arg3='rl', &arg2='wo')
+
+
+# # using the argument picker in a class
+# class('test', (
+#     # function in the class
+#     def('func', 'self', 'arg1', &arg2='world', &arg3='!', (
+#         assert(
+#             arg1.equals('hello'), 
+#             arg2.equals('world'), 
+#             arg3.equals('!')
+#         ),
+#         destroy('arg1', 'arg2', 'arg3')
+#     ))
+# ))
+
+# # create an instance of the class
+# @ t = test()
+# # control
+# t.func('hello', 'world', '!')
+# # default arguments placed
+# t.func('hello', 'world')
+# t.func('hello')
+# # one named argument
+# t.func('hello', &arg3='!')
+# t.func('hello', &arg2='world')
+# # 2 named arguments
+# t.func('hello', &arg2='world', &arg3='!')
+# t.func('hello', &arg3='!', &arg2='world')
+
+
+
+
+
+
+# using the argument picker with empty values
+def('func9', 'arg1', &arg2='', &arg3={}, &arg4=[], (
+    # print('--> args:', iterable:join("|", 
+    #     map(arr(arg1, arg2, arg3, arg4), 'e', str(e)))),
+    assert(
+        arg1.equals('hello'), 
+        arg2.equals(''),
+        arg3.equals({}),
+        arg4.equals([])
+    ),
+    destroy('arg1', 'arg2', 'arg3', 'arg4'),
+    # print('------------------------------------------')
+))
+
+
+
+# control
+# print("-->  func9('hello')")
+func9('hello')
+
+# default arguments placed
+
+# print("-->  func9('hello', '', {}, [])")
+func9('hello', '', {}, [])
+# print("-->  func9('hello', '', {})")
+func9('hello', '', {})
+# print("-->  func9('hello', '')")
+func9('hello', '')
+
+
+
+
+
+
+# #one named argument
+# print("-->  func9('hello', &arg4=[])")
+# #uncomment to induce error
+# func9('hello', &arg4=[])

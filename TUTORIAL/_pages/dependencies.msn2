@@ -1,0 +1,214 @@
+# Dependencies tutorial page.
+#
+# author : Mason Marker
+# date : 8/13/2023
+# version : 2.0.384
+
+# page
+@ page:dependencies = script((
+
+    # starting message
+    console:print(arr(
+        object(
+            'text', 'Installing ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'dependencies',
+            'style', 'bold',
+            'fore', 'green'
+        )
+    )),
+    print(),
+
+    # gather list of dependencies
+    @ deps:list = filter(split(file.read('dependencies.txt'), "\n"), 
+        'page:deps:line', page:deps:line.startswith('pip')),
+
+    # message
+    console:print(arr(
+        object(
+            'text', 'Running MSN2 requires a few ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'dependencies',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' to have been installed, first.',
+            'style', 'italic'
+        )
+    )),
+    print(),
+    console:print(arr(
+        object(
+            'text', 'These ',
+            'style', 'bold'
+        ),
+        object(
+            'text', 'dependencies',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' are as follows:',
+            'style', 'bold'
+        )
+    )),
+    print(),
+
+    # list dependencies
+    deps:list.each('deps:list:command', (
+        console:print(arr(object(
+            'text', get(deps:list:command.split(' '), -1),
+            'style', 'bold',
+            'fore', 'magenta'
+        )))
+    )),
+    print(),
+
+    # type 'i' to attempt to (re)install dependencies
+    console:print(arr(
+        object(
+            'text', 'Type ',
+            'style', 'italic'
+        ),
+        object(
+            'text', "'i'",
+            'style', 'italic',
+            'fore', 'yellow'
+        ),
+        object(
+            'text', ' to attempt to ',
+            'style', 'italic'
+        ),
+        object(
+            'text', '(re)install',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' these ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'dependencies. ',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', '*verify that you have ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'pip',
+            'style', 'italic',
+            'fore', 'green'
+        ),
+        object(
+            'text', ' installed*',
+            'style', 'italic'
+        )
+    )),
+    print(),
+
+    # or press 'q' to quit
+    console:print(arr(
+        object(
+            'text', 'or type ',
+            'style', 'italic'
+        ),
+        object(
+            'text', "'q'",
+            'style', 'italic',
+            'fore', 'yellow'
+        ),
+        object(
+            'text', ' to ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'quit',
+            'style', 'italic',
+            'fore', 'red'
+        )
+    )),
+
+
+    # wait for user input
+    if (equals(@ page:deps:input = input(), 'q'), goto('0'), 
+    if (equals(page:deps:input, 'i'), (
+        new_page(),
+
+        # function to print a message from [MSN2] 
+        def('page:deps:msn2_print', 'page:deps:msn2_print:objects', (
+            console:print(+(arr(
+                object(
+                    'text', '[',
+                    'style', 'bold'
+                ),
+                object(
+                    'text', 'MSN2',
+                    'fore', 'cyan'
+                ),
+                object(
+                    'text', '] ',
+                    'style', 'bold'
+                ),
+            ), page:deps:msn2_print:objects))
+        )),
+
+        # print reinstalling updates
+        page:deps:msn2_print(arr(
+            object(
+                'text', '(Re)installing '
+            ),
+            object(
+                'text', str(deps:list.len()),
+                'style', 'bold',
+                'fore', 'yellow'
+            ),
+            object(
+                'text', ' dependencies',
+                'fore', 'green'
+            ),
+            object(
+                'text', '...'
+            )
+        )),
+
+        # install dependencies
+        deps:list.each('deps:list:command', (
+
+            # installing message
+            page:deps:msn2_print(arr(
+                object(
+                    'text', 'Running '
+                ),
+                object(
+                    'text', deps:list:command,
+                    'fore', 'green'
+                )
+            )),
+
+            # install the dependency
+            console(deps:list:command),
+
+            # finished installing message
+            page:deps:msn2_print(arr(
+                object(
+                    'text', 'Finished installing '
+                ),
+                object(
+                    'text', get(deps:list:command.split(' '), -1),
+                    'fore', 'green'
+                ),
+                object(
+                    'text', '.'
+                )
+            )))
+    ))))
+
+))

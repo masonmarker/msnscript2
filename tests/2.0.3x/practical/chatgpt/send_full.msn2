@@ -1,0 +1,83 @@
+# Sends a message to ChatGPT, and retrieves the response.
+# 
+# Why use this as opposed to OpenAI's ChatGPT API?
+# A: 
+#   1. No API key
+#   2. No charge per request
+#   3. Model settings pre-determined and refined by OpenAI's team
+#   4. ChatGPT's algorithm for retaining and interpreting the previous messages
+#      is maintained (THIS IS ABSOLUTELY HUGE AND CRUCIAL TO 
+#      UTILIZING GPT'S COMPLETE CAPABILITIES)
+#
+# author : Mason Marker
+# date : 6/2/2023
+
+# import automated JavaScript injection library
+import ('lib/auto/inject')
+
+# opens Google Chrome to the ChatGPT website
+@ chrome = app('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe')
+chrome.start()
+chrome.write('https://chat.openai.com/')
+chrome.enter()
+
+# waits for the message input to appear
+@ message_input = chrome.wait_for_input('Send a message.')
+
+# asks ChatGPT questions, retrieving its answer
+function('ask', (
+    # for each message
+    messages.each('message', (
+
+        # asks ChatGPT a question
+        message_input.focus(),
+        chrome.write(message),
+        chrome.enter(),
+
+        # asking a message!
+        message.print('ASKING: '),
+
+        # wait for a response
+        chrome.wait_for_text('Regenerate response'),
+
+        # opens and injects JavaScript into the application's element 
+        # inspection console
+        # arguments: browser, script, inspect element is open?
+        print('GPT SAYS: ', inject:active_inject(chrome, script(
+            let m = document.getElementsByClassName(
+                'flex flex-col text-sm dark:bg-gray-800'
+            )[0];
+            let lm = m.children[m.children.length-2];
+            console.log(lm.innerText);
+        ), True))
+    ))
+), 'messages')
+
+# opens the inspect element panel
+chrome.inspect()
+
+# asks ChatGPT an array of questions in sequence
+ask(
+    ['Who is Obama?', 
+    'How old is he?', 
+    'Did he believe in aliens?']
+)
+
+# export results to an enclosing Python script?
+# email the results somewhere?
+# put the results in a database?
+# save the results to a file?
+# a million other things?
+
+
+
+
+
+# same automation can be performed with
+# the chatgpt automation library
+# import ('lib/auto/chatgpt')
+# print(get(chatgpt:ask_gpt(
+#     ['Who is Obama?', 
+#     'How old is he?', 
+#     'Did he believe in aliens?']
+# ), 1))

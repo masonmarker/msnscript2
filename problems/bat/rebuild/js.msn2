@@ -1,0 +1,399 @@
+# JavaScript
+#
+# author : Mason Marker
+# date : 7/6/2023
+
+# JavaScript exerpt to replace the webpage
+# Rebuilds the CodingBat website styles
+# to be hypermodern with transitions
+# and animations and all that yk
+@ js = script(
+
+    # creates a new style to append to the document'
+    # style
+
+    # new styling requirements
+    #
+    # new style will be:
+    #
+    # dark mode, background should be animated
+    # to be a gradient of colors and mainly black
+    # and white
+    # 
+    # CodingBat editor uses Ace.js for styling,
+    # so these specific classnames need modification
+    var style = document.createElement('style');
+    style.innerHTML = "
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: white;
+            overflow-x: hidden;
+            # center everything in the middle of the page
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;            
+        }    
+
+        header {
+            background-color: #000;
+            color: white;
+            padding: 1em;
+            text-align: center;
+            transition: background-color 1s;
+        }
+
+        header:hover {
+            background-color: #fff;
+            color: black;
+        }
+
+        # fade in in a random number of seconds
+        tr {
+            animation: fadein 2s;
+            transition: .5s;
+        }
+
+        @ keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        a {
+            color: white;
+            transition: .5s;
+        }
+        
+        a:hover {
+            transform: scale(1.1);
+            text-decoration: underline;
+        }
+
+        # make the buttons more modern
+        # ------------------
+        button {
+            background-color: #000;
+            color: black;
+            border-radius: 1em;
+            transition: .5s ease;
+            border: none;
+        }
+
+        button:hover {
+            cursor: pointer;
+            box-shadow: 0 0 1em #fff;
+            transform: scale(1.1);
+        }
+
+
+        # ace editor styling
+        # should be dark mode
+        # 
+        # added a nice box shadow to the editor
+        # added a nice border radius to the editor
+        # ------------------
+
+
+        .ace_editor {
+            background-color: #333;
+            color: white;
+            border-radius: 1em;
+            box-shadow: 0 0 1em #fff;
+            transition: background-color 1s;
+            .ace_cursor {
+                color: white;
+            }
+        }
+        
+        .ace_gutter {
+            background-color: #000;
+            color: white;
+            border-radius: 1em;
+            box-shadow: 0 0 1em #fff;
+            transition: background-color 1s;
+        }
+
+        .ace_constant.ace_numeric {
+            color: lightblue !important;
+            font-weight: bold;
+        }
+        .ace_keyword {
+            # bright maroon
+            color: #cc0000 !important;
+            font-weight: bold;
+        }
+    ";
+    document.head.appendChild(style);
+
+    # add moving background to the document
+    # ---------------------------
+    # create the iframe
+    var iframe = document.createElement('iframe');
+    iframe.src = 'https://giphy.com/embed/UYBDCJjwOd9Re';
+
+    # the iframe should take up the entire screen
+    # no matter what
+    iframe.style.position = 'fixed';
+    iframe.style.top = '0';
+    iframe.style.left = '0';
+    iframe.style.width = '100vw';
+    iframe.style.height = '100vh';
+    iframe.style.border = 'none';
+    iframe.style.zIndex = '-1';
+    iframe.style.backgroundPosition = 'center';
+    iframe.style.backgroundRepeat = 'repeat-3';
+
+    # add the iframe to the document
+    document.body.appendChild(iframe);
+    # ---------------------------
+    # remove the first table
+    # ---------------------------
+    # get the first table
+    var table = document.getElementsByTagName('table')[0];
+    # remove the table
+    table.remove();
+
+    # get the first table
+    var table = document.getElementsByTagName('table')[0];
+    # get the td inside
+    var td = table.getElementsByTagName('td')[0];
+    
+    # remove all children in the td
+    while (td.firstChild) {
+        td.removeChild(td.firstChild);
+    }
+
+    # add two links to 'about.html' and 'help.html'
+    # ---------------------------
+    # create the about link
+    var about = document.createElement('a');
+    # color the link white
+    about.style.color = 'white';
+    about.href = 'about.html';
+    about.innerHTML = 'About';
+    # add padding
+    about.style.padding = '1em';
+
+    # create the help link
+    var help = document.createElement('a');
+    # color the link white
+    help.style.color = 'white';
+    help.href = 'help.html';
+    help.innerHTML = 'Help';
+    # remove any on hover function
+    help.style.padding = '1em';
+
+
+    # add the links to the td
+    td.appendChild(about);
+    # append a space
+    td.appendChild(document.createTextNode(' '));
+    td.appendChild(help);
+    
+    # do this for the next 3 spans
+    for (var i = 0; i < 8; i++) {
+        # get the span
+        var span = document.getElementsByTagName('span')[i];
+        # make the text color white
+        span.style.color = 'white';
+    }
+
+    # function that changes the background color
+    # of everything without the class 'ace_scroller'
+    # ---------------------------
+    function change(tag) {
+        # get all tags
+        var tags = document.getElementsByTagName(tag);
+
+        # loop through all tags
+        for (var i = 0; i < tags.length; i++) {
+            var tag = tags[i];
+            
+            var hasAceContentAncestor = false;
+            var parent = tag.parentNode;
+            
+            while (parent) {
+                if (parent.classList && parent.classList.contains('ace_scroller')) {
+                    hasAceContentAncestor = true;
+                    break;
+                }
+                
+                parent = parent.parentNode;
+            }
+            
+            if (!hasAceContentAncestor) {
+                tag.style.color = 'white';
+            }
+        }
+    };
+
+    # change the color of all tags
+    # ---------------------------
+    change('a');
+    change('span');
+
+    # remove ul
+    # ---------------------------
+    var ul = document.getElementsByTagName('ul')[0];
+    ul.remove();
+
+    # get item with class 'tabin'
+    # ---------------------------
+    var tabin = document.getElementsByClassName('tabin')[0];
+    # remove border
+    tabin.style.border = 'none';
+
+    # re-render the element with classname 'ace-scroller'
+    # ---------------------------
+    # get the element
+    var scroller = document.getElementsByClassName('ace_scroller')[0];
+    # get the parent of the element
+    var parent = scroller.parentNode;
+    # remove the element
+    scroller.remove();
+    # add the element back
+    parent.appendChild(scroller);
+
+    # add a transition to all buttons
+    # ---------------------------
+    # get all buttons
+    var buttons = document.getElementsByTagName('button');
+
+    # loop through all buttons
+    for (var i = 0; i < buttons.length; i++) {
+        # get the button
+        var button = buttons[i];
+        # add a transition
+        button.style.transition = '.3s ease';
+
+        # add mouse down
+        button.addEventListener('mousedown', function() {
+            this.style.transform = 'scale(.9)';
+            this.style.color = "white";
+        });
+        # add mouse up
+        button.addEventListener('mouseup', function() {
+            this.style.transform = 'scale(1)';
+            this.style.color = 'black';
+        });
+        # mouse out
+        button.addEventListener('mouseout', function() {
+            this.style.transform = 'scale(1)';
+            this.style.color = 'black';
+
+        });
+        # mouse in 
+        button.addEventListener('mouseover', function() {
+            this.style.transform = 'scale(1.1)';
+        });
+    }
+
+    # get the first 'a', this is the title
+    # ---------------------------
+    var title = document.getElementsByTagName('span')[0];
+    # make the title bigger and center it on the page
+    title.style.fontSize = '7em';
+    title.style.textAlign = 'center';
+    # make font fancy
+    title.style.fontFamily = 'Edwardian Script ITC';
+    title.style.fontWeight = 'bold';
+
+    # insert an image with path c:\Users\mason\Downloads\bat.png
+    # ---------------------------
+    # create the image
+    var image = document.createElement('img');
+    # set the src
+    image.src = 'https://clipart-library.com/images_k/bat-silhouette-vector/bat-silhouette-vector-25.png';
+
+    # make the picture unaffected by text,
+    # but still moves around with the page
+    image.style.position = 'absolute';
+    # make the image 100px by 100px
+    image.style.width = '100px';
+    image.style.height = '100px';
+    
+
+    
+    # add after the title
+    title.parentNode.insertBefore(image, title.nextSibling);
+
+
+    # remove the second td
+    # ---------------------------
+    var solutionDiv = document.getElementsByTagName('td')[2];
+    solutionDiv.remove();
+    
+    # add listener to the document
+    # for when an element with id 'results'
+    # exists
+    # ---------------------------
+    document.addEventListener('DOMNodeInserted', function(event) {
+        # get the element
+        var results = document.getElementById('results');
+        # if the element exists
+        if (results) {
+            results.style.margin = '0 auto';
+            results.style.alignSelf = 'center';
+            results.style.justifySelf = 'center';
+        }
+        # get the element with the className 'out'
+        var out = document.getElementsByClassName('out')[0];
+        if (out) {
+            out.style.margin = '0 auto';
+            out.style.alignSelf = 'center';
+            out.style.justifySelf = 'center';
+        }
+        # get image with src /c2big.jpg
+        var image = document.querySelector('img[src="/c2big.jpg"]');
+        if (image) {
+            image.style.display = 'none';
+        }
+    });
+
+
+    # insert solutionDiv after element with name 'outputonly'
+    # ---------------------------
+    # get the element
+    var outputonly = document.getElementsByName('outputonly')[0];
+    # get the parent of the element
+    var parent = outputonly.parentNode;
+    # insert the solutionDiv after the element
+    parent.insertBefore(solutionDiv, outputonly.nextSibling);
+
+
+    # get element with classname 'indent'
+    # ---------------------------
+    var indent = document.getElementsByClassName('indent')[0];
+    # center everything in the element with display flex
+    indent.style.display = 'flex';
+    indent.style.justifyContent = 'center';
+    indent.style.alignItems = 'center';
+    # direction
+    indent.style.flexDirection = 'column';
+
+    # put the first 9 children of indent
+    # into a div and add it to the beginning of indent
+    # ---------------------------
+    var children = indent.children;
+
+    # loop through the first 9 children
+    for (var i = 1; i < 5; i++) {
+        children[1].remove();
+    }
+
+    # remove extra text
+    const childNodes = indent.childNodes;
+        for (let i = 0; i < childNodes.length; i++) {
+        const node = childNodes[i];
+
+        if (node.nodeType === 3 <or> node.nodeType === 8) {
+            indent.removeChild(node);
+        }
+    }
+)

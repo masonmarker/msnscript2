@@ -1,0 +1,81 @@
+# Tests MSN2 CLI.
+#
+# author : Mason Marker
+# date : 10/03/2024
+
+# start tests
+import ('tests/resources/start')
+
+# testing file 1
+@tests:cli:test_file_1 = 'tests/2.0.401/cli_tests/test1'
+@tests:cli:test_file_2 = 'tests/2.0.401/cli_tests/test2'
+@tests:cli:test_file_3 = 'tests/2.0.401/cli_tests/test3'
+@tests:cli:test_file_4 = 'tests/2.0.401/cli_tests/test4'
+@tests:cli:test_file_5 = 'tests/2.0.401/cli_tests/test5'
+
+
+def('tests:cli:assert', 'tests:cli:assert:file_to_check', (
+        assert(file.exists(tests:cli:assert:file_to_check)),
+        assert(equals(file.read(tests:cli:assert:file_to_check), 'Hello, World!')),
+        tests:cli:assert:file_to_check
+))
+
+# runs commands through the msn2cli.py file
+def('tests:cli:run_test', 
+    'tests:cli:run_test:commands', 
+    'tests:cli:run_test:files_to_check', 
+    (
+        # run CLI command
+        console(cat(get(settings(), 'runner_alias'), ' msn2cli.py ', tests:cli:run_test:commands)),
+        each(tests:cli:run_test:files_to_check, 'tests:cli:run_test:f', (
+                @tests:cli:run_test:f = tests:cli:assert(cat(tests:cli:run_test:f, '.txt')),
+                file.delete(tests:cli:run_test:f)
+            )
+        )
+    )
+)
+
+
+# testing standard file execution
+tests:cli:run_test(
+    # commands to test
+    cat('-f ', tests:cli:test_file_1),
+    arr(tests:cli:test_file_1)
+)
+
+# testing with multiple files
+tests:cli:run_test(
+    # commands to test
+    cat('-f ', tests:cli:test_file_1, ' -f ', tests:cli:test_file_2),
+    arr(tests:cli:test_file_1, tests:cli:test_file_2)
+)
+
+
+# testing 1 file 1 argpack
+tests:cli:run_test(
+    # commands to test
+    cat('-f ', tests:cli:test_file_3, ' -a "Hello, World!"'),
+    arr(tests:cli:test_file_3)
+)
+
+
+
+# testing 2 files 2 argpacks
+tests:cli:run_test(
+    # commands to test
+    cat('-f ', tests:cli:test_file_3, ' -a "Hello, World!" -f ', tests:cli:test_file_4, ' -a "Hello, World!"'),
+    arr(tests:cli:test_file_3, tests:cli:test_file_4)
+)
+
+# testing running a snippet
+tests:cli:run_test(
+    # commands to test
+    script(-s "file.write('tests/2.0.401/cli_tests/test4.txt', 'Hello, World!')"),
+    arr(tests:cli:test_file_4)
+)
+
+# test running a file and snippet
+tests:cli:run_test(
+    cat('-f ', tests:cli:test_file_5, script( -s "file.write('tests/2.0.401/cli_tests/test5.txt', 'Hello, World!')")),
+    arr(tests:cli:test_file_5)
+)

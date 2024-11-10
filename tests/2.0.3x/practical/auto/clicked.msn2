@@ -1,0 +1,21 @@
+# waits for a mouse click
+#
+# author : Mason Marker
+# date : 6/4/2023
+
+
+# element discovery
+import ('lib/auto/discover')
+
+# starts Google Chrome
+@ chrome = app('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe')
+chrome.start()
+chrome.write(input('type a website: '))
+chrome.enter()
+
+
+discover:click(chrome, 45, script(True))
+
+
+
+chrome.stop()

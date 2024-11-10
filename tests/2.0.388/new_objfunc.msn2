@@ -1,0 +1,57 @@
+# Testing new functions for objects.
+#
+# author : Mason Marker
+# date : 9/17/2023
+
+# import resources
+import ('tests/resources/start')
+
+# ----------------------------- .rename() -----------------------------
+
+# renaming a variable is now much simpler
+@ string = 'hello'
+# assert the variable exists
+assert(exists('string'))
+# rename the variable
+string.rename('string2')
+# name 'string' should no longer exist
+# name 'string2' should exist
+# string2 should equal 'hello'
+assert(
+    not(exists('string')), 
+    exists('string2'), 
+    string2.equals('hello'))
+
+# assert errors
+assert:err(
+    # renaming to an empty name should not be possible
+    string2.rename(''),
+    # argument must be a string
+    string2.rename(1)
+)
+
+# ----------------------------- .switch() -----------------------------
+# switches the values of two variables
+# switch() takes one argument, being the variable name to switch with
+
+# create two variables
+@ var1 = [1, 2, 3]
+@ var2 = [4, 5, 6]
+
+# switch the values
+var1.switch('var2')
+
+# assert the values were switched
+assert(
+    var1.equals([4, 5, 6]), 
+    var2.equals([1, 2, 3]))
+
+# assert errors
+assert:err(
+    # variable name must exist
+    var1.switch('var3'),
+    # argument must be a string
+    var1.switch(1),
+    # variable name must have characters
+    var1.switch('')
+)

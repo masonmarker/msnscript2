@@ -1,0 +1,123 @@
+# Demonstrates utilization of Python snippets, introduced
+# in MSN2 2.38x.
+#
+# Python snippets can be used to run Python scripts
+# in MSN2 environments.
+#
+# author : Mason Marker
+# date : 8/19/2023
+# version : 2.0.385
+
+# clear the console
+import ('lib/os')
+os:clear()
+
+# import the MSN2 Python module
+import ('lib/python')
+
+# defining a new Python snippet
+#
+# this snippet generates a couple functions to use in an
+# msn2 environment.
+\\
+
+# imports
+import math
+
+# computes the sum of a list
+def sum_list(list):
+    sum = 0
+    for i in list:
+        sum += i
+    return sum
+
+# computes the product of a list
+def product_list(list):
+    product = 1
+    for i in list:
+        product *= i
+    return product
+
+script \\
+
+# generate these functions in this msn2 environment
+py.run(script)
+
+
+
+# defining a Python snippet to test these functions
+#
+# python snippet arguments: 
+#   tests:arg1 : list of lists to test
+\\
+
+# for each list in the list of lists
+for lst in {=tests:arg1=}:
+
+    # test sum_list()
+    total = sum_list(lst)
+    expected_sum = 0
+    if len(lst) > 0:
+        expected_sum = sum(lst)
+    # test product_list()
+    product = product_list(lst)
+    expected_product = 1
+    if len(lst) > 0:
+        expected_product = math.prod(lst)
+    # print the results
+    print('list: ' + str(lst))
+    print('sum: ' + str(total) + ' (expected: ' + str(expected_sum) + ')')
+    print('product: ' + str(product) + ' (expected: ' + str(expected_product) + ')')
+    print('')
+    
+tests \\
+
+# create a python:script() object from the msn2 python module
+# for this python snippet, this simplifies the process of
+# running this script in an msn2 environment with arguments
+# from msn2
+@ tests:script = python:script(tests, ['tests:arg1'])
+
+# run the script with the respective arguments,
+# being a matrix
+# first arr() being an array of arguments being passed to the script,
+#
+# we're sending a single argument to the snippet,
+# being a list of lists
+@ tests:with_args = tests:script.run(arr(
+    arr(
+        arr(1, 2, 3), 
+        arr(),
+        arr(5, 2, 6, 7),
+        arr(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    )
+))
+
+# import lib/console for pretty printing
+import ('lib/console')
+
+# print the script
+console:print(arr(
+    object(
+        'text', 'python script with ',
+        'style', 'bold'
+    ),
+    object(
+        'text', str(len(tests:script.varnames())),
+        'style', 'bold',
+        'fore', 'green'
+    ),
+    object(
+        'text', ' argument:',
+        'style', 'bold'
+    )
+))
+print()
+# print the script with_args
+console:print(arr(object(
+    'text', 'evaluated snippet:',
+    'style', 'bold',
+    'fore', 'green'
+)))
+
+print(tests:with_args)

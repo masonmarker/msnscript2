@@ -1,0 +1,31 @@
+# Updates this NextJS project.
+#
+# author : Mason Marker
+# date : 1/1/2024
+# version : 2.0.400
+
+# import React
+import ('lib/web/react')
+
+# create an index page
+react:page(
+    # NextJS index.jsx is at the path below
+    'tests/next_2.0.400/my-app/pages/index.jsx', 
+    # MSN2 script to convert to React-compliant code
+    script((
+        # create a css module for this page
+        css('styles',
+            .class1 {color: red;}
+        ),
+
+
+        # return component
+        hstack(
+            h1(
+                # add classname from this page's css module
+                className=(styles.class1), 
+                'hi, this is some text!'
+            )
+        )
+    )          
+))

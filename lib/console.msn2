@@ -1,0 +1,93 @@
+# Brings various capabilities to the console window.
+#
+# author : Mason Marker
+# date : 8/5/2023
+
+# style codes
+# @version 2.0.381
+@ console:colors = (
+    {
+        'RESET': '\033[0m',
+        'BOLD': '\033[1m',
+        'UNDERLINE': '\033[4m',
+        'ITALIC': '\033[3m',
+        'BLACK': {
+            'FORE': '\033[30m',
+            'BACK': '\033[40m',
+        },
+        'RED': {
+            'FORE': '\033[31m',
+            'BACK': '\033[41m',
+        },
+        'GREEN': {
+            'FORE': '\033[32m',
+            'BACK': '\033[42m',
+        },
+        'YELLOW': {
+            'FORE': '\033[33m',
+            'BACK': '\033[43m',
+        },
+        'BLUE': {
+            'FORE': '\033[34m',
+            'BACK': '\033[44m',
+        },
+        'MAGENTA': {
+            'FORE': '\033[35m',
+            'BACK': '\033[45m',
+        },
+        'CYAN': {
+            'FORE': '\033[36m',
+            'BACK': '\033[46m',
+        },
+        'WHITE': {
+            'FORE': '\033[37m',
+            'BACK': '\033[47m',
+        }
+    }
+)
+
+# Prints colored portions of text to the console.
+#
+# @param [[text, color], [text2, color2]] matrix of text to color for
+#   a single line of text to print
+# @return str the line of text printed
+# @version 2.0.381
+function ('console:print', ret('console:print', (
+
+    # for each pairing of color to text
+    console:print:pairing.each('console:print:text_with_options', (
+        
+        # initialize flags
+        @console:print:text = '',
+        @console:print:back = '',
+        @console:print:fore = '',
+        @console:print:style = '',
+
+        # for each dictionary entry
+        console:print:text_with_options.foreach('console:print:attr', 'console:print:value', (
+
+            # raise the flag value if found for this portion of text
+            @console:print:text = if (equals(console:print:attr.upper(), 'TEXT'), 
+                console:print:value, console:print:text),
+            @console:print:back = if (equals(console:print:attr.upper(), 'BACK'), 
+                console:colors.get(console:print:value.upper(), 'BACK'), 
+                    console:print:back),
+            @console:print:fore = if (equals(console:print:attr.upper(), 'FORE'), 
+                console:colors.get(console:print:value.upper(), 'FORE'), 
+                    console:print:fore),
+            @console:print:style = if (equals(console:print:attr.upper(), 'STYLE'), 
+                console:colors.get(console:print:value.upper()), console:print:style)
+        )),
+
+        # print the styled line, using <<>> for direct python insertion
+        <<print(|console:print:fore| + 
+                |console:print:back| + 
+                |console:print:style| +
+                |console:print:text| + 
+                |console:colors.get('RESET')|, end="")>>
+    )),
+
+    # newline at the end
+    print()
+
+)), 'console:print:pairing')

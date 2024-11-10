@@ -1,0 +1,47 @@
+solution
+
+
+
+
+start, end = 0, len(nums) - 1
+
+while start < end:
+    mid = (start + end) // 2
+
+    if nums[mid] > nums[end]:
+        start = mid + 1
+    elif nums[mid] < nums[start]:
+        end = mid
+    else:
+        end -= 1
+
+return nums[start]
+
+
+---- msn2
+
+-- template
+
+function(@_r='min_sort', ret(_r, (
+
+
+
+)), 'nums')
+
+
+
+-- solution
+
+function(@_r='min_sort', ret(_r, (
+    @s=0,
+    @end=-(len(nums), 1),
+        while (s.less(end), (
+        @mid= //(+(s, end), 2),
+        if (greater(nums.get(mid), nums.get(end)),
+            s.add(+(mid, 1)),
+        if (less(nums.get(mid), nums.get(s)),
+            end.set(mid),
+        end.sub(1)))
+    )),
+    nums.get(s)
+)), 'nums')

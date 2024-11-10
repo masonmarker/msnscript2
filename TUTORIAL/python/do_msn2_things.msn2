@@ -1,0 +1,29 @@
+# Performs MSN2 capabilities, shows how an MSN2
+# script takes input values from an enclosing Python script
+# and returns output values to the enclosing Python script.
+#
+# author : Mason Marker
+# date : 6/2/2023
+
+# taking input from the enclosing Python script, if specified.
+
+# in this case, we take a reversed array
+@ inp = in()
+
+# print input received
+print('[msn2] received input: ', inp)
+
+# in() with a single integer as an argument accepts a single element of the input
+# array
+assert(equals(in(0), 7), equals(in(6), 1))
+
+# in() with two integer arguments gets a slice of the input array
+assert(equals(in(0, len(in())), [7, 6, 5, 4, 3, 2, 1]))
+
+# exporting
+print('[msn2] exporting output: ', @fixed=inp.reverse())
+
+# export the reversed array to the enclosing Python script
+# out can accept any amount of arguments to return to the enclosing Python script
+# however here we just use one
+out(fixed)

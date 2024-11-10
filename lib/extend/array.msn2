@@ -1,0 +1,11 @@
+# Extension methods.
+#
+# author : Mason Marker
+# date : 8/2/2023
+
+# Indexes an array.
+# 
+# @version 2.0.382
+def('array:at', 'array:array', 'array:index', (
+    array:array.get(array:index)
+))

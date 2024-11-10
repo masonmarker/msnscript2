@@ -1,0 +1,90 @@
+# Handles page events
+#
+# author : Mason Marker
+# date : 6/27/2023
+
+# import CORS local api information
+import ('lib/apis/api')
+@ local = cors_api()
+
+# timer for timing computation
+import ('lib/timer')
+
+# function for making seconds string
+function(@_sec='seconds', ret(_sec, cat(timer:runtime(), 's')))
+
+# new thread to wait for an expression
+function('handler:start', (
+
+    # thread waiting for page events
+    thread(interval(0.05, (
+
+        # wait for finished to be 0
+        wait(try(not(get(local.GET(), 'finished'))),,0.05),
+
+        # waits for an input from page
+        # for length of array
+        wait(try(@ length = get(local.GET(), 'array_len'))),
+
+        print(length),
+
+        # ------------- JAVA -------------
+        local.POSTENTRY('java', (
+
+            # execute a Java program
+            @ out = float(get(JAVA(
+                public class Main {
+                    public static void main(String[] args) {
+                        long start = System.nanoTime();
+                        int[] arr = new int[{=length=}];
+                        for (int i = 0; i < arr.length; i++) {
+                            arr[i] = i;
+                        }
+                        System.out.println((System.nanoTime() - start) / 1000000000.0);
+                    }
+                }
+            , 'Main'), 'out'))
+        )),
+        # --------------------------------
+
+        # ------------- JAVASCRIPT -------------
+        # post the out of a node program
+        local.POSTENTRY('javascript', get(JS(
+            const start = performance.now();
+            const arr = new Array({=length=});
+            for (let i = 0; i < arr.length; i++) {
+                arr[i] = i;
+            }
+            console.log((performance.now() - start) / 1000);
+        ), 'out')),
+        # --------------------------------
+
+        # ------------- C -------------
+        local.POSTENTRY('C', (
+            get(C(
+                <tag>include <stdio.h> <nl>
+                <tag>include <stdlib.h> <nl>
+                <tag>include <time.h> <nl>
+                int main() {
+                    clock_t start = clock();
+                    int *arr = malloc({=length=} * sizeof(int));
+                    for (int i = 0; i < {=length=}; i++) {
+                        arr[i] = i;
+                    }
+                    printf("%f", (double)(clock() - start) / CLOCKS_PER_SEC);
+                    free(arr);
+                    return 0;
+                }
+            ), 'out')
+        )),
+        # --------------------------------
+        
+        # execution finished!
+        local.POSTENTRY('finished', 1),
+
+        # cleanup processes directory
+        import ('lib/lang/dir'),
+        __lang_dir_.end(),
+
+    )))
+))

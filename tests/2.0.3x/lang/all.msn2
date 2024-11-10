@@ -1,0 +1,108 @@
+# Demonstrates interpretation and execution of
+# other language constructs.
+#
+# author : Mason Marker
+# date : 6/13/2023
+# updated : 10/09/2024
+
+# import language directory
+# for automatic cleanup
+import ('lib/lang/dir')
+
+# import timer for timing execution 
+import ('lib/timer')
+
+# function for printing the runtime
+function('rt', print('timer runtime:', timer:runtime()))
+
+
+# shared variable
+@ len = 99999999
+
+
+
+# -------------------- JavaScript --------------------
+# start the timer
+timer:start()
+
+
+
+# running JavaScript via 'node __filepath__'
+# not using reduce() for demonstration purposes
+# {==} tags are replaced with the 
+# interpretation of the internal code
+@ env = JS(
+    function sum(array) {
+        var sum = 0;
+        for (var i = 0; i < {=len=}; i++) {
+            sum += array[i];
+        }
+        return sum;
+    }
+    var a = [];
+    for (let i = 0; i < {=len=}; i++) {
+        a.push(1);
+    }
+    console.log(sum(a));
+)
+
+# print the runtime
+rt()
+
+
+# print JavaScripts output
+print('JavaScript:', env.out())
+# ------------------------------------------------------
+
+# -------------------- C --------------------
+# start timer again
+timer:start()
+
+# compiling and running a C program
+# <tag> is replaced with a hashtag,
+# <nl> is replaced with a newline
+# {==} tags are replaced with the 
+# interpretation of the internal code
+@ env = C(
+    <tag>include <stdio.h><nl>
+    <tag>include <stdlib.h><nl>
+
+
+    int arraySum(int arr[], int size) {
+        int sum = 0;
+        
+        for (int i = 0; i < size; i++) {
+            sum += arr[i];
+        }
+        
+        return sum;
+    }
+    int main() {
+        int size = {=len=};
+        int* arr = malloc(sizeof(int) * size);
+        if (arr == NULL) {
+            printf("Error allocating memory");
+            return 1;
+        }
+
+        for (int i = 0; i < size; i++) {
+            arr[i] = 1;
+        }
+
+        printf("%d", arraySum(arr, size));
+
+        free(arr);
+    }
+)
+
+# print the runtime
+rt()
+
+# print C's output
+print('C:', env.out())
+# ------------------------------------------------------
+
+
+
+# cleanup lang directory
+__lang_dir_.end()

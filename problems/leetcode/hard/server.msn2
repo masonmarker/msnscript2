@@ -1,0 +1,62 @@
+# Starts the local server
+# for executing MSN2 code, and
+# starts a thread waiting to run the code
+# for the front-end.
+#
+# author : Mason Marker
+# date : 7/2/2023
+
+alias('py')
+# start the server in a new process
+proc('server', ENDPOINT(
+    '127.0.0.1',
+    8080,
+    '/',
+    # initial data
+    {
+        'code': '',
+        'out': ''
+    },
+    'CORS'
+))
+
+
+# local CORS api information 
+import ('lib/apis/api')
+@ local = cors_api()
+
+# thread waiting for the front-end to
+# request execution
+thread(interval(0.08, (
+    
+    # wait for code to be sent
+    wait(try(@ msn2_code = get(local.GET(), 'code')),,0.05),
+
+    # print msn2 code
+    print(msn2_code, @op=private(try((
+        # generate msn2 function called 'min_sort'
+        -(msn2_code),
+
+        # run min_sort with the values listed
+        @ test_one = -('min_sort([1,3,5])'),
+        @ test_two = -('min_sort([2,2,2,0,1])'),
+
+        # return the results,
+        @ _result = '',
+
+        # assert the test results
+        if (not(equals(test_one, 1)), 
+            _result.add(' case 1 failed '), 
+            _result.add(' case 1 passed ')),
+        if (not(equals(test_two, 0)), 
+            _result.add(' case 2 failed '), 
+            _result.add(' case 2 passed ')),
+
+        # return the result
+        _result
+    ), 'error'))),
+
+    # reset the code and send back the result
+    local.POSTENTRY('out', op),
+    local.POSTENTRY('code', '')
+)))

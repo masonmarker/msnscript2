@@ -1,0 +1,17 @@
+# NavBar component
+
+
+# creates a react component
+def('Navbar', 'props', (
+
+    # sub component
+    def('Nav', 'props', (
+        h1(style={'color': 'red'}, 'this is the red navbar!')
+    )),
+
+    # return component
+    nav(
+        h1('this is the black navbar!'),
+        <Nav />
+    )
+))

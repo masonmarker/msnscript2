@@ -1,0 +1,43 @@
+# resources for a minimalist language syntax
+# 
+# author : Mason Marker
+# date : 12/10/2022
+
+
+# postmacro for a cleaner assertion
+postmacro('??', '__asserting', assert(-(?__asserting?)))
+
+# macro for printing syntax
+macro('prt ', '__printing', =>(
+    each(__printing.split('|'), '__line', << print(|-(?__line?)|, end='') >>),
+    print()
+)) 
+
+# macro for sorting an array
+macro('sort ', '__expression', =>(
+    sorted(-(?__expression?))
+))
+
+# gets a variable by its name
+macro('get ', '__varname', -(?__varname?))
+
+# adds an element to an array variable
+macro('add ', '__array', =>(
+    var('adding_varname', __array.split('to')),
+    var('__vname', ?adding_varname?[1]),
+    __vname.strip(),
+    add(?__vname?, -(?adding_varname?[0]))
+))
+
+# adds an element to an array variable
+macro('set ', '__array', =>(
+    var('adding_varname', __array.split('to')),
+    var('__vname', ?adding_varname?[0]),
+    __vname.strip(),
+    var(?__vname?, -(?adding_varname?[1]))
+))
+
+
+# clears the screen and prepares for new language execution
+import('lib/os')
+os:clear()

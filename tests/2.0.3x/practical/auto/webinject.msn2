@@ -1,0 +1,36 @@
+# Injects JavaScript into a web page.
+#
+# author : Mason Marker
+# date : 5/30/2023
+
+# import injection library
+import ('lib/auto/inject')
+
+# inject JavaScript into 'www.calculator.com'
+# returns the instance of Chrome opened
+inject:inject('www.calculator.com', script(
+    const elements = document.getElementsByClassName('button blue btnsml caps');
+    const operatorButton = Array.from(
+        document.getElementsByClassName('button orange btnsml caps'))
+            .find(e => e.value === '+');
+    const equalsButton = document.getElementsByClassName('button green btnsml caps2')[0];
+    function click(a, b, c) {
+        for (let i = 0; i < elements.length; i++) {
+            const e = elements[i];
+            const val = e.value;
+            if (val === a || val === b || val === c) {
+                e.click();
+            }
+        }
+    }
+    click('1', '2', '3');
+    operatorButton.click();
+    click('4', '5', '6');
+    equalsButton.click();
+))
+
+# get the element containing the result of the calculation
+@ equals_element = get(chrome.find_all_children('='), 1)
+
+# print the result
+print(equals_element.text())

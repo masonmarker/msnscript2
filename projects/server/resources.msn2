@@ -1,0 +1,24 @@
+# example of a resource class in MSNScript2
+#
+# makes forking a process a little bit easier
+#
+# author : Mason Marker
+# date : 11/20/2022
+
+# api specific resources
+import ('lib/apis/api')
+
+# processing resources
+import ('lib/processes')
+
+# creates the process key for a port
+def('process_key_for', 'process_key_for:port', cat(
+    'p',process_key_for:port))
+
+# prints a process specific message to the console
+def('msg', 'msg:port', 'msg:message', print(cat(
+    '|', msg:port, '| ', msg:message)))
+
+def('req', 'req:process_key', 'req:message', api:post(
+    req:process_key, object(req:process_key, req:message)
+))

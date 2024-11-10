@@ -1,0 +1,20 @@
+# second api endpoint
+# 
+# author : Mason Marker
+# date : 11/18/2022
+
+
+# starting message
+print('endpoint 2 started')
+
+import('lib/apis/api.msn2')
+import('lib/http.msn2')
+
+# obtain a copy of the local api data structure
+var('ep2', api:api_local.copy())
+
+# host on port 5001, while endpoint 2 hosts on 5000
+ep2.port(5001)
+
+# start endpoint 2
+private(api:start(ep2))

@@ -1,0 +1,24 @@
+# Asserts that the block sent raises an error.
+# Also tests type errors
+#
+# Tests assert:err()
+#
+# author : Mason Marker
+# date : 9/15/2023
+
+# import starting tests
+import ('tests/resources/start')
+
+# make assertions
+assert:err(
+    # common raise
+    exception('', '', ''), 
+
+    # indexing error
+    private((
+        @ array = [1, 2, 3, 4, 5],
+        array.get(32)
+    ))
+)
+
+assert:err(exception('', '', ''))

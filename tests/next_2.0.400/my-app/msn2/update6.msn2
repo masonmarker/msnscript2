@@ -1,0 +1,40 @@
+# Client side component generation example.
+#
+# author : Mason Marker
+# date : 6/15/2024
+# version : 2.0.400
+
+# import MSN2 React tools
+import ('lib/web/react')
+
+
+# create an index page
+react:page(
+    # NextJS index.jsx is at the path below
+    'tests/next_2.0.400/my-app/pages/index.jsx',
+
+    # MSN2 script to convert to React-compliant code
+    script((
+
+        # creating a const variable
+        const('variable', 'Hello World!'),
+
+        # last line of this body "()" is the return,
+        # so we return an HTML element
+        
+        # fit this element to the screen
+        fitscreen(
+            # vertically and horizontally centered
+            centered(
+                # create a colored text element
+                poppins(
+                    h1(
+                        orange('MSN2 with'),
+                        red('NextJS')
+                    ),
+                    h2(variable)
+                )
+            )
+        )
+    ))
+)

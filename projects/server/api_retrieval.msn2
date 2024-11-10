@@ -1,0 +1,80 @@
+# Server taking multiple requestst
+
+
+import ('lib/processes')
+import ('lib/python')
+
+# hosting location
+@port = 3000
+@host = ls(http://localhost:{=port=})
+
+
+proc('js_server', JS(
+    const http = require('http');
+    let pingCount = 0;
+    const server = http.createServer((req, res) => {
+        pingCount++;
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ message: `{=input("Type something to be served: ")=}_${pingCount}` }));
+        # stop the server
+        if (pingCount === 3) server.close();
+    });
+
+    server.listen({=port=});
+
+))
+
+
+# ---------------- ping via JavaScript ----------------
+proc('JS_client', print(cat('from js: ', JS(    
+    const http = require('http');
+    # wait for server startup, receive response, then leave
+    while (true) {
+        try {
+            new Promise((resolve, reject) => {
+                http.get(`{=host=}`, (res) => {
+                    let data = '';
+                    res.on('data', (chunk) => {
+                        data += chunk;
+                    });
+                    res.on('end', () => {
+                        resolve(JSON.parse(data));
+                    });
+                }).on('error', (err) => {
+                    reject(err);
+                });
+            }).then((r) => console.log(r));
+            break;
+        } catch (err) {
+        }
+    }
+))))
+
+
+# ---------------- ping via MSN2 ---------------- 
+proc('msn2_client', 
+    wait(try(prnt(ls(from msn2: {=request(host)=}))),,0.05))
+
+
+# ---------------- ping via Python ----------------
+\\
+import requests
+while True:
+    try:
+        res = requests.get("{=host=}").text
+        break
+    except:
+        pass
+py_script \\
+
+# run the script and print the response variable
+@ python_test_script = python:script(py_script, ['host'])
+python_test_script.run(arr(host))
+# print the response stored in the 'res' variable
+print('from inline python:', py.res())
+
+# ---------------------------------------------------
+
+# clean process files
+processes:cleanup()

@@ -1,0 +1,37 @@
+# Reads questions from an Excel file,
+# and feeds them into the GPT-3.5 website.
+# Then writes the answers back to the Excel file.
+#
+# author : Mason Marker
+# date : 6/4/2023
+
+# import ChatGPT library
+# for automation of the website
+import ('lib/auto/chatgpt')
+
+# load the Excel Workbook
+@ book = excel(
+    'C:\\Users\\mason\\OneDrive\\Desktop\\msn\\bball.xlsx')
+
+# obtain the active Worksheet
+@ sheet = book.sheet('Lebron')
+
+# Asking ChatGPT for answers to the 
+# questions in the first column
+# 
+# Unpack the GPT response request
+# to the Google Chrome instance
+# and the array of responses
+unpack(chatgpt:ask_gpt(
+    map(sheet.column(0), 'q', cat('Answer in 5 words or less:', q))),
+    'chrome', 'answers')
+
+# close Google Chrome
+chrome.close()
+
+# write the answers to the Excel file
+answers.each('answer', sheet.add_to_column('Answers', answer))
+
+# save and close the book
+book.save()
+book.close()

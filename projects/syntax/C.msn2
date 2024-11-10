@@ -1,0 +1,142 @@
+# demonstrates MSNScript2's ease of ability to create and emulate another language
+#
+# C made a loop lol (C->Python->MSNScript2->C)
+#
+# author : Mason Marker
+# date : 12/8/2022
+# updated in 2.0.387
+
+import('lib/os')
+os:clear()
+
+# functions
+@funcdefs=[]
+
+# emulating C functions
+def('printf', 'first', '__printing', (
+    __printing.replace('\n', '%'),
+    var('__split', __printing.split('%')),
+    if (less(len(__split), 2), <<print(|__printing|, end="")>>, 
+        for(0, -(len(__split), 1), '__i', 
+            print(__split.get(__i)))),
+    len(__printing)
+))
+
+def('fwrite', 'path', 'text', (
+    file.create(path),
+    file.write(path, text)
+))
+
+
+def('fread', 'path', (
+    file.read(path)
+))
+def('strcat', '__string1', '__string2', (
+    cat(__string1, __string2)
+))
+
+
+# include macro (we cannot use the preceeding # of the include 
+# because that indicates a comment in MSNScript2)
+# we need to use the system call val() to extract a complex value of a variable
+macro('include', '__m_file', import(-(__m_file)))
+
+# macros created to assert no errors when evaluating
+macro('int main() {', 'funcdef',)
+macro('}', '__unused',)
+
+# creates new syntax to set a variable
+# new syntax specifically evaluates the first two arguments provided
+# as per C syntax, the variable name cannot contain spaces
+macro('define', '__def', (
+
+    # prepares the variable definition
+    __def.replace('"', ''),
+    __def.strip(),
+
+    # prepare to create the new variable
+    @vn = '',
+    @vl = '',
+    @at_value = 0,
+
+    # using val() for complex return values
+    each( val ('__def'), 'char', (
+        if (not(at_value), (
+            if (char.equals(' '),  @at_value = 1),
+            if (not(char.equals(' ')), vn.add(char))
+        ), vl.add(char))
+    )),
+
+    # strip value and evaluate according to the type contained in the value string 
+    vl.strip(),
+    
+    # rid of any post semicolon
+    if (vl.endswith(';'), var('vl', vl.slice(,-(len(vl),1)))),
+    if (and(not(vl.equals('None')), not(vl.equals(None))), (
+        var('__ev', -(vl)),
+        if (not(__ev.equals(None)), var('vl', __ev))
+    )),
+
+    print('[+] creating variable:', vn, 'with value:', vl),
+
+    # creates a new macro that will replace the variable name specified
+    # with the value stored
+    # note that macro can take a fourth argument in place of the third
+    # to return a specific value as opposed to running a block of code
+    macro(vn, '__unused', None , vl)
+))
+
+# executes the preceeding line
+postmacro(';', '__line', -(val('__line')))
+
+
+
+# --------------------- we now in C lol ---------------------
+
+# serialization library
+include "lib/serial";
+
+# global variable definition macros
+define WELCOME "hello from a C program!";
+define MAX 10;
+define MIN 0;
+define PATH "localstorage/local.txt";
+define TEXT "test write from C";
+
+# main program
+int main() {
+
+    assert(equals(printf("%s", "\n"), 1));
+
+    # C's notorious printf() working in unison with its infamous strcat()
+    assert(equals(printf("%s", strcat(WELCOME, "\n")), 24));
+
+
+    # assertions, note the conformity to C's possible syntax given
+    # a function declaration for assert(), not(), and equals()
+    assert(equals(MAX, 10));
+    assert(not(equals(MAX, 11)));
+    assert(equals(0, MIN));
+    assert(not(equals(1, MIN)));
+    assert(not(equals(MAX, MIN)));
+    assert(equals(MAX, MAX));
+
+
+    # opens a serialized variable
+    serial:open("1");
+
+    # utilizing the included library for serialization
+    assert(equals(serial:next("1"), 1));
+    assert(equals(serial:next("1"), 2));
+    assert(equals(serial:next("1"), 3));
+    assert(equals(serial:next("1"), 4));
+
+    # its humble fwrite()
+    fwrite(PATH, TEXT);
+
+    # and its subtle fread()
+    assert(equals(fread(PATH), TEXT));
+}
+
+
+# -----------------------------------------------------------

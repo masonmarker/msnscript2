@@ -1,0 +1,50 @@
+# library for http server support
+# author : Mason Marker
+# date : 11/9/2022
+# updated in 2.0.387
+
+
+# localhost
+var('http:localhost', '127.0.0.1')
+
+# network
+# broadcasts on all of the executing machine's network interfaces
+var('http:network', '0.0.0.0')
+
+# default http post
+var('http:default_port', 8000)
+
+# default flask port
+var('http:default_flask_port', 5000) 
+
+# starts an http server on address:port on a new thread to permit further instructions
+def('http:start', 'http:address', 'http:port', (
+    thread(console(+(get(settings(), 'runner_alias'),
+        ' -m http.server ', str(http:port), ' --bind ', str(http:address)))),
+    True
+))
+
+# simplifies POST system call method
+# demonstrates how the api endpoint json is manipulated using POST(url, port, path, json)
+# port defaults to the default flask port (5000)
+def('http:local_post', 'local_post:path', 'local_post:data', POST(
+    http:localhost, http:default_flask_port, local_post:path, local_post:data
+))
+
+# simplifies GET system call method
+def('http:local_get', 'local_get:path', GET(
+    http:localhost, http:default_flask_port, local_get:path
+))
+
+# # simplifies DELETE system call method
+def('http:local_delete', 'local_delete:path', DELETE(
+    http:localhost, http:default_flask_port, local_delete:path
+))
+
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+# demonstrates how to break out of context
+# author : Mason Marker
+# date : 11/14/2022
+
+
+# create private context
+private((
+
+    # increment
+    var('number', 0),
+    
+    for(0, 100, 'i', (
+
+        # leave private context if number > 75
+        # exports number and i to parent context
+        if (number.greater(75), (
+            export('number', 'i'),
+
+            # leaves private context
+            break()
+        )),
+
+        # increments number
+        number.add(1)
+    )),
+
+    # should be unreached code
+    # (keyword 'should' lol)
+    i.add(999)
+))
+
+# asserts variables were computed and exported correctly
+assert(i.equals(76), number.equals(76))

@@ -1,0 +1,61 @@
+# Tests functionality of objects.
+#
+# author : Mason Marker
+# date : 11/7/2022
+# updated in 2.0.387
+
+# fresh console
+import ('lib/os')
+os:clear()
+
+# creates a template class
+# all resources and methods created in the class
+# will be absorbed as a single object variable once definition is complete
+class('person', (
+
+    # person attributes
+    var('name', None),
+    var('age', None)
+))
+
+prnt('main: created class "person"')
+
+# creating a unique instance of the class defined
+var('joe', person('joe', 21))
+prnt('main: created instance of "person" called "joe"')
+
+# assert attributes were automatically set correctly
+assert(equals(getattr('joe', 'name'), 'joe'))
+assert(equals(getattr('joe', 'age'), 21))
+prnt('main: getattr() passed testing')
+
+# testing setattr()
+setattr('joe', 'age', 22)
+
+# assert attribute was set correctly
+assert(equals(getattr('joe', 'age'), 22))
+prnt('main: setattr() passed testing')
+
+# father class
+class('father', (
+    var('name', None),
+    var('children', [])
+))
+
+# son class
+class('son', (
+    var('name', None)
+))
+
+var('dad1', father('david', []))
+var('son1', son('alvin'))
+
+
+# easier way of getting attributes
+assert(equals(dad1.name(), 'david'))
+# assert(<<|dad1.name()| != 50 and |dad1.children()| == []>>)
+assert(and(not(equals(dad1.name(), 50)), equals(dad1.children(), [])))
+
+# setting attributes
+dad1.name('jerry')
+assert(equals(dad1.name(), 'jerry'))

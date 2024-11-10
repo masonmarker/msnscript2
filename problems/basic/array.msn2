@@ -1,0 +1,61 @@
+# removes an element from an array
+#
+# author : Mason Marker
+# date : 5/13/2023
+# updated in 2.0.387
+
+# import timer
+import ('lib/timer.msn2')
+
+# resets test array
+function('reset', (@array = list(range(0,100)), timer:start()))
+# verifies the number 75 was removed
+function('verify', (assert(not(array.has(75))), print(timer:runtime(), 's')))
+
+
+# fastest way
+reset()
+# -----------
+array.removen(1, 75)
+# -----------
+verify()
+
+
+
+
+
+reset()
+# -----------
+array.remove(75)
+# -----------
+verify()
+
+
+
+
+
+
+
+
+reset()
+# -----------
+@ _n = []
+array.each('_e',
+    if(not(_e.equals(75)), _n.append(_e))
+)
+@ array = _n
+# -----------
+verify()
+
+
+reset()
+# # -----------
+@ found = 0
+array.each('el', (
+    if (equals(el, 75), @ found = 1),
+    try(if(found, array.removen(1, el)))
+))
+# # -----------
+verify()
+
+

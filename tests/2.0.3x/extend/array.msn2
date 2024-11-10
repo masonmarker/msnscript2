@@ -1,0 +1,16 @@
+# Tests a module.
+#
+# author : Mason Marker
+# date : 8/2/2023
+
+# importing the module
+import ('lib/extend/array')
+
+# import testing functions
+import ('lib/tests')
+
+# common array to test with
+
+
+# test the module
+tests:run(0, array:at([1, 2, 3, 4, 5], 0))

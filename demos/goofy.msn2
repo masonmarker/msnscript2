@@ -1,0 +1,39 @@
+# demonstrates odd ways of doing things that work for some reason
+# 
+# author : Mason Marker
+# date : 12/01/2022
+
+# os specific console usage
+import ('lib/os')
+import ('lib/syntax/msn2plus')
+os:clear()
+
+
+
+# sorting an array
+print([5, 4, 3, 2, 1], 'sorted is' ,<2> sorted(<< %[1, 2, 3, 4, 5]%[::-1] >>)  <2>)
+
+# index of an element in an array
+print('index of 3 in [1, 2, 3, 4, 5] is' , << [1, 2, 3, 4, 5].index(3) >>)
+
+# macro constant
+macro('IM HUNGRY FOR PI', '__unused', 3.14)
+
+assert(equals(IM HUNGRY FOR PI, 3.14))
+assert((IM HUNGRY FOR PI).equals(3.14))
+assert((IM HUNGER FOR PI).notequals(5))
+
+# triple nested for loop
+@i=0
+0|2|_ (0|2|_ (0|2|_ (i.++())))
+equals(i, 8) ??
+
+
+
+
+
+
+
+
+
+

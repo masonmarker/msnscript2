@@ -1,0 +1,100 @@
+# HTML and JavaScript for the interface
+#
+# author : Mason Marker
+# date : 6/27/2023
+
+# import css
+import ('tests/lang/html/calc/style')
+
+# HTML path
+@ html_path = 'tests\\lang\\html\\speed\\interface.html'
+
+# render the HTML
+function('interface:render', file.write(html_path, HTML(
+    <html>
+        <head>
+            <title>Speed Testing</title>
+            <style>
+                {=
+                    css
+                =}
+            </style>
+        </head>
+        <body>
+            <div>
+
+                # HTML body
+                <h1>Speed Testing</h1>
+                <p class="enter">Enter the length of the array to generate:</p>
+                <input id="array_len" type="number" value="0">
+                <p class="enter">Java: <span id="java">-</span></p>
+                <p class="enter">Node: <span id="javascript">-</span></p>
+                <p class="enter">C: <span id="C">-</span></p>
+                <button id="submit" onclick=
+                    {=
+                    # msn2 request
+
+                        # insert JavaScript
+                        script(
+                            
+                            # common headers
+                            const headers = {
+                                'Content-Type': 'application/json',
+                            };
+
+                            fetch('http:\/\/127.0.0.1:8080/', {
+                                method: 'POST',
+                                headers: headers,
+                                body: JSON.stringify({
+                                    'array_len': document.getElementById('array_len').value,
+                                    'finished': 0
+                                })
+                            }).then(response => response.json()).then(data => {
+                                
+                                # continuously fetch for the 'finished' field to be a 1
+                                # (meaning the computation is finished) use setTimeout
+                                # to avoid blocking the main thread
+                                async function fetcher() {
+                                    try {
+                                    fetch('http:\/\/127.0.0.1:8080/', {
+                                        method: 'GET',
+                                        headers: headers
+                                    }).then(response => response.json()).then(data => {
+                                        if (data['finished'] == 1) {
+                                            document.getElementById('java').innerHTML = data['java'];
+                                            document.getElementById('javascript').innerHTML = data['javascript'];
+                                            document.getElementById('C').innerHTML = data['C'];
+                                        } else {
+                                            setTimeout(fetcher, 100);
+                                        }
+                                    });
+                                    } catch (e) {
+                                        setTimeout(fetcher, 500);
+                                    }
+                                }
+
+                                fetcher();
+                                
+                            });
+                        )
+                    =}
+                >Submit</button>
+            </div>
+        </body>
+    </html>
+)))
+
+# function to launch Chrome
+function('interface:show', (
+    # create Chrome instance
+    @ chrome = app(
+        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'),
+    chrome.start(),
+    chrome.write(+(
+        'C:\\Users\\mason\\OneDrive\\
+        Desktop\\TheMsnProject\\msnscript2\\', html_path)),
+    chrome.enter()
+))
+
+# render the HTML
+interface:render()

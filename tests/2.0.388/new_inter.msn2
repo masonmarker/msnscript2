@@ -1,0 +1,70 @@
+# Tests the new line accumulator for the
+# msn2 interpreter.
+#
+# author : Mason Marker
+# date : 9/15/2023
+
+# import resources
+import ('tests/resources/start')
+
+# running a line ending with a ','
+# ------------------------------------
+assert(True,
+
+1)
+
+# creating a variable
+@ array = [1,2,3,
+4,5]
+# assert the assignment was made
+assert(array.equals([1,2,3,4,5]))
+
+# more complex example
+assert(equals(+(84572394875293487529348572390487523904875, 
+    1), 84572394875293487529348572390487523904876))
+
+# defining a complex function
+def('func',
+
+    # defining arguments
+    &arg1='Default',
+    &arg2='Default',
+    &arg3='Default',
+    &arg4='Default', 
+    # function body
+    cat(arg1, arg2, arg3, arg4)
+)
+# invocation
+assert(equals(func('Hello', 'World', 'Sup', 'Dude'), 'HelloWorldSupDude'))
+# with 2 arguments
+assert(equals(func('Hello', 'World'), 'HelloWorldDefaultDefault'))
+# with 1 argument
+assert(equals(func('Hello'), 'HelloDefaultDefaultDefault'))
+# with no arguments
+assert(equals(func(), 'DefaultDefaultDefaultDefault'))
+# specifying two arguments
+assert(equals(func(&arg1='Hello', &arg2='World'), 'HelloWorldDefaultDefault'))
+# specifying one argument
+assert(equals(func(&arg1='Hello'), 'HelloDefaultDefaultDefault'))
+# specifying all arguments backwards
+assert(equals(func(&arg4='Dude', &arg3='Sup', &arg2='World', &arg1='Hello'), 'HelloWorldSupDude'))
+
+# ------------------------------------
+
+# line ending in '='
+@ c = 
+    1
+# assert the assignment was made
+assert(c.equals(1))
+
+@ c =
+    [1,2,3,4,5]
+# assert the assignment was made
+assert(c.equals([1,2,3,4,5]))
+
+# ------------------------------------
+# ending a line with '{='
+assert(equals(script({=
+549375398475
+=}), "549375398475"))
+

@@ -1,0 +1,45 @@
+# Chooses and executes an msn2 file.
+#
+# author : Mason Marker
+# date : 9/4/2023
+# version : 2.0.387
+
+# choose and execute the .msn2
+# file in a new context
+
+# clear the screen
+import ('lib/os')
+os:clear()
+
+# picking a file message
+print:color(
+    {'text': 'Choosing ','style': 'bold','fore': 'green'},
+    {'text': '.msn2','style': 'bold','fore': 'blue'},
+    {'text': ' file...','style': 'bold','fore': 'green'}
+)
+
+# get the path to the file to launch
+@ path = auto.file()
+
+# print the path
+print:color(
+    {
+        'text': 'File chosen: ',
+        'style': 'bold',
+        'fore': 'green'
+    },
+    object(
+        'text', path,
+        'style', 'bold',
+        'fore', 'blue'
+    )
+)
+# running
+print:color(
+    {'text': 'Running file...','style': 'bold','fore': 'green'}
+)
+
+# execute the script
+console(+(
+    get(settings(), 'runner_alias'), 
+    ' msn2.py ', path))

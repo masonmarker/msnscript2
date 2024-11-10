@@ -1,0 +1,33 @@
+# demonstrates MSNScript2's capability to create a simpler, more minamalist, original language
+#
+# author : Mason Marker
+# date : 12/10/2022
+
+# import new language syntax
+import('projects/syntax/lib/minimal.msn2')
+
+
+
+
+
+
+# ------------------- MINIMALIST PROGRAM -------------------
+
+# new printing syntax
+prt '[+] starting minimalist program'
+
+
+# general assertions
+# demonstrates new assertion syntax ??
+True??
+'mason' == 'mason' ??
+[1, 2, 3, 4, 5] != {5: '23423'} ??
+
+# MSNScript2 base syntax for variable assignment
+@ v = [6, 4, 2, 4]
+
+
+prt sort [7, 6, 5, 4, 3, 2]
+
+
+# ----------------------------------------------------------

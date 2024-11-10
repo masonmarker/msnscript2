@@ -1,0 +1,27 @@
+# Tests ChatGPT's ability to generate and execute code
+# in multiple programming languages.
+#
+# author : Mason Marker
+# date : 10/12/2023
+
+# import ChatGPT library
+import ('lib/auto/chatgpt')
+
+# create ChatGPT instance
+@gpt = chatgpt:instance()
+
+
+
+
+
+
+
+# do the above 10 times
+# JAVA implementation
+# 10(print(get(JAVA(
+#     public class Main {
+#         public static void main(String[] args) {
+#             {=gpt.ask:code('java', "(pretend we're already in the main function)compute and print the sum of this array: [0, 1, 2, 3, 4]")=}
+#         }
+#     }
+# , 'Main'), 'out')))

@@ -1,0 +1,1099 @@
+# demonstrates how to use the base language, and to build upon the base language
+# to create a personalized coding experience
+#
+# this tutorial / demonstration utilizes the safest features of the base language
+# and serves as a reference for correct syntactical usage for user programs
+# all code demonstrated in this file is safe and can be used elsewhere
+#
+# run this program from /msnscript2 with '{python_alias} msn2cli.py -f TUTORIAL\suggestedusage.msn2'
+#
+# see tests/validator.msn2 fro a MASSIVE increase in syntax detail
+#
+#
+# author : Mason Marker
+# date : 12/20/2022
+# UPDATED : 5/28/2023
+
+
+# to import files, file path is relative to the user's cwd
+# import() can be placed anywhere, as it is treated as a system call
+# importing a file simply executes the msn2 code within the file specified
+# in this context
+import ('lib/os')
+
+# importing syntax additions
+# and thread ease of use with '/t'
+import ('lib/syntax/msn2plus')
+
+
+# using an imported method from actual path '../os.msn2' to clear the console
+os:clear()
+
+
+
+
+# printing to the console
+print('[+] beginning tutorial')
+
+
+# setting variables
+var('var1', 1)
+
+# asserting that statement(s) are not 0
+assert(1, True, not False, not 0, not(0), assert(1), var1)
+
+# boolean assertions
+assert(5 != 4, 4 == 4, 3==3, 7>=3, 2>=2, 5<=7, 5<=5)
+
+# assertions with variables
+assert(equals(var1, 1))
+
+
+
+
+# alternate variable setting with '@' macro
+@var1 += 3
+assert(equals(var1, 4))
+
+@var1 = 3
+assert(equals(var1, 3))
+
+@var1 -= 1
+assert(equals(var1, 2))
+
+@var1 *= 2
+assert(equals(var1, 4))
+
+@var1 /= 2
+assert(equals(var1, 2))
+
+
+# msn2 instruction insertion with '|'
+@var1 = sorted([5, 4, 3, 2, 1])
+assert(equals(var1, [1, 2, 3, 4, 5]))
+
+
+var('var1', 0)
+
+# directly destructive variable manipulation with functions
+assert(equals(var1.++(), 1))
+assert(equals(var1, 1))
+assert(equals(var1.--(), 0))
+assert(equals(var1, 0))
+
+@ string='hello\nthis is a string'
+assert(equals(string, 'hello\nthis is a string'))
+
+@ string = ''
+assert(equals(string, ''))
+
+@ string = 'hello'
+assert(equals(string, 'hello'))
+
+@string += '\nthis is a string' 
+assert(equals(string, 'hello\nthis is a string'))
+
+# function based approach
+string.replace('\n', ' ')
+assert(equals(string, 'hello this is a string'))
+
+string.replace('i', '', 2)
+assert(equals(string, 'hello ths s a string'))
+
+string.add('!')
+assert(equals(string, 'hello ths s a string!'))
+
+
+
+# conditionals
+if (1, assert(1), assert(0))
+if (0, assert(0), assert(1))
+if (1, assert(1))
+
+? True (assert(1), assert(0))
+? False(assert(0), assert(1))
+
+? 1 (assert(1))
+?0(,assert(1))
+
+# loops
+var('var1', 0)
+for (0, 5, 'i', @var1 += i)
+assert(equals(var1, 10))
+
+# start_arg|end_arg|loop_arg loops cannot have arguments iunvoving a '('
+var('var1', 0)
+0|5|i (@var1 += i)
+assert(equals(var1, 10))
+
+
+# any line ending in '(' will continue until the next line ending in ')'
+# this is useful for long lines of code
+
+assert(
+    True,
+    not False, 
+    True,
+    not(False),
+    1)
+
+assert (
+    1
+)
+
+# inline function syntax
+# allows for a sequence of instructions and a return instruction from within the '=>()' syntax
+# the return instruction is the last instruction in the sequence
+
+# the following function returns the sum of the first 10 integers
+var('_sum', =>(
+    var('_sum', 0), 
+    for (0, 10, 'i', @_sum += i),
+
+    _sum
+))  
+
+assert(equals(_sum, 45))
+
+
+# shortening the process into 1 line
+assert(equals(var('_sum', =>(var('_sum', 0), for (0, 10, 'i', @_sum += i), _sum)), 45))
+
+
+# without a variable
+assert(equals(=>(var('_sum', 0), for (0, 10, 'i', @_sum += i), _sum), 45))
+
+# with simple loops
+assert(equals(=>(var('_sum', 0), 0|10|i (@_sum += i), _sum), 45))
+
+# with a python system call fallback to range() and sum() (most optimal)
+assert(equals(sum(range(0, 10)), 45))
+
+# using python fallback
+assert(sum(range(0, 10)) == 45)
+
+# with each syntax
+assert(equals(=>(
+    var('_sum', 0),
+    each(range(0, 10), 'el', @_sum += el),
+    _sum
+), 45))
+
+# with each syntax  
+assert(equals(=>(
+    var('_sum', 0),
+    each(range(0, 10), 'el', add('_sum', el)),
+    _sum
+), 45))
+
+
+# more optimal approach
+sum(range(0, 10)) == 45 ??
+
+# enclosing syntax to make a range faster
+enclosedsyntax('rng[', ']', '__line', =>(
+    var('__split', __line.split(':')),
+
+    # enclosing syntax <<>> interprets and replaces all msn2 code 
+    # surrounded by || with it's return value, then evaluates the
+    # resulting string as a line of Python
+    << list(range(int(|__split|[0]), int(|__split|[1]))) >>
+))
+
+# more optimal approach
+equals(sum(rng[0:10]), 45) ??
+
+
+# this is a user defined function that can be used in the same way as the built in functions
+# function definition starts with a '~' , a body line starts with '--'
+# the user function should set the return value 
+#
+# nested functions are not supported WIPWIPWIPWIPWIPWIP
+#
+# equals method with less characters
+~ eq(__arg1, __arg2) -> __result
+    -- var('__result', equals(__arg1, __arg2))
+
+# more optimal approach
+eq(sum(rng[0:10]), 45) ??
+
+# macro for obtaining the sum of a range
+enclosedsyntax('rsum[', ']', '__line', =>(
+    var('__split', __line.split(':')),
+    << sum(range(int(|__split|[0]), int(|__split|[1]))) >>
+))
+
+# more optimal approach with rsum[]
+eq(rsum[0:10], 45) ??
+eq(rsum[0:100], 4950) ??
+eq(rsum[0:1000], 499500) ??
+eq(rsum[0:10000], 49995000) ??
+
+# -------------------- MSN2 OBJECTS --------------------
+
+# you can call methods on virtually all types of basic data types 
+# being those in Python. 
+# example:
+var('n', 4)
+n.++()
+eq(n, 5)??
+
+# you can also call methods on objects
+# objects in msn2 without msn2 function calls or macros is created with
+# a Pythonic syntax, the exact same of that within Python
+var('d', {'key': {'key2': 'p4ssw\n0rd'}})
+
+# however when creating a dict requring msn2 code, see crtl->f dictfrom()
+
+# indexing a dictionary
+eq(d.get('key', 'key2'), 'p4ssw\n0rd') ??
+
+# changing a dictionary
+d.setn('n3wp4ssw0rd', 'key', 'key2')
+eq(d.get('key', 'key2'), 'n3wp4ssw0rd') ??
+
+
+# defining an msn2 class
+# person class with two attributes
+class('person', =>(
+    @name='',
+    @age=-1
+))
+
+# creating an instance of the class
+var('me', person('mason', 21))
+eq(me.name(), 'mason') ??   
+eq(me.age(), 21) ??
+
+# resetting attributes
+me.name('mason2')
+me.age(22)
+eq(me.name(), 'mason2') ??
+eq(me.age(), 22) ??
+
+
+
+
+# ---------------------- CREATION ----------------------
+
+# msn2 has been designed to keep algorithms within a single interpretation,
+# while this interpretation may interpret sub instructions, the algorithm
+# was written with a single broad goal in mind by the programmer
+
+# the system call from() creates an array from its arguments
+
+
+# creating an array
+@ array = from()
+eq(array, []) ??
+
+@ array = from(None)
+eq(array, [None]) ??
+
+@array = from('', 2, 3, 4, '')
+eq(array, ['', 2, 3, 4, '']) ??
+
+
+
+# system call dictfrom() creates a dictionary from its arguments
+# every two arguments are treated as a key-value pair in the creating
+# dictionary
+# an odd quantity of arguments is not possible
+
+
+# creating a dict requiring msn2 code
+@ dict = dictfrom('key', [], 'key2', dictfrom('key', []))
+eq(dict, {'key': [], 'key2': {'key': []}}) ??
+
+# class format {humans: name: [eyecolor, hairtype, age]}
+@class1 = =>({'humans': {'joe': ['green', 'curly', 40]}})
+
+# function that outputs a human with a more appealing format
+function('human_from', ret('human_from', =>(
+    dictfrom(
+        'name', 'joe', 
+
+        # indexing variables is safest with
+        # the indexing system call ->()
+        # macros are used to simplify this indexing technique
+        # farther down in this file
+        'eyecolor', ->(->(class1.humans(),__name), 0),
+        'hairtype', ->(->(class1.humans(), __name), 1),
+        'age', ->(->(class1.humans(), __name), 2))
+)), '__name')
+
+
+# creating a more appealing format of a human
+@ joe = human_from('joe')
+eq(joe, {'name': 'joe', 'hairtype': 'curly', 'eyecolor': 'green', 'age': 40})??
+
+# variable keys can be indexed now
+eq(joe.name(), 'joe') ??
+eq(joe.hairtype(), 'curly')??
+not(eq(joe.hairtype(), 'curlyf')) ??
+eq(joe.eyecolor(), 'green') ??
+eq(joe.age(), 40)??
+
+
+# WORKING WITH ARRAYS PREVIEW
+@ array = [1, 2, 3, 4, 5]
+assert(equals(filter(array, 'el', el.greater(3)), [4, 5]))
+
+# destructive
+array.filter('el', el.less(3))
+array.equals([1, 2]) ??
+
+
+# ------------------------ CODE ISOLATION ------------------------
+
+# msn2 is divided into interpretation contexts
+# a single context consists of variables and user defined methods
+#
+# you can privately execute code segments with private() or new()
+#
+# private() takes 1 argument, which is the code segment to execute in isolation from
+# the parent context
+# private() inherits copies of the parent context's variables and user-defined methods
+# 
+# new() executes its single code block argument within a new context. 
+# this new context inherits no variables or user defined methods from its parent context
+
+# this variable is public to this context
+@ v = 0
+
+# 'v' is copied into the child context,
+# however the child context cannot reference the parent context's copy of 'v'
+private(=>(
+
+    # assert that v exists
+    exists('v') ??,
+    not(exists('asdf')) ??,
+    not(v) ??,
+    @v += 1,
+    v ??,
+    @priv_var=0,
+    exists('priv_var') ??
+))
+
+# verify code segment was privatized
+exists('v') ??
+not(exists('priv_var')) ??
+eq(v, 0) ??
+
+# private returns the return value of its first argument, 
+# which allows for private execution of methods, for example:
+
+~ get_keys(__map) -> __keys
+    -- var('__keys', list(keys(__map)))
+
+# private context inherits and executes user function in an isolated environment
+eq(private(get_keys({'key': 'value', 'name': 'joe'})), ['key', 'name']) ??
+
+
+# new() inherits no variables
+
+@ v = 0
+new(=>(
+    not(exists('v')) ??,
+    @newvar = 0
+    exists('newvar') ??
+))
+
+exists('v')
+not(exists('newvar')) ??
+
+# breaking out of a private context
+# system call break() allows for an immediate Interpreter redirect to the parent context
+# break() is used to break out of a private() or new() context
+# break() takes any amount of arguments as an array of return values to the private()
+# or new() call
+# 
+# example:
+
+private(=>(
+    for(0, 100, 'i', if (i.greater(50), =>(
+
+        # exports variable 'i' to the parent context
+        export('i'),
+
+        # breaks out of the private context
+        break()
+    )))
+))
+
+i.equals(51) ??
+
+# see farther below in this file for a break() simplification technique
+# via macros
+
+# why use private() or new() ??
+# code segments need to be isolated if the same method / variable name
+# could possibly be used by another thread simulteneously, 
+# affecting variable values for both method calls
+
+# VVVV   more about threads below   VVVV
+# -------------------- MORE COMPLEX TASKS --------------------
+
+
+# starting a thread
+
+# starts a thread with the name 'thread_1' and the instructions 'assert(1)'
+thread('thread_1', 1??)
+
+# joins with the thread
+join('thread_1')
+
+# starting a thread with imported msn2plus syntax
+var('n', /t 1??)
+join(n)
+
+# starting two threads that communicate with each other
+# tests this process across 5 iterations
+
+0|5|_ (=>(
+    @can_continue=0,
+    @t2_done=0,
+    @work=0,
+    /t =>(
+        wait(t2_done),
+        @can_continue=1
+    ),
+
+    /t =>(       
+        0|10|_ (@work+=1),
+        @t2_done=1 
+    ),
+
+    work.equals(10) ??,
+    wait(can_continue)
+))
+
+work.equals(10) ??
+
+
+# -------------------- python fallback <<>> --------------------
+
+# importing ips
+import('lib/apis/api.msn2')
+
+# obtaining local ip
+var('ip', api:api_local.host())
+
+# use '||' to insert a line of msn2 code into a line of Python code, then returning the
+# evaluated Python code
+#
+# this allows for Pythonically syntactical capabilities in msn2
+# ------------------------------------V----V---------------
+var('ip_split', << [int(el) for el in |ip|.split('.')] >>)
+ip_split.equals([127, 0, 0, 1]) ??
+
+
+# optimizing with a user defined function
+~ to_int(__string_array) -> __result
+    -- var('__result', << [int(el) for el in |__string_array|] >>)
+
+@ip_split=0
+var('ip_split', to_int(ip.split('.')))  
+ip_split.equals([127, 0, 0, 1]) ??
+
+
+
+# -------------------- MORE MACROS --------------------
+
+# optimizing assertion syntax for clearer tests
+macro('TEST', '__line', private(=>(
+    var('__split', __line.split('AND')),
+
+    # making assertion
+    if(not(equals(-(->(__split, 0)), -(->(__split, 1)))), =>(
+
+        # printing error messagef
+        print('[-] assertion failed :', ->(__split, 0), '==', ->(__split, 1))
+    ))
+)))
+
+# clean test case syntax
+TEST ip_split AND [127, 0, 0, 1]
+TEST 54 AND 54
+TEST {'key': 'value'} AND {'key': 'value'}
+TEST [1, 2, 3] AND [1, 2, 3]
+TEST 1 AND 1
+TEST 'string' AND 'string'
+TEST 1.0 AND 1.0
+TEST 1.0 AND 1
+TEST 1 AND 1.0
+
+# testing classes
+TEST person('mason', 21) AND person('mason', 21)   
+
+# complex testing
+TEST 1?? AND True ??
+TEST 5 == 3 AND False
+
+# testing functions
+TEST to_int(ip.split('.')) AND [127, 0, 0, 1]
+TEST 'hello'.split('l') AND ['he', '', 'o']
+TEST 1 AND 5+4-4-4
+TEST =>(@v=1, v) AND =>(
+    @arr = [1, 2, 3, 4, 5],
+    eq(sum(arr), 15) ??
+)
+
+# -------------------- PROCESSES --------------------
+
+# launching processes has been simplified into a couple lines:
+
+# import processing library
+import('lib/processes.msn2')
+
+# importing timer
+import ('lib/timer.msn2')
+
+# clean processes from previous runs (optional but recommended)
+processes:clean_processes()
+
+# launch a process with imported fork()
+# second argument as code for process to run
+# second argument must be async()
+timer:start()
+processes:fork('p1', async(=>(
+
+    # user created macros aren't available in the new process
+
+    # code to be launched in a separate process
+    # this process will be launched in a separate thread
+    assert(1),
+
+    @processvar=1,
+    assert(equals(val('processvar'), 1)),
+)))
+
+# joins with the process
+join('p1')
+
+print('[*] 1 process fin in', cat(timer:runtime(), 's'))
+
+# asserts code was ran in another process
+not(exists('processvar')) ??
+
+# putting a thread to sleep
+
+
+timer:start()
+sleep(0.5)
+
+# reverting to classic assert
+assert(<< |timer:runtime()| >= 0.5 >>)
+
+# -------------------- MSN2 INSERTION --------------------
+
+# with <2> surrounding tags, you can insert msn2 code into msn2 code
+# example:
+
+# uses classic assertion to maintain interpretation authority over <2> tags
+# postmacro '??' would not function correctly in this scenario
+assert(<2> %timer:runtime()% >= 0.5 <2>)
+
+
+# -------------------- MSN2 ADVANTAGES --------------------
+
+# simple advantages of the language involve simplicity of completing tasks
+# within code. For example, the following code is a simple example of how
+# msn2 can be used to extract email information from a str:
+
+# extracting the name, domain, and extension from an email
+
+@email = 'johndoe123@outlook.com'
+@email2 = 'samtaylor321@gmail.com'
+@email3 = 'billsalmson@bros.com'
+
+# creates an email object
+~ email_from(__email) -> __result
+    -- var('__sp', __email.split('@'))
+    -- var('__result', << {'name': |->(__sp, 0)|, 'domain': |->(split(->(__sp, 1), '.'), 0)|} >>) 
+
+var('em1', email_from(email))
+var('em2', email_from(email2))
+var('em3', email_from(email3))
+
+TEST em1.name() AND 'johndoe123'
+TEST em1.domain() AND 'outlook'
+
+TEST em2.name() AND 'samtaylor321'
+TEST em2.domain() AND 'gmail'
+
+TEST em3.name() AND 'billsalmson'
+TEST em3.domain() AND 'bros'
+
+
+
+
+# you can destroy variables and user defined methods with the destroy() system call
+
+@v = 4
+exists('v')??
+
+destroy('v')
+not(exists('v'))??
+
+
+
+# destroying '__' will destroy all functions OR variables
+# starting with '__'
+
+~ __ () -> _
+@__v = 4
+exists('__v')??
+destroy:function('__')
+not(exists('__v'))??
+
+
+
+# -------------------- MSN2 SHIFT TO PROPER VARIABLE SETTING --------------------
+
+# as of 12/20/2022, variable setting and alteration has been shifted to a more proper syntax
+
+assert(@variable = assert(1))
+assert(equals(@variable+=assert(1)))
+
+assert(variable.equals(2))
+
+
+# working with complex variables
+@v = {'key': '\n\t\rhello\t\n\r', 'key2': -4532.543523, 'key3': [1, 2, 3, 4, 5]}
+assert(equals(v, {'key': '\n\t\rhello\t\n\r', 'key2': -4532.543523, 'key3': [1, 2, 3, 4, 5]}))
+
+
+# advanced setting of a variable
+
+@ v = =>(
+    @ array = [1, 2, 3, 4, 5],
+    array.avg()
+)
+
+TEST v AND 3.0
+
+@ v = =>(<< |[1, 2, 3]| >>)
+TEST v AND [1, 2, 3]
+
+
+# -------------------- EXAMPLE PROBLEM --------------------
+
+# create an array of length 9 with random numbers between 1 and the index at
+# which the number is being placed
+# the number should be an integer
+
+@ arr = =>(
+    @__unused = [],
+
+    # adds a random integer between 1 and the index to the array
+    # adds a third argument to the random() function to return an integer
+    for(1, 10, 'i', __unused. push (random(1, i,))),
+    __unused
+)
+
+# assert each element is in bounds
+for(1,arr.len(), 'i', assert(<< 1 <= |arr.get(i)| and |arr.get(i)| <= |i| >>))
+
+# --- OPTIMIZING LOOP FOR THIS CASE --- 
+
+# new EACH syntax incorporates the element and an index
+macro('EACH ', '__line', =>(
+
+    # extracting tokens
+    @__sp = __line.split(' IN '),
+    @__eachargs = ->(__sp, 0),
+    @__sp2 = split(->(__sp, 1), ' DO '),
+    @__block = ->(__sp2, 1),
+    @__iterable = ->(__sp2, 0),
+    @__eachargssp = __eachargs.split(','),
+    @__el_vname = ->(__eachargssp, 0),
+    @__ind_vname = ->(__eachargssp, 1),
+    __el_vname.strip(),
+    __ind_vname.strip(),
+
+    # perform loop logic
+    @__ind = 0,
+    @__each_ret=None,
+    each(-(__iterable), '__EACH_ELEMENT', =>(
+        var(__el_vname, __EACH_ELEMENT),
+        var(__ind_vname, __ind),
+        @__each_ret = -(__block),
+        @__ind+=1
+    )),
+
+    # cleanup macro variables
+    destroy('__sp', '__eachargs', '__sp2', '__block', '__iterable', '__eachargssp', '__el_vname', '__ind_vname', '__ind'),
+
+    __each_ret
+))
+
+
+# invoking EACH macro to perform each loop with element and index variables
+EACH el, i IN arr DO assert(<< 1 <= |el| and |el| <= |i| + 1 >>)
+
+
+@map = {}
+
+# str() method on a number gets a string representation of the number
+EACH element, ind IN [1, 2, 3] DO map.set(ind.str(), element)
+
+# converted array to map
+TEST map AND {'0': 1, '1': 2, '2': 3}
+
+
+# creates half-assed macro and enclosed syntax for crude list comprehension
+# ------------------------ LIST SIMPLIFICATION ------------------------
+
+# completes a task, then another task, returning the first task's return value
+# syntax : DO task1() THEN task2() -> task1.return
+macro('DO ', '__line', private(=>(
+    @ DO_split = __line.split(' THEN '),
+    @ DO_ret = -(DO_split.get(0)),
+    -(DO_split.get(1)),
+    DO_ret    
+)))
+
+# creating a list comprehension syntax similar to that of Python's,
+# however directly supporting msn2 code
+# added privacy protection so variables interpreted do not interfere
+# with other variables
+enclosedsyntax('2[', ']', '__line', private(=>(
+        
+    @ __forsp = __line.split(' FOR '),
+
+    # code block to execute
+    @ __block = __forsp.get(0),
+    
+    @ __insp = split(__forsp.get(1), ' IN '),
+    
+    # loop variable varname
+    @ __loopvar = __insp.get(0),
+
+    # obtains the iterable to loop over
+    @ __iterable = list(-(__insp.get(1))),
+
+    # perform loop
+    for (0, __iterable.len(), '__i', =>(
+        var(__loopvar, __iterable.get(__i)),
+         __iterable.set(__i, -(__block))
+    )),
+
+
+    # return mended list and destroy variables
+    DO list(__iterable) THEN destroy('__')
+)))
+
+# invokes msn2 list comprehension
+TEST 2[@el += 1 FOR el IN [1, 2, 3, 4, 5]] AND [2, 3, 4, 5, 6]
+
+# gets a range from 0 to 5
+TEST 2[_ FOR _ IN range(0, 5)] AND [0, 1, 2, 3, 4]
+
+
+
+# multiline list comprehension
+TEST 2[=>(
+    i.int()
+) FOR i IN ['1', '2', '3', '4', '5']] AND [1, 2, 3, 4, 5]
+
+
+@arr = [5, 4, 3, 2, 1]
+@arr = 2[@el *= 3 FOR el IN arr]
+TEST arr AND [15, 12, 9, 6, 3]
+
+
+# ------------------------ OTHER STUFF  ------------------------
+
+
+# creating and asserting 'e'
+@ e = 3
+equals(3, @ e = 3) ??
+
+e.equals(3) ??
+
+@ string = 'this\nis\y\ra string'
+
+string.equals('this\nis\y\ra string') ??
+
+# for lines that absolutely need to be on multiple lines,
+# you can use aggregate syntax '!{}'
+# example:
+
+!{
+    {} ==
+    {} ??
+}
+
+!{equals(True, 1) ??}
+
+@ object = {'key': 4, 'key2': 'value'}
+!{
+    object.equals(object) ??}
+
+
+
+# ---- NUMBER COMPARISON ----
+
+# literals can be compared wiht Python syntax within any line
+# example:
+4 == 4 ??
+3 != 5 ??
+3 > 1 ??
+3 >= 3  and 4 < 10??
+1 == 1+1 - 1 ??
+
+# there are several ways of camparing numbers as variables
+
+
+# variable methods (recommended)
+@ v = 0.00
+@v2 = 1
+@ v3 = 1
+@ v4 = 0.00
+v2 ??
+v3 ??
+
+v.less(v2) ??
+v2.greater(v) ??
+
+v.lessequal(v4) ??
+v.greaterequal(v4) ??
+
+v2.greaterequal(v3) ??
+v2.greaterequal(v) ??
+
+# defining an in between function
+function('in_between', =>(
+
+    # method 2: using Python fallback <<>>
+    ret('in_between', << |__min| <= |__is_in| and |__is_in| <= |__max| >>)
+
+# defining function arguments
+), '__min', '__is_in', '__max')
+
+
+@v = 50
+
+# testing
+in_between(-1, v, 51) ??   
+in_between(50, v, 50) ??
+in_between(20, v, 100) ??
+
+
+
+
+# ---- INTERPRETER REDIRECTION ----
+
+# interpreter redirection allows for lines of code to be redirected to a redirect(line_var_name, function)
+# and stopredirect()  system calls that alter the path of the working 
+# interpreter to a function that would operate on the line instead
+# this will occur until stopredirect() is called
+# startredirect() executes each line within the function declared in the most recent redirect()
+# 
+# usage:
+# redirect(line_var_name, function)
+# ****
+# ****
+# ****
+# stopredirect()
+# startredirect()
+
+# other examples than those below can be found in tests/validator.msn2
+
+
+redirect('__line', assert(-(__line)))
+    1
+    not False
+    1
+    True
+stopredirect()
+startredirect()
+
+# this syntax can be simplified for personal need with MSN2 syntax alteration
+
+# simplify redirect definition
+macro('verify:', '__unused', redirect('__line', if(not(-(__line)), =>(
+    print('[-] assertion error : ', __line)
+))))
+
+# !!! IMPORTANT !!!
+# when requesting that an Interpreter stops its redirection,
+# its important to grasp that only macros have priority
+# over methods AND the check for an active Interpreter redirect request: 'example()'
+# 
+
+# given the above, we simplify the redirection cancellation process as shown
+macro(':fin', '__unused', =>(stopredirect(), startredirect()))
+
+
+
+
+# demonstration of simplified redirection request to an assertion function
+verify:
+    1
+    1
+    'hello' == 'hello'
+:fin
+
+
+verify:
+    True == True
+    1
+    assert(1)
+    1 ??
+    1
+:fin
+
+
+
+# creating an approach to line by line function declaration
+macro('func ', '__funcdec', =>(
+
+    @__sp = __funcdec.split(' : '),
+    @__fname = strip(__sp.get(0)),
+
+    # declares the basics of the new function
+    function(__fname,),
+
+    # add each argument variable to the function
+    each(split(strip(__sp.get(1)), ' '), '__var', =>(
+        function.addarg(__fname, __var)
+    )),
+
+    # requests for an Interpreter redirect
+    redirect('__funcline', =>(
+        function.addbody(__fname, __funcline)
+    ))
+))
+
+# declares a function and ends Interpreter redirection
+macro('end', '__unused', =>(stopredirect(), startredirect()))
+
+# demonstrating the simplified redirection of function contruction
+# using the same macro ':fin' to symbolize the end of Interpreter redirection
+
+
+@arr = [1, 2, 3, 4, 5]
+
+# function declaration for finding the index of an element in an array
+func array_index :  __array __element
+
+    # store return variable (for no reason, just testing)
+    var('_ret', __array.index(__element))
+
+    # return a value to a function
+    ret('array_index', _ret)
+end
+
+
+# an Interpreter's redirection can be tedious and prove
+# to be a fragile component of the language because of a certain kink
+# in msn2's design:
+
+# priority handling within the backend accepts macros before recognizing
+# an active Interpreter redirection request. this was implemented to simplify 
+# the redirection cancellation process, being two system calls, 
+# stopredirect() and startredirect() by enabling a getaway mechanism 
+# via macros
+
+# this restricts all macros from being used within redirected code
+# including built in @, <<>> and <2><2> and user defined macros/postmacros/
+# syntax and enclosed syntax. this is specifically because macros were developed
+# to interpret multiple instructions as a single, stringed argument.
+# however when an Interpreter is asked to redirect an instruction,
+# and the instruction is a one of the macro types listed above, it will 
+# incorrectly proceed to adhere to the macro's instructions instead of 
+# redirecting the instruction to a block of code, as it was designed. 
+
+# there is a fix to this issue, being that each macro used within the redirected
+# context should be have a private() block overseeing the logic performed, see below
+# for examples
+
+# the issue is not the case when a macro is tasked with ending the redirection.
+# as this instruction is not a component of redirected code
+
+
+
+# demonstration
+verify:
+    eq(array_index([1, 2, 3, 4, 5], 1), 0)
+    eq(array_index([1, 2, 3, 4, 5], 2), 1)
+    eq(array_index([1, 2, 3, 4, 5], 3), 2)
+   eq(array_index([1, 2, 3, 4, 5], 4), 3)
+     eq(array_index([1, 2, 3, 4, 5], 5), 4)
+end
+
+
+verify:
+    assert(=>(
+        True
+    ))
+    assert(True)
+    1
+    5 in [5, 4, 3, 2,1]
+end
+
+
+
+# example of safely isolating function variables
+func test_func : __test_func_arg
+    ret('test_func', private(=>(
+        var('test_func_v', []),
+        var('test_func_v2', 1),
+        var('test_func_v3', 2),
+        
+        assert(exists('test_func_v')),
+        assert(exists('test_func_v2')),
+        assert(exists('test_func_v3'))
+    )))
+end
+
+
+# running some tests on the new function with the previously made
+# 'verify:' macro -> redirect
+verify:
+    test_func(0)
+    test_func(1)
+    test_func([])
+    test_func({})
+    test_func('')
+    test_func("")
+    test_func(None)
+
+    # verifies internal function variables were isolated
+    not(exists('test_func_v'))
+    not(exists('test_func_v2'))
+    not(exists('test_func_v3'))
+end
+
+
+
+# breaking simplification with new syntax
+
+# sometimes, breaking needs variables returned for use by the parent context.
+# this requires an export() call, we can simplify this with a user defined method
+
+# reverting to the original user definition syntax for demonstration
+~ leave(__vars)->_
+    -- each(__vars, '__var', export(__var))
+    -- break()
+
+# execute for loop in isolation 
+private(=>(
+    @a = ['a', 'b'],
+    # leave() now returns the variables requested while breaking
+    # out of the private context
+    for (0, 100, 'i', if (i . greater(75), leave(['i', 'a'])))
+))
+
+TEST i AND 76
+TEST a AND ['a', 'b']
+
+
+
+# finishing and printing total instructions executed
+print('[*] interpreted', trace.len(), 'instructions')
+
+# force shutdown everything
+stop()

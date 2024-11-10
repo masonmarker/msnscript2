@@ -1,0 +1,25 @@
+# Injects the necessary JavaScript to make CodingBat look better!
+#
+# author : Mason Marker
+# date : 7/6/2023
+
+
+# import JavaScript to inject
+import ('problems/bat/rebuild/js')
+
+# open Chrome and inject JavaScript
+import ('lib/auto/chrome')
+import ('lib/auto/inject')
+
+# open Chrome and navigate to the problem
+@ chrome = chrome:open(
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    'https://codingbat.com/prob/p162058'
+)
+
+# inject imported JavaScript
+# into active Chrome instance
+inject:active_inject_paste(chrome, js, False)
+
+# close inspection
+chrome.close_inspect()

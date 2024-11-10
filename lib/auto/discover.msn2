@@ -1,0 +1,30 @@
+# Assists in element discovery.
+#
+# author : Mason Marker
+# date : 6/4/2023
+# updated in 2.0.387
+
+# prints the elements being clicked for 
+# '_seconds' amount of seconds
+# 
+# instance : the application instance to search on
+# seconds : the amount of seconds to wait for clicks
+# text_condition : print a discovered element if a condition
+# regarding the child is met, condition variable is 'child'
+def('discover:click', 'discover:instance', 'discover:seconds', 'discover:text_condition', (
+    # times clicked
+    @ discover:_dc_times_clicked = 0,
+    # interval for waiting for a mouse click
+    interval(0.001, (
+        # waits for a mouse click
+        pointer.wait_left(),
+
+        print('-' * 50),
+        # increments the times clicked
+        print('Click #', discover:_dc_times_clicked.inc()),
+        print('Clicked at', pointer.position()),
+        # prints the element at the mouse position
+        each(discover:instance.hovered(), 'discover:child', if(-(discover:text_condition), discover:child.print())),
+        print('-' * 50)
+
+), discover:seconds)))

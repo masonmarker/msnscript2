@@ -1,0 +1,125 @@
+# demonstrates MSNScript2's capability to create new language syntax
+# for perform large scale operations invoked with just a few characters
+#
+# author : Mason Marker
+# date : 12/8/2022
+# updated in 2.0.387
+
+# imports clear()
+import ('lib/os.msn2')
+
+# serialization
+import ('lib/serial.msn2')
+
+# fresh console
+os:clear()
+
+# creates a new system wide syntax, see tests/validator.msn2 for documentation
+# prints a line in the form of a message
+syntax('!', 'bt', (
+    print('[+]', bt)
+))
+
+# opens a new serialized variable for thread naming
+serial:open('thread')
+
+# starts the line on a new thread
+syntax('/t', 'line', (
+
+    # name the thread
+    var('__name', serial:next('thread')),
+
+    # start the thread
+    thread(__name, -(line)),
+
+    # thread has been started
+    print('[+] thread started:', __name),
+
+    __name
+))
+
+
+# executes the code surrounded by the t tags as a thread
+/t  (assert(1, True, not(False)))  /t
+
+# /t can play the role of a static method with single tags
+# though practically unneccessary in this situation
+# due to the purpose of the syntax, however note that the threads
+# DID execute according to STDOUT
+/t
+/t
+
+# there are multiple approaches to multilining with user syntax
+
+# using user syntax across multiple lines with aggregate syntax
+!{/t 
+    (
+        assert(1, 1, True, (
+            assert(assert(True))
+        ))
+    )
+    /t
+}
+
+# using user syntax across multiple lines with block syntax
+(
+    /t
+        assert(1, 1, 1, not(0), << True >>,
+         <<not(not(True))>>)
+    /t
+)
+
+
+
+class('s_list', (
+    
+    var('l', []),
+    var('varname', '__unused'),
+
+    # creates an adding syntax specifically for this list implementation
+    syntax('__', 'line', (
+        lst.l(<< |lst.l()| + [|-(line)|]  >>)
+    )),
+
+    # clears this global list
+    syntax('00', 'line',. (
+        lst.l([])
+    ))
+))
+
+
+var('lst', s_list([], 'lst'))
+
+assert(equals(lst.l(), []))
+
+__ 3 __
+__ 1 __
+__ 6 __
+__ 9 __
+
+assert(equals(lst.l(), [3, 1, 6, 9]))
+
+# newly defined syntax clears this list
+00
+
+assert(equals(lst.l(), []))
+
+
+
+
+# creates a macro, see tests/validator.msn2 for documentation
+# this macro in particular sorts an array
+macro('SORT', 'line', (
+
+    # sorts the array
+    << sorted(|-(line)|) >>
+))
+
+# execute the manner in an assertive context
+
+# make a bunch of different assertions testing the integrity of the macro
+# test a bunch of randomely shuffled arrays
+assert(equals(SORT[4,3,2,1], [1,2,3,4]))        
+assert(equals( SORT [1,2,3,4],  [1,2,3,4] ) )
+assert(equals( SORT  [5,2,9,4], [2,4,5,9]))
+assert(equals(  SORT    [0,1,67,4],  SORT [ 4 , 0 , 1 , 67]))

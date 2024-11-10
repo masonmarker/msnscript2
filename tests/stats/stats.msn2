@@ -1,0 +1,32 @@
+# Statistics from the main validator file.
+#
+# author : Mason Marker
+# date : 9/12/2023
+# version : 2.0.387
+
+
+# writes a value to and adds to the stats.csv file
+def('stats:write', 'stats:runtime', (
+
+    # load the current information
+    # read the file
+    @ stats:write:p = 'tests/stats/stats.txt',
+    @ stats:write:text = file.read(stats:write:p),
+    # remove the first line and collect all previous runs
+    @ stats:write:prev = [],
+    each(slice(@stats:write:text_copy=stats:write:text.lines(), 1, stats:write:text_copy.len()), 'stats:write:line',
+        if(stats:write:line, 
+            stats:write:prev.add(float(stats:write:line)))
+    ),
+    # add the current runtime to the list
+    stats:write:prev.add(stats:runtime),
+    # calculate the average
+    @ stats:write:avg = stats:write:prev.avg(),
+    # rewrite stats to the file
+    # write the first line
+    file.write(stats:write:p, cat("average ", stats:write:avg, "\n")),
+    # write the rest of the lines
+    stats:write:prev.each('stats:write:line',
+        file.append(stats:write:p, cat(stats:write:line, "\n"))
+    )
+))

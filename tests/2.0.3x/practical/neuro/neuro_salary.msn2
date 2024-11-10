@@ -1,0 +1,103 @@
+# Uses an online salary calculator to compute salary after taxes.
+#
+# author : Mason Marker
+# date : 5/23/2023
+
+# defines and opens Chrome
+@ chrome = app('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe')
+chrome.start()
+
+# search Google for salary of a neurologist in California
+chrome.write('what is the salary of a neurologist in California?{ENTER}')
+
+# get the first Google link
+wait(@ first_google_link = first(
+    chrome.find_links('Neurologist Salary in California'))
+)
+# click the link
+first_google_link.click()
+# wait for the page to load by a unique
+# footer on the page
+chrome.wait_for_text (
+    'California is a state in the Pacific Region of the United States.'
+)
+
+# get the first child containing a '$', and it's text,
+# then extract it from its enclosing paragraph
+@ salary_text = first(chrome.find_children('$'))
+@ salary_text = salary_text.text()
+@ salary = salary_text.around('$', 0, 7)
+
+# get an integer from the string version of the salary
+salary.replace('$', '')
+salary.replace(',', '')
+
+# get the new tab button for Chrome, and click it
+@ new_tab = first(chrome .find_buttons('New Tab'))
+new_tab.click() 
+# wait to see the default Google search page
+chrome.wait_for_text('customize chrome')
+
+# search for salary calculator
+chrome.write('salary calculator{ENTER}')
+# wait for the correct link to appear, then click it
+wait(@ smart_asset_link = first(
+    chrome.find_links('paycheck calculator: federal'))
+)
+smart_asset_link.click()
+# wait for the page to load by a unique
+# footer on the page
+chrome.wait_for_text('Sources: SmartAsset, government websites')
+
+# get the description of the input for the salary to be entered
+@ salary_input_description = first(
+    chrome.find_all_children_exact('Salary (per year)')
+)
+# hovers the mouse over the description
+salary_input_description.hover()
+
+# moves the mouse down 20 pixels
+pointer.down(20)
+pointer.double_click()
+
+# type the salary into the input box
+chrome.write(cat("{BACK}", salary))
+
+# get the title for the pay frequency menu
+@ pay_freq_title = first(
+    chrome.find_all_children_exact('Pay Frequency')
+)
+
+# hovers the mouse over the title
+pay_freq_title.hover()
+# click on the menu
+pointer.down(20)
+pointer.click()
+# click on the first menu option
+pointer.up(20)
+pointer.click()
+
+# key phrase to wait for and used to locate the computed salary
+@ key_phrase = 'Your estimated annual take home pay:'
+# wait for the page to finish computing
+chrome.wait_for_text(key_phrase)
+
+# get the computed annual take home pay
+@ take_home_pay = first(
+    chrome.find_children (key_phrase)
+)
+
+# extract the computed salary from the paragraph
+@ text = take_home_pay.text()
+@ take_home_pay = text.around(key_phrase, 0, 10)
+take_home_pay.replace(key_phrase, '')
+take_home_pay.replace('$', '')
+take_home_pay.replace(',', '')
+@ take_home_pay = take_home_pay.int()
+
+# prints a number as money
+function('as_money', ret('as_money', << f"${|value|:,.2f}" >>), 'value')
+# print statistics from the salary
+print('Salary:', as_money(salary))
+print('Take home pay:', as_money(take_home_pay))
+print('Taxes paid:', as_money(salary.sub(take_home_pay)))

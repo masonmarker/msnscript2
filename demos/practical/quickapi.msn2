@@ -1,0 +1,58 @@
+# demonstrates quick and seamless construction and manipulation of a local api endpoint
+# using the api class
+#
+# author : Mason Marker
+# date : 11/17/2022
+# updated in 2.0.387
+
+# fresh console
+import ('lib/os')
+os:clear()
+
+
+# imports api data structure
+import ('lib/apis/api')
+
+# user shell
+import ('lib/user')
+
+# construct an api object
+var('local', api(http:localhost, 5000, '/stuff', {}))
+
+
+# 'local' now holds the information of an api endpoint, 
+# lib/apis/api.msn2 contains methods for practical manipulation of this object
+
+# privately starts the endpoint on a new thread
+private(api:start(local))
+
+# provide small amount of time for endpoint start messages to finish printing to STDOUT
+sleep(0.1)
+
+# gets url of endpoint
+private(print('url:', api:url(local)))
+
+# gets current data from endpoint
+private(print('GET() says initial data is', api:get(local)))
+
+# posts data to endpoint
+private(print(
+    'POST() says', 
+    api:post(local, {'entry1': {'name': 'bill', 'age': 45}})
+))
+
+# posts more data to endpoint
+private(print(
+    'POST() says', 
+    api:post(local, {'entry2': {'name': 'john', 'age': 34}})
+))
+
+private(print(
+    'DELETE() says',
+    api:delete(local)
+))
+
+assert(equals(api:get(local), {}))
+
+# offers command line injection
+private(user:shell('usershell'))

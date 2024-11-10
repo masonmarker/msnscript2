@@ -1,0 +1,110 @@
+# Using MSN2 + NextJS + ChakraUI to create NextJS pages
+#
+# author : Mason Marker
+# date : 1/1/2024
+# version : 2.0.400
+
+# import React
+import ('lib/web/react')
+# animations library
+import ('lib/web/animations')
+
+
+# create an index page
+react:page(
+    # NextJS index.jsx is at the path below
+    'tests/next_2.0.400/my-app/pages/index.jsx', 
+
+    # MSN2 script to convert to React-compliant code
+    script((
+
+        # using Chakra UI
+        UI("chakra"),
+
+        # create a css module for this page
+        css('styles',
+            .background * {
+                transition: 0.4s ease-out;
+            }
+            .background {
+                background-color: #322659;   
+            }
+            .head {
+                font-family: Poppins;
+            }
+            .gap {
+                gap: 5px;
+            }
+            # insert a purple shine animation className "shineOnHover"
+            {=animations:shine("shineOnHover", "red")=}
+            {=animations:shine("whiteShineOnHover")=}
+            {=animations:border("borderAnimation")=}
+        ),
+
+        # states for username and password
+        state('username', null),
+        state('password', null),
+
+        # event handlers
+        def('handleLogin', 
+            username !== null && 
+            password !== null && 
+            alert('logging in as ' + username)
+        ),
+        def('handleGoHome', alert('Going home...')),
+        def('handleUsernameChange', 'e', username.set(e.target.value)),
+        def('handlePasswordChange', 'e', password.set(e.target.value)),
+
+
+        # return the positioned the card component
+        fitscreen(center(
+            className=(styles.background),
+            # create the card component=
+            chakra:Card( 
+                className=(styles.borderAnimation),
+                chakra:CardHeader(
+                    chakra:Heading(className=(styles.head), "Login"),
+                ),
+
+                chakra:CardBody(
+                    vstack(
+                        className=(styles.gap),
+                        chakra:Input(
+                            placeholder="Username", 
+                            value=(username), 
+                            onChange=(handleUsernameChange)
+                        ),
+                        chakra:Input(
+                            type="password", 
+                            placeholder="Password", 
+                            value=(password), 
+                            onChange=(handlePasswordChange)
+                        )
+                    )
+                ),
+                # create a card footer
+                chakra:CardFooter(
+                    justify="center",
+                    hstack(
+                        className=(styles.gap),
+                        chakra:Button(
+                            className=(styles.shineOnHover),
+                            colorScheme="purple",
+                            variant="outline",
+                            onClick=(handleGoHome),
+                            leftIcon=chakra:icon:ArrowBackIcon(),
+                            "Back"
+                        ),
+                        chakra:Button(
+                            className=(styles.whiteShineOnHover),
+                            colorScheme="purple",
+                            rightIcon=chakra:icon:UnlockIcon(),
+                            onClick=(handleLogin),
+                            "Login"
+                        )
+                    )
+                )
+            )
+        ))
+    ))
+)

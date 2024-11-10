@@ -1,0 +1,17 @@
+bs4
+html5lib
+requests-html
+openai
+tiktoken
+langchain
+requests
+flask
+flask_restful
+flask_cors
+pywinauto
+openpyxl
+pyperclip
+esprima
+jsbeautifier
+click
+jsonschema

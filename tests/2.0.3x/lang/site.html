@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <title>Testing MSN2 x HTML/CSS/JS</title>
+    <script>
+        const path = 'http:\/\/127.0.0.1:8080/';
+        const header = {
+            'Content-Type': 'application/json'
+        };
+
+        function ping(field) {
+            const posting = {};
+            posting[field] = 1;
+            fetch(path, {
+                method: 'POST',
+                headers: header,
+                body: JSON.stringify(posting)
+            })
+        };
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Rakkas');
+        button {
+            background-color: gray;
+            transition: 0.3s;
+        }
+        
+        button:hover {
+            transform: scale(1.1);
+            background-color: darkgray;
+        }
+        
+        body {
+            background-color: #232728;
+            overflow: hidden;
+            font-family: 'Rakkas';
+        }
+        
+        .title {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            text-align: center;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 5em;
+        }
+    </style>
+    <script>
+        "border-radius: 5px;border: 1px solid gray;padding: 0.5rem;margin-left: 3rem;margin-top: 1rem;margin-bottom: 1rem;font-size: 1rem;color: white;cursor: pointer;font-weight: bold;"
+    </script>
+</head>
+
+<body style="font-size: 50">
+    <h1 style="color:#DBAB4C">MSN2 in HTML!</h1>
+    <h1 style='font-size: 30px;color:#DBAB4C'>Joke:</h1>
+    <p id='joke' style='margin-left: 3rem; font-size:25px;color:#DBAB4C'>Face your problems, unless your face is the problem which Chuck Norris roundhouse kicked.</p><button onclick=fetch(path, {headers: header}).then(res=> res.json().then(data => {const joke = data.joke;document.getElementById("joke").innerHTML = joke;ping("new_click")}))style="border-radius: 5px;border: 1px solid gray;padding: 0.5rem;margin-left: 3rem;margin-top: 1rem;margin-bottom: 1rem;font-size: 1rem;color: white;cursor: pointer;font-weight: bold;">New joke</button><br/><br/>
+    <button
+        onclick="ping('write_clicked')" style="border-radius: 5px;border: 1px solid gray;padding: 0.5rem;margin-left: 3rem;margin-top: 1rem;margin-bottom: 1rem;font-size: 1rem;color: white;cursor: pointer;font-weight: bold;">Write to notepad</button><button onclick="ping('write_clicked')" style="border-radius: 5px;border: 1px solid gray;padding: 0.5rem;margin-left: 3rem;margin-top: 1rem;margin-bottom: 1rem;font-size: 1rem;color: white;cursor: pointer;font-weight: bold;">Write to notepad</button>
+        <button
+            onclick="ping('write_clicked')" style="border-radius: 5px;border: 1px solid gray;padding: 0.5rem;margin-left: 3rem;margin-top: 1rem;margin-bottom: 1rem;font-size: 1rem;color: white;cursor: pointer;font-weight: bold;">Write to notepad</button>
+</body>
+
+</html>

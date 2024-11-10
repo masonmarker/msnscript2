@@ -1,0 +1,597 @@
+# Latest, suggested usage and syntax.
+#
+# Get msn2 syntax highlighting from my VS Code extension: msn2-syntax-highlighting
+#
+# Usage not seen here is recommended in the 
+# previous version of this file.
+#
+# author : Mason Marker
+# date : 5/30/2023
+# updated in 2.0.388
+# updated in 2.0.403: 11/8/2024
+
+# fresh console
+import ('lib/os')
+os:clear()
+
+# ---------------- MULTI LINED ARGUMENT ----------------
+
+# both the =>() system call and () now perform the same
+# operations
+#
+# () takes any amount of arguments, and returns the value
+# of the last argument provided
+#
+# () was implemented 6/1/2023 as a more readable alternative
+# to =>(), though they do the same thing, it just looks better tbh
+(
+    @ a = 1,
+    assert(a)
+)
+
+# () can be put literally anywhere, at any time,
+# and simply exists to provide multiple lined interpretation
+# directly inline with the rest of the code
+assert((
+    @ a = 0,
+    a.inc()
+))
+
+# TUPLES
+# tuples are allowed in msn2... for now,
+# this may change if they're too unsafe or something
+
+# ending in '('
+@ b = (
+    'hello',
+    'sup',
+    'world'
+)
+# assert the assignment was made
+assert(
+    b.equals((
+        'hello',
+        'sup',
+        'world'
+    ))
+)
+
+
+# as of 2.0.382, there is a new, simpler way to create functions
+# with def(name, ...args, body) -> function name
+
+# due to variable intertwining, we use a ':' in
+# the variable names to indicate variable spacing
+def('add', 'add:a', 'add:b', (
+    @ add:total = 0,
+
+    # add to total based on the type
+    
+    # if list, return sum
+    @ add:total += if (islist(add:a), sum(add:a), add:a),
+    @ add:total += if (islist(add:b), sum(add:b), add:b)
+))
+
+# testing the method
+assert(equals(add(5, 6)), 11)
+assert(equals(add(5, [1, 2]), 8))
+assert(equals(add([1, 2], [3, 4]), 10))
+
+# as of 2.0.388, functions now have an argument specification
+# syntax, which allows for default arguments, and named arguments
+# to be passed in any order.
+#
+# named arguments are specified with the '&' symbol
+# examples:
+def('add', 'arg1', 'arg2', &arg3=5, 
+    +(arg1, arg2, arg3))
+
+# ignoring default value
+assert(equals(add(1, 2, 3), 6))
+# accepting default value
+assert(equals(add(1, 2), 8))
+# setting value via named argument
+assert(equals(add(1, 2, &arg3=10), 13))
+# setting all values via named arguments
+# and out of order for demonstration
+assert(equals(add(&arg3=10, &arg2=2, &arg1=1), 13))
+
+# ----------------------- VARIABLES -----------------------
+@ a = 1
+
+# repeated access syntax method 1
+# kinda silly, will hopefully be updated
+a.(add(1, 2, 3),add(4, 5))
+assert(a.equals(16))
+
+# repeated access syntax method 2
+a.(sub(1, 2, 3), sub(4, 5))
+assert(a.equals(1))
+
+
+# arrays
+@ array = [1, 2, 3, 4, 5]
+
+@array = array.add(6).remove(3).filter('el', el.greater(2))
+assert(array.equals([4, 5, 6]))
+
+# strings
+@ string = 'hello this is a string'
+@ char = (@string=string.reverse().upper()).get(0)
+assert(string.equals('GNIRTS A SI SIHT OLLEH'))
+assert(char.equals('G'))
+
+# ----------------------- LONG STRINGS -----------------------
+# install my VS Code extension, msn2-syntax-highlighting, for ls() and longstring() specific highlighting
+#
+# you can create long, complex strings with the ls() or longstring() calls (aliases).
+#
+# both calls have custom escape sequences for special characters, see below for examples
+#
+#      ls(hello!) -> "hello!"
+#
+# you can insert values into strings with the {==} insertion syntax
+#      ls(hello, {='world!'=}) -> "hello, world!"
+#
+# ls() and longstring() share the same escape sequences as some other special built in
+# functions, such as script() or HTML()
+#      ls(<tag>hello< >world<nl>) -> "#hello world\n"
+
+assert(equals(
+    ls(hello!),
+    "hello!"
+))
+
+assert(ls(hello, {='world!'=}).equals("hello, world!"))
+
+# the insertion logic is recursive, so you can repeat long strings
+ls(hello, {=ls(This is so cool! {="eh I guess so"=})=}).equals("hello, This is so cool! eh I guess so").assert()
+# or you can insert whatever logic you want ig
+ls(complex {=cat("kinda", " sorta").add(" not really")=}).equals("complex kinda sorta not really").assert()
+
+# testing some escape sequences
+ls(
+    This is a long string that we want to continue to<nl>
+    the next line, we also want a space and not to go to the next< >
+    line for this one.
+).equals("This is a long string that we want to continue to\nthe next line, we also want a space and not to go to the next line for this one.").assert()
+
+
+# ----------------------- METHOD CHAINING -----------------------
+# you've been mainly exposed to the functional, postfix-like syntax
+# of msn2 so far, but now we're going to dive into method chaining
+#
+# method chaining is an easier way to complete many operations in a single line
+#
+# CHAINING SYNTAX:
+# FUNC(farg1, farg2).OBJFUNC(f2arg1, f2arg2).OBJFUNC(f3arg1, f3arg2)
+#     *where FUNC is a built in system function, like print()*
+#     *and where OBJFUNC is a method attached to an object, like "var.add(1)" ('add' is the objfunc)*
+
+# simple examples
++(1, 2).-(3).equals(0).assert()
+
+ls(hello this is a {="string"=}).equals("hello this is a string").assert()
+@ v = [1, 2, 3]
+v.map('e', e.add(1)).equals([2, 3, 4]).assert()
+
+# ----------------------- RUNNING PYTHON -----------------------
+
+# Python is integrated directly into the MSN2 environment
+# through the py module and with '\\' tokens to switch
+# between environments.
+#
+# the script execute starts an internal python
+# environment with new global and local
+# variables.
+#
+# the '\\' script assignment token
+# essentially creates a string variable
+# but the string retains newlines, tabs, etc.
+#
+#
+# @version 2.0.383
+
+# python code token
+\\
+val = 0
+
+# indentation and spacing for python is maintained
+for i in range(0, 10):
+    val += i
+
+# test
+assert(val == 45)
+
+# end python code and run script
+\\
+
+# back in the msn2 environment, we
+# can reference python variables
+# as shown below
+assert(equals(py.val(), 45))
+
+# a python script can be executed conditionally
+# with the below syntax
+
+# this script will execute
+1 \\
+assert(True)
+\\
+
+# this script will not execute
+0 \\
+assert(False)
+\\
+
+# more complex example
+# this script will run
+equals("Hello", +('H', 'e', 'l', 'l', 'o')) \\
+assert(True)
+\\
+
+# this script will not run
+equals("He", +('H', 'e', 'l', 'l', 'o')) \\
+assert(False)
+\\
+
+
+
+# test that the variable does not exist
+try(py.array(), assert(True))
+
+# the script can be ran
+# with the py module
+py.run("array = [1, 2, 3]")
+
+# the variable should now exist
+assert(equals(py.array(), [1, 2, 3]))
+
+
+# scripts can be stored sas a variable
+# mapped to a string with the following syntax
+\\
+assert(True)
+py_script \\
+
+# the script can be ran at any time
+2(py.run(py_script))
+
+
+# conditional setting of a python script
+0\\
+# setting an array
+array2 = [1, 2, 3, 4, 5]
+# resetting a variable would overwrite
+# the previous script under this name
+py_script3 \\
+
+
+
+# this python script was not assigned
+# due to the false conditional
+assert(not(exists("py_script3")))
+
+
+# this variable will be set
+1 \\
+assert(True)
+py_script2 \\
+
+# this variable should exist
+assert(exists("py_script2"))
+
+# the \\ syntax is mainly used for executing
+# python, but can also serve as a string-with-newlines-and-tabs-etc.
+# variable assignment
+#
+# eventually, assignments will be made with some form
+# of quotes for string literals so the text colors
+# under 'msn2' as a language mode will be more accurate,
+# this is hopefully a temporary solution
+# to interpreting strings as-is.
+#
+# install the msn2-syntax-highlighting package for 
+# better syntax highlighting
+#
+# unfortunately this syntax cannot be intertwined
+# with other msn2 code
+#
+# EXAMPLE:
+#
+# NOT OK
+# print(
+# \\
+#   val = 1
+# \\
+# )
+#
+# OK
+# \\
+# val = 1
+# script \\
+# print(script)
+# 
+#
+# this is as of 2.0.383
+\\
+hello
+this is a string
+ string \\
+
+# string was assigned
+assert(string.equals("hello\nthis is a string"))
+
+
+# ----- SENDING RESOURCES TO PYTHON -----
+# we can passed 'arguments' to python scripts
+# effectively having portable python scripts
+# for direct python usage and resource management.
+#
+# we can pass these arguments with '{==}' insertion,
+# this insertion is the SAME as what's offered in
+# the script() injection, so {==} isn't the only
+# way to insert resources from the msn2 environment.
+
+# defining python script
+\\
+
+# computes the sum of the list  
+def sum_list(list):
+    total = 0
+    for i in list:
+        total += i
+    return total
+
+# prints the sum of the argument
+# 'list'
+s = sum_list({=list=})
+
+script \\
+
+# set argument
+@ list = [1, 2, 3, 4, 5]
+
+# run script
+py.run(script)
+
+# obtaining a 'return' from the python script
+# local variables
+assert(equals(py.s(), 15))
+
+
+# setting repeated arguments
+
+# define python script
+\\
+
+# computes the average of the list
+def avg_list(list):
+    total = 0
+    for i in list:
+        total += i
+    return total / len(list)
+
+# prints the average of the argument
+# 'arg1'
+s = avg_list({=arg1=})
+script \\
+
+# running repeated python scripts
+# with different arguments
+for (2, 10, 'i', (
+
+    # create an argument
+    @ arg1 = comp(range(1, i), 'e', e),
+    
+    # run the script
+    py.run(script),
+
+    # assert the return is correct
+    assert(equals(py.s(), arg1.avg()))
+))
+
+# ----------- MORE COMPLEX PYTHON EXAMPLE ------------
+
+# define python script
+\\
+
+# computes the cartesian product of two lists
+def cartesian_product(list1, list2):
+    product = []
+    for i in list1:
+        for j in list2:
+            product.append([i, j])
+    return product
+
+# directly inserting arguments from msn2
+s = cartesian_product({=
+    @ list1 = [1, 2, 3]
+=}, {=
+    @ list2 = [4, 5, 6]
+=})
+
+script\\
+
+# assert the arguments were set
+assert(list1.equals([1, 2, 3]))
+assert(list2.equals([4, 5, 6]))
+
+# run the script
+py.run(script)
+
+# assert the return is correct
+assert(equals(py.s(), [[1, 4], [1, 5], [1, 6], [2, 4], [2, 5], [2, 6], [3, 4], [3, 5], [3, 6]]))
+
+# ----------------------- CLASSES -----------------------
+# this is how a class is rendered in MSN2
+class('person', (
+    @ age = -1,
+    @ name = 'Unknown',
+
+    # advances time for this person
+    function('advance_time', self.age(years.+(self.age())), 'self', 'years')
+))
+
+# creates a person
+@ mason = person(22, 'mason')
+
+# advances time for a few years
+mason.(advance_time(3), advance_time(1))
+assert(mason.age().equals(26))
+
+
+# class with constructor
+class('person', (
+    @ age = -1,
+    @ name = 'Unknown',
+
+    # constructor
+    function('const', self.name(self.name().upper()) , 'self')
+))
+
+# creates a person
+@ mason = person(22, 'mason')
+assert(equals(mason.name(), 'MASON'))
+
+# changes a person's name
+mason.name('masonator')
+assert(equals(mason.name(), 'masonator'))
+
+# re-building an object (re-running the constructor)
+mason.const()
+assert(equals(mason.name(), 'MASONATOR'))
+
+# ----------------------- THREADS -----------------------
+# threads are started with the thread(name, code) system call
+
+thread('t', (@g=0,wait(g.inc().equals(10))))
+
+# joins with the thread
+join('t')
+
+# assert that the thread has finished
+assert(g.equals(10))
+
+# ----------------------- AUTOMATION -----------------------
+# Provides control over a Windows computer and 
+# window's applications
+# 
+# basics:
+# app(path) -> returns an instance of the application
+#              at the path provided, this variable would
+#              be used to control the application
+# pointer class:
+# controls the basics of the mouse pointer
+# ex: pointer.click()
+#
+# 
+# ----------------------- LOOPS -----------------------
+# loops can be performed in several ways, from the each(), for(), and while()
+# system calls, to the .each() method, and start|end|var| () system call
+
+# for()
+@ g = 0
+for(0, 5, 'i', @g += 1)
+assert(g.equals(5))
+
+# while()
+@ g=0
+while(g.less(5),g.inc())
+assert(g.equals(5))
+
+# each()
+@g= 0
+each([1, 2, 3], 'e', g.add(e))
+assert(g.equals(6))
+
+# .each()
+@ g = [1, 2, 3]
+@ s = 0
+g.each('e', s.add(e))
+assert(s.equals(6))
+
+# start|end|var|()
+# start and end cannot contain parantheses
+# within the argument
+#
+# 0|len(array)|i ()    <- NOT OK
+#
+# @ len = len(array)
+# 0|len|i ()           <- OK
+#
+#
+@ g = 0
+0|5|i (g.inc())
+assert(g.equals(5))
+
+
+# ----------------------- CONDITIONALS -----------------------
+# same as the previous suggested usage file.
+# however variable access updates allow for a better
+# use of ?() system call
+#
+#
+#
+# a conditional should exist between the ? and the first '('
+# similary to the || for loop syntax, the argument cannot
+# contain parantheses
+
+@ t = 1
+? t (assert(1), assert(0))
+@ f = not(t)
+? f (assert(0), assert(1))
+
+
+# arithmetic
+#
+# 6/13/2023
+# added more efficient math system calls
+# (these really should have been added a long time ago)
+# +() -() *() /() //() %() ^()
+#
+# note that -() with 1 argument takes a string of msn2 code
+# any more and it acts as a subtraction mechanism
+
+@ a = 1
+@ b = 2
+assert(equals(+(a, b, 1), 4))
+assert(equals(-(a, b, 1), -2))
+assert(equals(x(a, b, 2), 4))
+assert(equals(/(a, b, 2), 0.25))
+assert(equals(//(a, b, 2), 0))
+assert(equals(%(a, b, 2), 1))
+assert(equals(^(a, b, 2), 1))
+
+assert(equals(^(2, 4), 16))
+
+
+# ----------------------- MULTIPROGRAMMING -----------------------
+
+# use the proc() system call to create a new process
+proc('p1', assert(1))
+
+# use the thread() system call with or without a
+# name to start a new thread
+thread('t1', assert(1))
+thread(assert(1))
+
+# use the threadpool(count, block) system call to create a new  
+# threadpool
+threadpool(3, assert(1))
+
+# end
+print('[+] suggested usage finished')
+print('[*] cleaning up...')
+
+
+# ------- WRAP UP -------
+
+# for more syntax and semantics in msn2,
+# read through the various examples and demonstrations
+# in the folders and files under the msnscript2/
+# directory.
+
+# also see the msn2 documentation on my website:
+# masonmarker.com/projects/msn2 or launch automatically
+# in the menu option below

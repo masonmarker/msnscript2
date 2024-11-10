@@ -1,0 +1,16 @@
+# Tests inputs.
+#
+# author : Mason Marker
+# date : 9/4/2023
+# updated in 2.0.387
+
+
+# clear the console
+import ('lib/os')
+os:clear()
+
+try(while(@inp=input('type a number: '), inp.int(), 
+    inp.print('input: ')))
+
+
+print('bye!!')

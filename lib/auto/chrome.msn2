@@ -1,0 +1,107 @@
+# Common operations for working with Google Chrome
+#
+# author : Mason Marker
+# date : 7/2/2023
+# updated in 2.0.387
+
+# default Chrome path
+@ chrome:default_path = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+
+# launches Chrome and navigates to the given url
+def('chrome:open', 'chrome:open:path', 'chrome:open:url', (
+    # define the application
+    @ chrome:open:chrome = app(chrome:open:path),
+    # start the application
+    chrome:open:chrome.start(),
+    # write the URL and press enter to
+    # navigate to that URL
+    chrome:open:chrome.write(chrome:open:url),
+    chrome:open:chrome.enter(),
+    # return the instance
+    chrome:open:chrome
+))
+
+# launches chrome under the default path
+#
+# chrome:default_open:url : the url to open
+# returns : the chrome instance
+# version : 2.0.384
+def('chrome:default_open', 'chrome:default_open:url', (
+    chrome:open(chrome:default_path, chrome:default_open:url)
+))
+
+# Chrome class, used for extensive browser functionality
+#
+# utilizes the chrome:instance: domain
+#
+# author : Mason Marker
+# date : 8/29/2023
+# version : 2.0.387
+class ('chrome:instance', (
+
+    # path to the application
+    @ path = None,
+
+    # application instance
+    @ app = None,
+    # determines if this application has started or not
+    #
+    # returns : bool : whether or not the application has started
+    def('is_started', 'self',
+        not(equals(self.app(), None))),
+
+    # soft starts the application
+    #
+    # returns : None | bool
+    def('soft_start', 'self', 
+        if(not(self.is_started()), self.start())),
+
+    # starts the application,
+    # removing any previous instance of the application
+    #
+    # returns : None
+    def('start', 'self', (
+        # set the instance of the application
+        self.app(
+            app(self.path())
+        ),
+        # start the application
+        as('chrome:instance:app_temp', 
+            self.app(), chrome:instance:app_temp.start()),
+    )),
+
+    # searches in Chrome in a new tab
+    def('search_in_new_tab', 'self', 'chrome:instance:search', 
+        as(
+            'chrome:instance:app_temp',
+            self.app(), (
+                chrome:instance:app_temp.write(chrome:instance:search),
+                chrome:instance:app_temp.enter()
+            )
+        )
+    ),
+
+    # opens a new tab in an already opened Chrome instance
+    #
+    # chrome:instance:url
+    def('new_tab', 'self', 'chrome:instance:url', (
+        # press the new tab button
+        as('chrome:instance:app_temp', self.app(), ( 
+            # open a new tab
+            chrome:instance:app_temp.press('VK_CONTROL', 't'),
+            # type the URL, if given
+            ? chrome:instance:url ((
+                chrome:instance:app_temp.write(chrome:instance:url),
+                chrome:instance:app_temp.enter()
+            ))
+        ))
+    )),
+
+    # refreshes the current tab
+    def('refresh', 'self', 
+        # refresh the current tab
+        as('chrome:instance:app_temp', self.app(), 
+            chrome:instance:app_temp.write('{F5}')
+        )
+    ),
+))

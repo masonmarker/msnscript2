@@ -1,0 +1,4 @@
+# File for CLI testing.
+
+# write a new file in this directory
+file.write('tests/2.0.401/cli_tests/test1.txt', 'Hello, World!')

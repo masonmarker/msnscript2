@@ -1,0 +1,4 @@
+Executing certain aspects of the lang library require certain language support,
+
+for example, the 'lib/lang/node' class requires 'node' to be installed, and so on
+for each of the other classes in 'lib/lang'.

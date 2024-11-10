@@ -1,0 +1,2015 @@
+# validates integrity of the current MSNScript2 interpreter
+#
+# author : Mason Marker
+# date : 11/27/2022
+# updated in 2.0.387
+
+# NOTE : ?? SYNTAX SHOULD NOT ALWAYS BE USED IN USER PROGRAMS (your programs)
+# ?? is used in very specific cases to ensure integrity, such as receiving input(), 
+# you should use type specific methods instead
+
+
+# ------------------ SETUP ------------------
+
+# imports operating system specific 'clear' console command
+import ('lib/os')
+
+# imports timing capabilities
+import ('lib/timer')
+
+# prints a test
+def('print_test', 'test_name', print:color(
+    object(
+        'text', '[*] ',
+        'style', 'bold',
+        'fore', 'cyan'
+    ),
+    object(
+        'text', 'testing ',
+        'style', 'bold',
+        'fore', 'white'
+    ),
+    object(
+        'text', test_name,
+        'style', 'bold',
+        'fore', 'green'
+    ),
+    object(
+        'text', '...',
+        'style', 'bold',
+        'fore', 'black'
+    )
+))
+
+# clear console
+os:clear()
+
+# -------------------------------------------
+# starting message
+print:color(
+    object(
+        'text', '[+] ',
+        'style', 'bold',
+        'fore', 'green'
+    ),
+    object(
+        'text', 'starting, do not ',
+        'style', 'bold',
+        'fore', 'white'
+    ),
+    object(
+        'text', 'crtl + c / z',
+        'style', 'bold',
+        'fore', 'red'
+    )
+)
+
+
+# testing variables
+var('a', 1)
+var('b', 2)
+var('c', 3)
+var('d', 4)
+var('e', 5)
+var('f', 6)
+
+
+# ------------------ VARIABLES ------------------
+
+# tests basic variable functions
+def('test_var', (
+    print_test('variables'),
+    # asserts all variables exist in this context
+    assert(exists('a'), exists('b'), exists('c'), exists('d'), exists('e'), exists('f')),
+    # asserts that variables are being set correctly
+    assert(a.equals(1), b.equals(2), c.equals(3), d.equals(4), e.equals(5), f.equals(6)),
+    # asserts that variables are compared correctly
+    assert(a.less(b), b.less(c), c.less(d), d.less(e), e.less(f)),
+    # asserts that variables are being modified correctly
+    var('a', 2),
+    var('b', 3),
+    var('c', 4),
+    var('d', 5),
+    var('e', 6),
+    var('f', 7),
+    assert(a.equals(2), b.equals(3), c.equals(4), d.equals(5), e.equals(6), f.equals(7)),
+    # modifying variables in place
+    a.add(1),
+    b.add(1),
+    c.add(1),
+    d.add(1),
+    e.add(1),
+    f.add(1),
+    assert(a.equals(3), b.equals(4), c.equals(5), d.equals(6), e.equals(7), f.equals(8)),
+    # subtracting variables in place
+    a.sub(1),
+    b.sub(1),
+    c.sub(1),
+    d.sub(1),
+    e.sub(1),
+    f.sub(1),
+    assert(a.equals(2), b.equals(3), c.equals(4), d.equals(5), e.equals(6), f.equals(7)),
+    # multiplying variables in place
+    a.mul(2),
+    b.mul(2),
+    c.mul(2),
+    d.mul(2),
+    e.mul(2),
+    f.mul(2),
+    assert(a.equals(4), b.equals(6), c.equals(8), d.equals(10), e.equals(12), f.equals(14)),
+    # dividing variables in place
+    a.div(2),
+    b.div(2),
+    c.div(2),
+    d.div(2),
+    e.div(2),
+    f.div(2),
+    assert(a.equals(2), b.equals(3), c.equals(4), d.equals(5), e.equals(6), f.equals(7)),
+    True
+))
+# -------------------------------------------
+
+
+# ------------------ MATH ------------------
+# tests basic math functions   
+def('test_math', (
+    print_test('math'),
+
+    # tests an iteration of values with expected outputs on all operators
+    # tests the operators in this order: +, -, x, /, %, ^, //
+    def('test_math:operators', 'operators:testing', 'operators:expected_list', (
+        unpack(operators:testing, 'a', 'b'),
+        # test all operators
+        assert(
+            equals(+(a, b), operators:expected_list.get(0)),
+            equals(-(a, b), operators:expected_list.get(1)),
+            equals(x(a, b), operators:expected_list.get(2)),
+            equals(/(a, b), operators:expected_list.get(3)),
+            equals(%(a, b), operators:expected_list.get(4)),
+            equals(^(a, b), operators:expected_list.get(5)),
+            equals(//(a, b), operators:expected_list.get(6))
+        )
+    )),
+    # testing basic operations on literals
+    test_math:operators([1, 1], [1+1, 1-1, 1*1, 1/1, 1%1, 1**1, 1//1]),
+    test_math:operators([2, 2], [2+2, 2-2, 2*2, 2/2, 2%2, 2**2, 2//2]),
+    test_math:operators([3, 3], [3+3, 3-3, 3*3, 3/3, 3%3, 3**3, 3//3]),
+    test_math:operators([4, 4], [4+4, 4-4, 4*4, 4/4, 4%4, 4**4, 4//4]),
+    test_math:operators([5, 5], [5+5, 5-5, 5*5, 5/5, 5%5, 5**5, 5//5]),
+    
+    # modifies variables
+    var('a', 2),
+    var('b', 3),
+    var('c', 4),
+    var('d', 5),
+    var('e', 6),
+    var('f', 7),
+
+    # runs test_math:operators on an array of values
+    def('run:test_math:operators', 'operators:variable', (
+        test_math:operators(arr(operators:variable, operators:variable), 
+            arr(
+                +(operators:variable, operators:variable), 
+                -(operators:variable, operators:variable), 
+                x(operators:variable, operators:variable), 
+                /(operators:variable, operators:variable), 
+                %(operators:variable, operators:variable), 
+                ^(operators:variable, operators:variable), 
+                //(operators:variable, operators:variable)
+            )
+        )
+    )),
+    # runs run:test_math:operators on an array of values
+    def('test:math', 'test:math:values', (
+        test:math:values.each('test:math:value', (
+            run:test_math:operators(test:math:value)
+        ))
+    )),
+
+    # asserts the same for variables
+    # we use arr() since msn2 code cannot exist in Python code
+    test:math(arr(a, b, c, d, e, f)),
+    # working with floats
+    var('a', 2.0),
+    var('b', 3.0),
+    var('c', 4.0),
+    var('d', 5.0),
+    var('e', 6.0),
+    var('f', 7.0),
+    # asserts the same for variables
+    test:math(arr(a, b, c, d, e, f)),
+
+    True
+))
+# -------------------------------------------
+
+
+# ------------------ STRINGS ------------------
+# tests basic string parsing and functionality
+def('test_strings', (
+    print_test('strings'),
+    # modifies variables
+    var('a', 'hello'),
+    var('b', 'world'),
+    # asserts that strings are being set correctly
+    assert(a.equals('hello'), b.equals('world')),
+    # asserts that strings are being concatenated correctly
+    assert(equals(+(a, b), 'helloworld')),
+    # asserts that strings are being multiplied correctly
+    assert(equals(x(a, 2), 'hellohello'), equals(x(b, 2), 'worldworld')),
+    # asserts that strings are being modified correctly
+    a.add('hello'),
+    assert(a.equals('hellohello')),
+    # replacing with converge operator <<>> (python fallback mechanism)
+    assert(<<|a|.replace('hello', '') == ''>>),
+    # replacing with converge operator <<>> (python fallback mechanism)
+    assert(<<|a|.replace('hello', 'world') == 'worldworld'>>),
+    # splitting with converge operator <<>> (python fallback mechanism)
+    assert(<<|a|.split('h') == ['', 'ello', 'ello']>>),
+    # getting a character in a string
+    assert(equals(a.get(0), 'h')),
+    assert(equals(a.get(1), 'e')),
+    assert(equals(a.get(2), 'l')),
+    assert(equals(a.get(3), 'l')),
+    assert(equals(a.get(4), 'o')),
+    # special characters
+    assert(equals('\\', '\\'), equals('\'', '\''), equals('\"', '\"'), equals('\n', '\n'), equals('\t', '\t'), equals('\r', '\r')),
+    # do the same but with ==
+    assert('\\' == '\\', '\'' == '\'', '\"' == '\"', '\n' == '\n', '\t' == '\t', '\r' == '\r'),
+    # asserts that strings are being modified correctly
+    var('a', 'hello'),
+    a.add(' how are you?'),
+    assert(a.equals('hello how are you?')),
+    a.add('\n'),
+    # when working with special characters, you cannot use ?? syntax
+    assert(a.equals('hello how are you?\n')),
+    True
+))
+# -------------------------------------------
+
+
+# ------------------ ARRAYS AND DICTIONARIES ------------------
+# tests basic array functionality
+def('test_arrays', (
+    print_test('arrays'),
+    # sets an array
+    var('a', [1, 2, 3, 4, 5, 6]),
+    # asserts that the array is being set correctly
+    assert(a.equals([1, 2, 3, 4, 5, 6])),
+    # asserts that the array is being concatenated correctly
+    assert(equals(+(a, [7, 8, 9, 10, 11, 12]), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])),
+    # asserts that the array is being multiplied correctly
+    assert(equals(x(a, 2), [1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6])),
+    # asserts that the array is being modified correctly
+    a.push(7, 8, 9),
+    assert(a.equals([1, 2, 3, 4, 5, 6, 7, 8, 9])),
+    a.push(10),
+    assert(a.equals([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])),
+    # asserts that removen() works correctly
+    a.push(3, 3, 3),
+    # removes 2 3's from 'a'
+    a.removen(2, 3),
+    assert(a.equals([1, 2, 4, 5, 6, 7, 8, 9, 10, 3, 3])),
+    # removes 1 '1' and 1 '2' from 'a'
+    a.removen(1, 1, 2),
+    assert(a.equals([4, 5, 6, 7, 8, 9, 10, 3, 3])),
+    # remove if not exists, catches value error
+    try(a.removen(1, 1)),
+    assert(a.equals([4, 5, 6, 7, 8, 9, 10, 3, 3])),
+    # tests remove
+    a.remove(3),
+    assert(a.equals([4, 5, 6, 7, 8, 9, 10])),
+    # assert contains (<<>> python fallback)
+    assert(<< 4 in |a| and 5 in |a| and 6 in |a| and 7 in |a| and 8 in |a| and 9  in |a| and 10 in |a| >>),
+    assert(<< 1 not in |a| and 2 not in |a| and 3 not in |a| >>),
+    # indexing dictionaries
+    var('dict', { 'a': 1, 'b': [0, [4, 3]], 'c': 3, 'd': 4, 'e': {'key': 'value'}, 'f': 6 }),
+    assert(equals(dict.get('a'), 1)),
+    True
+))
+# -------------------------------------------
+
+# ------- MSN2 EMBEDDING -------
+# enables embedding of msn2 code in msn2 code
+#
+# <2> ... </2> -> msn2 code
+# any pair of '%' will be replaced with the evaluation of the inner msn2 code
+# <2> %...% </2> -> msn2 code
+#
+# whats inside of the <2> </2> tags will be evaluated and the result will be returned
+def('test_msn2embed', (
+    print_test('msn2 embedding'),
+    <2> 1?? <2>,
+    <2> True?? <2>,
+    assert(<2>assert(<2>%True%<2>)<2>),
+    assert(<2> %assert(1)% == True <2>),
+    True
+))
+# --------------------------
+
+
+# ------------------ CLASSES ------------------
+def('test_classes', (
+    print_test('classes'),
+    # declares a class called 'person' with two attributes
+    class('person', (
+        var('name', 'unknown'),
+        var('age', -1)
+    )),
+    # creates an instance of a class
+    var('joe', person('joe', 20)),
+    assert(exists('joe')),
+    # assert vars were set
+    assert(equals(joe.name(), 'joe')),
+    assert(equals(joe.age(), 20)),
+    # set attributes of a class
+    joe.name('joseph'),
+    joe.age(21),
+    # reassert
+    assert(equals(joe.name(), 'joseph')),
+    assert(equals(joe.age(), 21)),
+    # copy of a person
+    var('joe2', joe.copy()),
+    # assert that joe2 is a copy of joe
+    assert(equals(joe2.name(), 'joseph')),
+    assert(equals(joe2.age(), 21)),
+    # assert that joe2 is not joe
+    joe2.name('joe2'),
+    joe2.age(22),
+    assert(equals(joe2.name(), 'joe2')),
+    assert(equals(joe2.age(), 22)),
+    assert(not(equals(joe.name(), 'joe2'))),
+    assert(not(equals(joe.age(), 22))),
+    # create a family
+    class('family', var('members', [])),
+    var('fam', family([])),
+    fam.members((
+        var('curr', fam.members()),
+        curr.push(joe),
+        curr
+    )),
+    fam.members((
+        var('curr', fam.members()),
+        curr.push(joe2),
+        curr
+    )),
+    assert(equals(fam.get('members', 0, 'name'), 'joseph')),
+    assert(equals(fam.get('members', 0, 'age'), 21)),
+    assert(equals(fam.get('members', 1, 'name'), 'joe2')),
+    assert(equals(fam.get('members', 1, 'age'), 22)),
+    assert(equals(fam.members(), arr(joe, joe2))),
+    # testing classes with methods attached
+    class ('math', def('_pi', 3.14)),
+    # create instance of the class
+    var('_math', math()),
+    # assert that function works with no attributes
+    assert(equals(_math._pi(), 3.14)),
+    # new class with both attributes and methods
+    class('math', (
+        var('pi', 3.1415),
+        def('get_pi', _math.pi())
+    )),
+    # create instance of the class
+    var('_math', math()),
+    # assert that we can get the correct attribute
+    assert(equals(_math.get_pi(), 3.1415)),
+    # math class that determines a different value of pi
+    var('_math', math(3.14)),
+    # assert that the new pi value was changed
+    assert(equals(_math.pi(), 3.14)),
+    # larger test
+    class('box', (
+        # dimensions
+        var('length', 0),
+        var('width', 0),
+        var('height', 0),
+        # whats inside?
+        var('contents', []),
+        # box methods
+        def('add_item', 'self', '_item', (
+            var('_contents', self.contents()),
+            _contents.push(_item),
+            _contents
+        )),
+        # determines if this box equals another box
+        def('equals', 'self', '_other', (
+            # verify all attributes are equal
+            and(
+                equals(self.length(), _other.length()),
+                equals(self.width(), _other.width()),
+                equals(self.height(), _other.height()),
+                equals(self.contents(), _other.contents())
+            )
+        ))
+    )),
+    # create instance of the class
+    var('_box', box()),
+    # assert default values
+    assert(equals(_box.length(), 0)),
+    assert(equals(_box.width(), 0)),
+    assert(equals(_box.height(), 0)),
+    assert(equals(_box.contents(), [])),
+    # assert that setting attributes works
+    _box.length(1),
+    _box.width(2),
+    _box.height(3),
+    _box.contents([1, 2, 3]),
+    assert(equals(_box.length(), 1)),
+    assert(equals(_box.width(), 2)),
+    assert(equals(_box.height(), 3)),
+    assert(equals(_box.contents(), [1, 2, 3])),
+    # adding an item to the box
+    _box.add_item(4),
+    assert(equals(_box.contents(), [1, 2, 3, 4])),
+    # adding a list of [1, 2] to the box
+    _box.add_item([1, 2]),
+    # assert that the list was added to the box
+    assert(equals(_box.contents(), [1, 2, 3, 4, [1, 2]])),
+    # creating another box with nothing in it
+    var('_box2', box(0, 0, 0, [])),
+    # make sure the contents are not the same
+    assert(not(equals(_box.contents(), _box2.contents()))),
+    # add the contents of _box to _box2
+    _box2.contents(copy(_box.contents())),
+    # assert their contents are equal
+    assert(equals(_box.contents(), _box2.contents())),
+    # assert all attributes of box2
+    assert(equals(_box2.length(), 0)),
+    assert(equals(_box2.width(), 0)),
+    assert(equals(_box2.height(), 0)),
+    assert(equals(_box2.contents(), [1, 2, 3, 4, [1, 2]])),
+    # reassert the attributes of the original box
+    assert(equals(_box.length(), 1)),
+    assert(equals(_box.width(), 2)),
+    assert(equals(_box.height(), 3)),
+    assert(equals(_box.contents(), [1, 2, 3, 4, [1, 2]])),
+    # assert that box equals itself
+    assert(_box.equals(_box)),
+    # assert that box does not equal box2
+    assert(not(_box.equals(_box2))),
+    # modify box2 to have the same dimensions as box
+    _box2.length(1),
+    _box2.width(2),
+    _box2.height(3),
+    # assert that box2 now equals box
+    assert(_box.equals(_box2)),
+    # testing static classes
+    class ('names', (
+        var('name1', 'joe'),
+        var('name2', 'joe2'),
+        var('name3', 'joe3')
+    )),
+    # you do not have to create an instance of the class to access its attributes
+    assert(equals(static(names.name1()), "joe")),
+    assert(equals(static(names.name2()), "joe2")),
+    assert(equals(static(names.name3()), "joe3")),
+    # you can still create an instance
+    var('_names', names("mason", "harris", "joe")),
+    # assert that the instance has the correct attributes
+    assert(equals(_names.name1(), "mason")),
+    assert(equals(_names.name2(), "harris")),
+    assert(equals(_names.name3(), "joe")),
+    # reassert the static values are the same
+    assert(equals(static(names.name1()), "joe")),
+    assert(equals(static(names.name2()), "joe2")),
+    assert(equals(static(names.name3()), "joe3")),
+    True
+))
+# -------------------------------------------
+
+# ------------------ COMPLEX STUFF ------------------
+def('test_complex', (
+    print_test('complex'),
+    assert(assert(True), assert(not(False))),
+    assert(assert(<< not |False| >>), not(not(True))),
+    assert(True and True, assert(True)),
+    assert(assert(True), assert(True), assert((
+        var('z', -1),
+        add('z', 1),
+        ?z? == 0
+    ))),
+    assert(True or False),
+    assert(3 != 3 or 5 != 1, [1, 2, 3] == [1, 2, 3]),
+    assert(
+        True,
+        assert(assert(not False), assert(True)),
+        assert(True),
+        not False,
+
+        # inline function syntax  ()
+        # takes any amount of instructions separated by commas
+        # can be used in place of any argument or instruction
+        # returns the return value of the last instruction to  ()
+        (
+            var('map', {'name': 'mason', 'age': 20}),
+            ?map?['name'] == 'mason' and ?map?['age'] == 20
+        ),
+        (
+            var('a', False),
+            ?a? or True
+        ),
+
+        True,
+        assert(True),
+        not(not(True))
+    ),
+    assert(True),
+    assert(assert(True), assert(True)),
+
+    # more complex examples
+    assert(
+        assert(1),
+        # assert
+        assert('hello' in '9238745298734509283745987(*&(@#*&!*(@#$)&!)@(*$^&(#*&%^@#(*%&^@#*&))hello))'),
+        assert('goodbye' in 'qao3984wifuhqao83947fhqwa083974r43qw8o79apy43qr89yp7ohqr342py89h7qrp39y824hpq89hry3qp98h
+        awpo4efijwaq3p904f8jnw3qpa94j890[f34w[90jf3490[f34j09[fj2j0[9j0qj09[fq2j[90qf2j0[92[0j9q2[j09fj09[j
+        qwap349trfuqw[30249ri09345872-0goodbye3495823-04857u2309485}{"
+        :}{:}{>}{:}{:?}{:}{:}{:}}]]]]]]]]]]]]\n\t\r\t\n\t\r\\\\\\\\\\\\\\\\'),
+        assert([5] in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 'aewjf98hqw34r90f872h34908tgf72h340gf928hn543g0982h345g09283h4f098qw3hj4fdo9pwq3
+        waq3o4fjqwa39p084fjwq3-p049fkjqw3029fk2-34f90i34-0gkw3904gfe4rf', '34590234750923475098234502!@#$%^&*()_+', 3452034534587203498572093485720398475
+        239408520398457209384572098347520983475029834752190-8345720345720938457209-83475203947856209834756209834752098347520938475209384750928347520983475029,
+        34978520349857209843572093845720983457628345.12983746192837461982374561928374651298765298374652934875623948765291348756239487562304897562394875623984576
+        , -23498572349857234987523498572389452.2345762349875629384756293847562897345+2394857293487523948576234908572398456723948765239847652983746529873465928736,
+        [5], {'3872349857234095872349085723904857230984572309845762308947652908347652098374!@#$RTYUIO)(*&^%6': 345872304985723409857203948752093847520983475209348752}])
+    ),
+    True
+))
+# -------------------------------------------
+
+# ------------------ ACTUAL STUFF HAPPENING : THREADS ------------------
+# semaphore support
+import ('lib/semaphore')
+
+# tests thread subroutines
+def('test_threads', (
+    print_test('threads'),
+    thread('t1', (
+        var('count', 0),
+        for (0, 10, 'i', (
+            count.add(1)
+        )),
+        assert(count.equals(10))
+    )),
+    # joins with newly created thread
+    join('t1'),
+    # assert count is 10
+    assert(count.equals(10)),
+    # testing semaphores
+    # main thread grabs the semaphore before the new
+    # thread is created
+    var('sem', semaphore(True, '')),
+    var('a', 0),
+    # creates a new thread
+    thread('t2', (
+        # wait for the resource to be unlocked
+        wait(not(sem.held())),
+        sem.held(True),
+        # perform work
+        a.add(1),
+        # release the semaphore
+        sem.message('finished'),
+        sem.held(False)
+    )),
+    assert(sem.held()),
+    assert(equals(sem.message(), '')),
+    # give the thread the semaphore
+    sem.held(False),
+    # waits for the thread to write a message to the semaphore
+    wait(equals(sem.message(), 'finished')),
+    # assert the thread released the semaphore
+    assert(not(sem.held())),
+    # assert that the work was finished
+    assert(a.equals(1)),
+    # joins threads to avoid thread counting errors
+    join('t1'),
+    join('t2'),
+    # testing threadpool(thread_count, job)
+    threadpool(2, (
+        var('a', 0),
+        for(0, 10, 'i', (
+            a.add(1)
+        )),
+        assert(a.equals(10))
+    )),
+    True
+))
+# -------------------------------------------
+
+# ------------------ ACTUAL STUFF HAPPENING : MULTIPROCESSING ------------------
+# multiprocessing support
+import ('lib/processes')
+
+def('test_processes', (
+    print_test('processes'),
+    # creates a new process
+    # you can start a process with proc() in ^2.0.386
+    proc('process1', (
+        # process performs work
+        var('forkvar', 0),
+        assert(exists('forkvar')),
+        10(forkvar.add(1)),
+        assert(forkvar.equals(10)),
+    )),
+    # joins with the process
+    join('process1'),
+    assert(not(exists('forkvar'))),
+    # test 2
+    var('a', 0),
+    # starts two processes that perform work
+    for(0, 2, 'i', (
+        proc(i, (
+            # process specific variables
+            @ a = @ b = @ c = 0, 
+            assert(exists('a'), exists('b'), exists('c')),
+            # if process 0
+            # we pass msn2 resources to a new process via {==}
+            # insertion, this is the same insertion in calls such
+            # as script() and JS()
+            if (equals({=i=}, 0), (
+                # assert the variables exists
+                assert(
+                    exists('a'), exists('b'), exists('c'),
+                    not(exists('d')), not(exists('e')), not(exists('f'))
+                ),
+                # modify the variables
+                a.add(1),
+                b.add(1),
+                c.add(1),
+                # assert the variables were modified
+                assert(a.equals(1), b.equals(1), c.equals(1)),
+            ), 
+            # else if process 1
+            (
+                # same as 0
+                assert(
+                    exists('a'), exists('b'), exists('c'),
+                    not(exists('d')), not(exists('e')), not(exists('f'))
+                ),
+                a.add(10),
+                b.add(10),
+                c.add(10),
+                assert(a.equals(10), b.equals(10), c.equals(10)),
+            ))
+        ))
+    )),
+
+    # joins with the first process created
+    join('0'),
+    True
+))
+# -------------------------------------------
+
+# ------------------ RANDOMNESS ------------------
+# random implementation includes
+# a single system call 'random()'
+# this test used to run 50-100 times
+# per test iteration, however was cut down after
+# proving correct functionality, and would only
+# need to be tested if the random() call is changed,
+# which it most likely won't be.
+def('test_random', (
+    print_test('random'),
+    # random() with 0-1 arguments returns a float between
+    # 0-1
+    var('r', random()),
+    assert(r.less(1), r.greaterequal(0)),
+    # random() with 2 arguments returns a range between the
+    # two values passed
+    var('r2', random(1, 2)),
+    assert(r2.less(3), r2.greaterequal(1)),
+    var('r3', random(0, 50)),
+    assert(r3.less(50), r3.greaterequal(0)),
+    # a random() with 3 arguments
+    # defaults the return value to an integer,
+    # effectively implementing float and integer random
+    # capabilities from random()
+    var('r4', random(0, 50,)),
+    # asserts the value is an integer with python fallback
+    assert(isint(r4)),
+    assert(r4.less(50), r4.greaterequal(0)),
+    # creates an array of random values with python fallback
+    var('r5', arr(random(), random(0, 10), random(0, 10,))),
+    # assert type of random
+    assert(isfloat(r5.get(0)), not(isint(r5.get(0)))),
+    assert(isfloat(r5.get(1)), not(isint(r5.get(1)))),
+    assert(isint(r5.get(2)), not(isfloat(r5.get(2)))),
+    # assert range of random
+    assert(less(r5.get(0), 1), greaterequal(r5.get(0), 0)),
+    assert(less(r5.get(1), 10), greaterequal(r5.get(1), 0)),
+    assert(less(r5.get(2), 10), greaterequal(r5.get(2), 0)),
+    True
+))
+# -------------------------------------------
+
+# ------------------ SIMPLE LOOPS ------------------
+# simple loops are written as functions with the below syntax
+# two integers, and an index variable before the loop's block arguments within the ()
+# the arguments to the simple loop between the || cannot be anything but an integer
+# 6/3/2023: added an integer as a syscall, running its block that many times
+# this works for any integer
+# tests another loop approach
+def('test_simple_loops', (
+    print_test('simple loops'),
+    @ a = 0,
+    # simple loop syntax
+    0|2|i (a.add(1)),
+    assert(a.equals(2)),
+    @ a = 0,
+    0|5|i(a.add(i)),
+    assert(a.equals(10)),
+    @ a = 0,
+    0 | 3 | i (a.add(1)),
+    assert(a.equals(3)),
+    # brute test
+    @ a = 0,
+    5    |   2 |_(a . add(1  )),
+    assert(1 , a.equals(3)),
+    @ a = 0,
+    # nested simple loops
+    2 | 6 | i    (1|4|j  (a.add(1))),
+    assert(a.equals(12)),
+    # testing integer syscall
+    @ a = 0,
+    5 (a.add(1)),
+    assert(a.equals(5)),
+    @ a = 0,
+    # integer call just performs the block inside x amount of times
+    300(a.add(1)),
+    assert(a.equals(300)),
+    # testing variable integer name syscall
+    # if integer, performs a loop that many times
+    @ a = 5,
+    @ test = 0,
+    # integer syscall works with integer variables
+    a(test.add(1)),
+    assert(test.equals(5)),
+    a (test.add(1)),
+    assert(test.equals(10)),
+    @ integer = 3,
+    integer (test.add(1)),
+    assert(test.equals(13)),
+    @ test = 0,
+    integer(integer(test.add(1))),
+    assert(test.equals(9)),
+    True
+))
+# -------------------------------------------
+
+# ------------------ SIMPLE CONDITIONALS ------------------
+# simpler conditional implementation
+# ? syntax is a function, meaning it requires (true_block, false_block) for a block to execute
+# the argument to ? cannot be a function itself
+# if this concept is confusing, just use if()
+def('test_simple_cond', (
+    print_test('simple cond'),
+    # assert syntax is functional
+    ? True (assert(True), assert(False)),
+    ? False (assert(False), assert(True)),
+    # slightly more advanced variations
+    @ a = 1,
+
+    # using just a variable doesn't require
+    # any special syntax
+    ? a (assert(True), assert(False)),
+    # the simple conditional call permits a Python
+    # expression as the condition, however requires
+    # that this condition doesn't have parenthases,
+    # as this creates issues with parsing
+
+    # to insert into a Python statement, we
+    # use the syntax we normally would.
+    ? not ?a? (assert(False)),
+    # no () can exist between ? and its blocks in ()
+    # --v----------------v
+    ? 0 (assert(False), assert(True)),
+    ? 0 (assert(False)),
+    True
+))
+# -------------------------------------------
+
+# ------------------ DEFINING SYNTAX ------------------
+# the system call syntax() is used to define new syntax
+# syntax() takes three arguments
+# the created syntax will exist in all contexts across all threads
+#
+# msn2 syntax essentially creates functions, however these
+# functions take priority over any other functions.
+# see the msn2 source code for clarity
+#
+# it is safe and highly recommended to choose unique tokens to avoid symbolic / naming conflicts within 
+# base MSNScript2 syntax
+#
+# first argument indicates the token surrounding a block of text in an MSNScript2 argument, this block of text
+# does not need to conform to MSNScript2 / Python syntax
+#
+# second argument stores the internals surrounded by the token specified
+# as the first argument
+#
+# third argument is what should be returned according to the line confined within the new token
+def('test_user_syntax', (
+    print_test('user syntax'),
+    # defining essentially enclosing syntax
+    syntax('!!!', 'line', (
+        assert(exists('line')),
+        assert(line.equals(' 5 + 2 - 6 * 2 ')),
+        assert(equals(-(line), -5)),
+    )),
+    # demonstrating the syntax
+    !!! 5 + 2 - 6 * 2 !!!,
+    # creating a new syntax
+    syntax('goof', 'line', (
+        @ a = 1000,
+        1
+    )),
+    # asserting syntax
+    assert(goofgoof, exists('a'), a.equals(1000)),
+    assert(goof, goofgoof, (goof)),
+    # more practical implementations
+    # defines and writes to a single local storage by which programs can communicate
+    syntax('LOCAL', 'line', (
+        file.mkdir('localstorage'),
+        file.create('localstorage/local.txt'),
+        file.write('localstorage/local.txt', line),
+        file.read('localstorage/local.txt')
+    )),
+    # asserts the write was correct
+    assert(equals(LOCAL 5729348570234 LOCAL, ' 5729348570234 ')),
+    assert(equals(LOCAL hello! LOCAL, ' hello! ')),
+    assert(equals(LOCAL this is some text LOCAL, ' this is some text ')),
+    # more advanced syntax
+    # creates an array out of all things surrounded by '---'
+    # when inside the user defined context
+    syntax('$', 'line', (
+        var('____', []),
+        var('insides', between('-', line)),
+        insides.each('line2', (
+            ____.push(line2)
+        )),
+        ____ 
+    )),
+    # create quicker assertion syntax
+    syntax('!!', 'line', each(line.split('--'), 'line2', 
+        if(not(-(line2)), print(+('[-] assertion failed: ', line))),
+    )),
+    # demonstrating new syntax
+    .. !! -- True -- 1 -- [1, 2, 3, 4] == [1, 2, 3, 4] -- assert(assert(True)) !!,
+    # using () to invoke multiline interpretation
+    (
+        !!
+        True
+        --
+        True
+        --
+        # we use th previous syntax to form an array
+        equals($ -1- -2- -9- $, ['1', '2', '9'])
+        !!
+    ),
+    # we use the new syntax to define an array of strings,
+    assert(equals(
+        @ array = comp($ -1- -2- -3- -4- -5- $, 'i', int(i)),
+        [1, 2, 3, 4, 5]
+    )),
+    assert(array.equals([1, 2, 3, 4, 5])),
+    # demonstrates the new syntax
+    @ array = $$ -5- -3- -0-   $$,
+    @ array = comp(array, 'i', int(i)),
+    assert(array.equals([5, 3, 0])),
+    # pretend global variable
+    @ a = 0,
+    # defines a new syntax to make an increment of a variable easier
+    syntax('++', 'line', @ a += 1),
+    # assert functionality
+    assert(a.equals(0)),
+    ++,
+    assert(a.equals(1)),
+    10(++),
+    assert(a.equals(11)),
+    ? True ((++, 5(++))),
+    assert(a.equals(17)),
+    # paired user syntax tags still act as a single call to that syntax
+    (
+        ++
+        ++
+    ),
+    assert(a.equals(18)),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTS MACROS ------------------
+# imports serialization for thread naming
+import('lib/serial.msn2')
+
+# opens a new serialization variable
+serial:open('thread')
+
+# MSNScript2 has both the ability to create new syntax as well as new macros
+#
+# macros are similar to syntax, however they are confined to a single line.
+# any text after the macro will be passed to the macro function,
+# where the user should handle the return value
+#
+# macro arguments should be literals in most cases
+def('test_macros', (
+    print_test('macros'),
+    # defines a new macro to create a thread, returning its name
+    # any line of code preceeded with a ':' will 
+    # be executed on a new thread
+    macro(':', 'line', (
+        @ name = serial:next('thread'),
+        thread(name, -(line)),
+        name
+    )),
+    # demonstrates the new macro
+    : assert(True, 1, not(False)),
+    # creates a thread on a new context that runs an assertion
+    : new(
+        assert(
+            not(exists('a')), not(exists('b')), not(exists('c')),
+            True, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        )
+    ),
+    # macros working together
+    # creating subthread
+    : : (
+        @ v = 3,
+        assert(exists('v'), v.equals(3)),
+    ),
+    # quicker assertion
+    macro('!', 'line', assert(-(line))),
+    (! True, !not(False)),
+    ! not False,
+    # creates a few threads that make some assertions
+    : : : (!True, !1, !not 0),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTS POSTMACROS ------------------
+# tests the concept of postmacros, which in turn create a new syntax that should exist
+# at the end of any single line of code
+# when a line is succeeded by a postmacro token, a function
+# will be invoked on the line preceeding the postmacro
+# this function is defined by the user
+# 
+# similarly to macros, if a 4th argument is added, the third
+# argument as a function is ignored and a value is returned instead
+def('test_postmacros', (
+    print_test('postmacros'),
+    # creates a post macro for a more English approach to asserting
+    # i guess you could call it questioning lol
+    postmacro('??', 'line', if (not(-(line)), 
+            print(
+                '[-] assertion error : ', line
+            )
+        )
+    ),
+    # demonstrates the postmacro
+    True??,
+    not False and True ??,
+    assert(True, 1, 1)??,
+    # 4th argument added
+    postmacro('_PI_', '__unused', None, 3.14),
+    assert(equals(_PI_, 3.14), not(equals(5.123, _PI_))),
+    # floors a number
+    postmacro('VVV', '__expression', math.floor(-(__expression))),
+    # ceils a number
+    postmacro('^^^', '__expression', math.ceil(-(__expression))),
+    # divides a number by 2
+    postmacro(' BY2', '__expression', /(-(__expression), 2)),
+    (
+        equals(3, 3.438732 VVV), 
+        .438275^^^, 
+        1.43254394382743928VVV,
+        equals(4 BY2, 2),
+        equals(4 BY2 BY2, 1),
+        equals(9 BY2 VVV, 4),
+        equals(6.234^^^ BY2 VVV, 3)
+    ) ??,
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTS ENCLOSING SYNTAX ------------------
+# tests integrity of an enclosing syntax
+def('test_enclosing', (
+    print_test('enclosing'),
+    # creates an enclosing macro surrounded by the start and end token,
+    # invoked by preceeding a line with a '(', similarly to the previous
+    # macro, postmacro, and syntax definitions
+
+    # SAFELY extracts a variable's value
+    enclosedsyntax('^', '^', '__line', val(val('__line'))),
+
+    @v = 'hello\n how are you?',
+
+    assert(equals(^v^, 'hello\n how are you?')),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTS ENCLOSING SYNTAX ------------------
+# destroy() system call destroys variables or user defined functions (~)
+def('test_destroy', (
+    print_test('destroy'),
+    @v = 1,
+    assert(exists('v')),
+    # destroying a variable
+    destroy('v'),
+    # destroying multiple variables
+    @v = @v2 = @v3 = 1,
+    assert(exists('v'), exists('v2'), exists('v3')),
+    destroy('v', 'v2', 'v3'),
+    assert(not(exists('v')), not(exists('v2')), not(exists('v3'))),
+    assert(not(exists('v'))),
+    # destroying a function
+    def('func', None),
+    assert(exists:function('func')),
+    destroy:function('func'),
+    assert(not(exists:function('func'))),
+    # destroying multiple functions
+    def('func', None), def('func2', None), def('func3', None),
+    assert(exists:function('func'), exists:function('func2'), exists:function('func3')),
+    destroy:function('func', 'func2', 'func3'),
+    assert(not(exists:function('func')), not(exists:function('func2')), not(exists:function('func3'))),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTS FUNCTION() SYSTEM CALL ------------------
+# tests function()
+# implementing function() is an attempt to offer a fully stable way
+# of declaring user methods
+# 
+# function() is a simply a better alternative to '~'
+# the context rules still apply to these functions the same way as '~'
+#
+# ret() is used to create a return buffer for multiprogramming purposes
+#
+# function() has been replaced with def() in 2.0.387,
+# function() is not recommended as a function creation mechanism,
+# however still works if need be
+def('test_function', (
+    print_test('function'),
+    # creating a new user function
+    # ret() returns to a function()
+    # these two system calls work hand in hand
+    # this creates a user function called array_sum() that takes an array,
+    # which is used in the function's context to compute its sum
+    function('array_sum', ret('array_sum', sum(__array)), '__array'),
+    # invoking the function is the same
+    equals(private(array_sum([1, 2, 3, 4, 5])), 15) ??,
+    # you can overwrite a function be redeclaring it
+    function('array_sum', ret('array_sum', 0), '__array'),
+    equals(private(array_sum(None)), 0) ??,
+    # playing with functions
+    function('f', ret('f', _e), '_e'),
+    # running the already declared function
+    equals(private(f(5)), 5) ??,
+    # NOTE : function()'s first argument should be a hard coded string
+    # avoid not using a hard coded string when creating class() inner methods
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTS INTERPRETER REDIRECTION ------------------
+
+# interpreter redirection allows for lines of code to be redirected to a 2REDIRECT
+# and 2STOPREDIRECT  system calls that alter the path of the working 
+# interpreter to a function that would operate on the line instead
+# this will occur until 2STOPREDIRECT is called
+# the lines surrounded by the REDIRECT keywords can all be invoked via '2STARTREDIRECT'
+# 
+# usage:
+# redirect(linevar, block)
+# ***
+# ***
+# ***
+# stopredirect()
+# startredirect()
+def('test_redirect', (
+    print_test('redirect'),
+    @v = 1,
+    @v2 = 2,
+    redirect('__line', add(val('__line'), 1)),
+    v,
+    v2,
+    v2,
+    stopredirect(),
+    # launches the code inside the redirect
+    startredirect(),
+    equals(v, 2) ??,
+    equals(v2, 4) ??,
+    # creates another redirect that simply evaluates each instruction in between
+    redirect('__line', -(val('__line'))),
+        5 == 5 ??,
+        34 > 1 ??,
+    stopredirect(),
+    # launch the code inside the redirect
+    startredirect(),
+    True
+))
+
+# -------------------------------------------
+
+# ------------------ TESTS INTERPRETER REDIRECTION ------------------
+def('test_userfunc_with_args', (
+    print_test('userfunc with args'),
+    # declaring a user defined function
+    def('__test', '__arg1', '__arg2', (
+        assert(exists('__arg1')),
+        assert(exists('__arg2')),
+        assert(equals(val('__arg1'), 1)),
+        assert(equals(val('__arg2'), 2)),
+    )),
+    # running method privately
+    private(__test(1, 2)),
+    # also testing nested user functions
+    def('__test2', '__arg1', '__arg2', (
+        assert(exists('__arg1')),
+        assert(exists('__arg2')),
+        assert(equals(val('__arg1'), 3)),
+        assert(equals(val('__arg2'), 4)),
+        # we use private() to prevent variable leakage to other contexts that need the same
+        # variable names
+        private(__test(1, 2)),
+        assert(equals(val('__arg1'), 3)),
+        assert(equals(val('__arg2'), 4)),
+    )),
+    # running test privately
+    private(__test2(3, 4)),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTING OP CLASS ------------------
+# tests the built in op class, used for general functional operations on all types
+# the op class simply performs operations, and does not modify any variables or methods
+#
+# a benefit of using the op class is the fact that there are many method names that
+# perform the same operation, allowing the programming to forget the specific syntax to focus on other problems
+#
+# every method in the op class takes any amount of arguments, and returns the result of the operation
+def('test_op', (
+    print_test('op'),
+    @v = 1,
+    # testing add on numbers
+    assert(equals(op.add(v, 4), 5)),
+    # testing different names for the same operation
+    assert(equals(op.add(v, 4), op.plus(v, 4))),
+    assert(equals(op.add(v, 4), op.sum(v, 4))),
+    assert(equals(op.add(v, 4), op.+(v, 4))),
+    # testing add on strings
+    assert(equals(op.add(str(v), '4'), '14')),
+    assert(equals(op.add(str(v), '4'), op.plus(str(v), '4'))),
+    assert(equals(op.add(str(v), '4'), op.sum(str(v), '4'))),
+    assert(equals(op.add(str(v), '4'), op.+(str(v), '4'))),
+    assert(equals(op.add(str(v), '4'), op.concat(str(v), '4'))),
+    # testing add on lists
+    assert(equals(op.add([5], 4, 3), [5, 4, 3])),
+    assert(equals(op.add([5], 4, 3), op.plus([5], 4, 3))),
+    assert(equals(op.add([5], 4, 3), op.sum([5], 4, 3))),
+    # testing recommended choice of method name for all other operations
+    assert(equals(op.sub(v, 4), -3)),
+    assert(equals(op.mul(v, 4), 4)),
+    assert(equals(op.div(v, 4), 0.25)),
+    assert(equals(op.mod(v, 4), 1)),
+    assert(equals(op.pow(v, 4), 1)),
+    # testing with any amount of arguments
+    assert(equals(op.add(1, 2, 3, 4, 5), 15)),
+    assert(equals(op.add(1, 2, 3, 4, 5), op.plus(1, 2, 3, 4, 5))),
+    # testing sub with any amount of arguments
+    assert(equals(op.sub(1, 2, 3, 4, 5), -13)),
+    assert(equals(op.sub(1, 2, 3, 4, 5), op.minus(1, 2, 3, 4, 5))),
+    # testing mul with any amount of arguments
+    assert(equals(op.mul(1, 2, 3, 4, 5), 120)),
+    assert(equals(op.mul(1, 2, 3, 4, 5), op.times(1, 2, 3, 4, 5))),
+    # testing div with any amount of arguments that results in a whole number
+    assert(equals(op.div(16, 2, 2, 2), 2)),
+    assert(equals(op.div(16, 2, 2, 2), op.divide(16, 2, 2, 2))),
+    # testing div with any amount of arguments that results in a decimal
+    assert(equals(op.div(16, 3, 2, 2), 1.3333333333333333)),
+    assert(equals(op.div(16, 3, 2, 2), op.divide(16, 3, 2, 2))),
+    # testing mod with any amount of arguments that results in 1
+    assert(equals(op.mod(16, 3, 2, 2), 1)),
+    # testing pow with any amount of arguments
+    assert(equals(op.pow(2, 2, 2), 16)),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTING ALL TYPE METHODS ------------------
+
+# all types share certain methods, this test demonstrates those methods
+# certain methods cannot and should not be used on certain types
+# ex: integer.copy() will not work and should not be
+# used (integer), however array.copy() will
+def('test_global_methods', (
+    print_test('global methods'),
+    @v = [1, 2, 3, 4],
+    # testing copy()
+    @v2 = v.copy(),
+    assert(v.equals(v2)),
+    # testing len()
+    assert(equals(v.len(), 4)),
+    # testing val()
+    assert(v.equals([1, 2, 3, 4])),
+    # test casting methods
+    assert(equals(v.str(), '[1, 2, 3, 4]')),
+    @ string = 'hello world',
+    # calling str() is like calling str(string) and is essentially the same as calling string
+    # with extra, unnecessary steps
+    assert(equals(string.str(), 'hello world')),
+    @ string = '[3, 4, 5, 65]',
+    # testing -() explicitly
+    # interprets msn2 code as a string
+    assert(equals(-(string), [3, 4, 5, 65])),
+    # finally, an equals method for all types
+    # equals(), like the system call, takes any amount of arguments
+    assert(string.equals('[3, 4, 5, 65]')),
+    # extract the value from the string
+    @ array = -(string),
+    # lists, like all other types, have an equals method
+    assert(array.equals([3, 4, 5, 65])),
+    # test with floats
+    @ float = 45.432,
+    assert(equals(float.str(), '45.432')),
+    assert(float.equals(45.432)),
+    # test with dictionaries
+    @ dict = { 'a': 1, 'b': 2, 'c': 3 },
+    assert(equals(dict.str(), "{'a': 1, 'b': 2, 'c': 3}")),
+    assert(dict.equals({ 'a': 1, 'b': 2, 'c': 3 }, dictfrom('a', 1, 'b', 2, 'c', 3))),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTING INTEGER METHODS ------------------
+def('test_int_methods', (
+    print_test('integer methods'),
+    @ integer = 5,
+    @ integer2 = 10,
+    # testing increment
+    integer.inc(),
+    assert(integer.equals(6)),
+    # testing decrement
+    integer.dec(),
+    assert(integer.equals(5)),
+    # testing add
+    assert(equals(integer.add(integer2), 15)),
+    @ integer = 0,
+    @ integer = 0,
+    # testing add with any amount of arguments
+    assert(equals(integer.add(1, 2, 3, 4, 5), 15)),
+    # number comparison methods
+    assert(integer.equals(15)),
+    # testing a dictionary
+    @ dictionary = {},
+    assert(dictionary.equals({})),
+    assert(not(dictionary.equals({ 'a': 1 }))),
+    # test greater and its aliases, greaterthan and g
+    assert(integer.greater(14)),
+    assert(not(integer.greater(15))),
+    assert(integer.greaterthan(14)),
+    assert(not(integer.greaterthan(15))),
+    assert(integer.g(14)),
+    assert(not(integer.g(15))),
+    # test less and its aliases, lessthan and l
+    assert(integer.less(16)),
+    assert(not(integer.less(15))),
+    assert(integer.lessthan(16)),
+    assert(not(integer.lessthan(15))),
+    assert(integer.l(16)),
+    assert(not(integer.l(15))),
+    # test greater or equal and its aliases, greaterequal and ge
+    assert(integer.greaterequal(15)),
+    assert(not(integer.greaterequal(16))),
+    assert(integer.ge(15)),
+    assert(not(integer.ge(16))),
+    # test less or equal and its aliases, lessequal and le
+    assert(integer.lessequal(15)),
+    assert(not(integer.lessequal(14))),
+    assert(integer.le(15)),
+    assert(not(integer.le(14))),
+    # testing comparisons with many arguments
+    assert(integer.greater(11, 12, 13, 14)),
+    assert(not(integer.greater(11, 12, 13, 14, 15))),
+    assert(integer.greaterthan(11, 12, 13, 14)),
+    assert(not(integer.greaterthan(11, 12, 13, 14, 15))),
+    assert(integer.g(11, 12, 13, 14)),
+    assert(not(integer.g(11, 12, 13, 14, 15))),
+    # tests extra dictionary methods
+    @ dict = { 'a': 1, 'b': 2, 'c': 3 },
+    assert(equals(list(dict.keys()), ['a', 'b', 'c'])),
+    assert(equals(list(dict.values()), [1, 2, 3])),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTING GLOBAL METHODS ------------------
+def('test_more_global_methods', (
+    print_test('more global methods'),
+    # testing each 
+    @ sum = 0,
+    @ v = [1, 2, 3, 4],
+    v.each('e', sum.add(e)),
+    assert(sum.equals(10)),
+    # obtaining a slice
+    @ slice = v.slice(0, 2),
+    assert(slice.equals([1, 2])),
+    # obtaining a slice of a string
+    @ string = 'hello world',
+    @ slice = string.slice(0, 5),
+    assert(slice.equals('hello')),
+    # testing map
+    @ v = [5, 4, 3, 2, 1],
+    v.map('el', el.add(1)),
+    assert(v.equals([6, 5, 4, 3, 2])),
+    # testing map with a dictionary
+    @ dict = { 'a': 1, 'b': 2, 'c': 3 },
+    # the map function on a dictionary can prove to be powerful
+    # for each iteration of map(), the key and value pair are set to a variable
+    # the key and value pair can be accessed by the variables 'k' and 'v'
+    # the values of temporary variables 'k' and 'v' can be changed in the function
+    # the values of the dictionary are changed to the values of the temporary variables
+    # does nothing to 'k' and 'v'
+    dict.map('k', 'v', ()),
+    assert(dict.equals({ 'a': 1, 'b': 2, 'c': 3 })),
+    # increases the value by 1
+    dict.map('k', 'v', v.inc()),
+    assert(dict.equals({ 'a': 2, 'b': 3, 'c': 4 })),
+    # changes both the key and the value
+    dict.map('k', 'v', (
+        @ k = 'd',
+        @ v = 5
+    )),
+    assert(dict.equals({ 'd': 5 })),
+    # testing setting of string character
+    @ string = 'hello world',
+    string.set(0, 'H'),
+    assert(string.equals('Hello world')),
+    # reversing a string
+    string.reverse(),
+    assert(string.equals('dlrow olleH')),
+    assert(not(string.equals('Hello world'))),
+    # testing shove(inserting, index)
+    string.shove('!', 5),
+    assert(string.equals('dlrow! olleH')),
+    # testing around()
+    assert(equals(string.around('!', 5, 5), 'dlrow! olle')),
+    # testing has()
+    assert(has(string, '!', 'w', 'e', 'll')),
+    # reversing an array
+    @ v = [1, 2, 3, 4, 5],
+    v.reverse(),
+    assert(v.equals([5, 4, 3, 2, 1])),
+    assert(not(v.equals([]))),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTING RANDOM STUFF ------------------
+# this is a test that implements some random things
+def('test_other_stuff', (
+    print_test('other stuff'),
+    # messing around with <2><2>
+    assert(<2>%1%<2>),
+    assert(<2>%not(0)%<2>),
+    assert(
+        <2>
+            %assert(1)% == %1%
+        <2>
+    ),
+    # reversing an array again
+    @ a = [1, 2, 3, 4, 5],
+    equals(a.reverse(), [5, 4, 3, 2, 1 ]) ??,
+    # simple array operations
+    a.add(a.get(2)),
+    equals(a, [5, 4, 3, 2, 1, 3]) ??,
+    # sorting an array by evens, then odds
+    #function('_reset', (a.equals([2, 4, 6, 1, 3, 5]) ??, @ a = [1, 2, 3, 4, 5, 6])),
+    def('_reset', (
+        a.equals([2, 4, 6, 1, 3, 5]) ??,
+        @ a = [1, 2, 3, 4, 5, 6]
+    )),
+    @ a = [1, 2, 3, 4, 5, 6],
+    @ a = (
+        << [el for el in |a| if el % 2 == 0] + 
+           [el for el in |a| if el % 2 != 0] >>),
+    # assert correction and reset 'a'
+    _reset(),
+    # calculating factorial, recursively
+    def('factorial', 'n', 
+        if (n.equals(0), 1, x(n, factorial(-(n, 1))))
+    ),
+    # testing factorial in a private context
+    equals(private(factorial(0)), 1) ??,
+    equals(private(factorial(1)), 1) ??,
+    equals(private(factorial(2)), 2) ??,
+    equals(private(factorial(3)), 6) ??,
+    equals(private(factorial(4)), 24) ??,
+    equals(private(factorial(5)), 120) ??,
+    equals(private(factorial(6)), 720) ??,
+    # lol
+    if(1,if(1,if(1,assert(1)))),
+    # entering a private context
+    new((
+        class('_range', @all=list(range(0,10))),
+        # assert two class insantces have the same initial attribute
+        equals(->(_range(), 'all'), ->(_range(), 'all'))
+    )),
+    # private function
+    def('priv', (
+        # import english alphabet
+        import('lib/eng'),
+        @ _i = 0,
+        # create a variable for each letter of the alphabet
+        eng:alphabet.each('letter', 
+            var(letter.val(), _i.inc())
+        ),
+        ret('priv', z)
+    )),
+    assert(equals(private(priv()), 26)),
+    # classes working together
+    new((
+        # making a class of tests
+        class('random_tests', (
+            # test 1
+            def('test1', 'self', 'value', 
+                assert(equals(op.add(value, 3), 13))
+            )
+        )),
+        (@_r=random_tests(),_r.test1(10))
+    )),
+    # testing the 'in' operator
+    @ v = 4,
+    assert(v.in([1, 2, 3, 4, 5])),
+    assert(not(v.in([1, 2, 3, 5, 6]))),
+    assert(v.in([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])),
+    # removes duplicates from an array
+    def('remove_dups', '_array', list(_array.toset())),
+    equals(remove_dups([1, 2, 3, 4, 5, 5, 4, 3, 2, 1]), [1, 2, 3, 4, 5]) ??,
+    # another test
+    equals(remove_dups(
+        [1, 2, 3, 4, 5, 5, 4, 3, 2, 1, 6, 7, 8, 9, 10]
+    ), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) ??,
+    # tests the maximum() and minimum() system calls
+    @ v = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    @ n = 20,
+    equals(maximum(v), 10) ??,
+    equals(maximum(n), 20) ??,
+    equals(maximum(v, n), 20) ??,
+    # finding the max between numbers
+    equals(maximum(10, 20, 30), 30) ??,
+    equals(maximum(10, 20, 30, 40), 40) ??,
+    equals(maximum(10, 20, 30, 40, 50), 50) ??,
+    # finding the min between lists
+    equals(maximum([1, 2, 3], [1, 2, 3, 4])), 4 ??,
+    equals(maximum([1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5], 12)), 12 ??,
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTING SUBCLASSES ------------------
+# tests nested classes
+# using function() just to verify integrity
+def('subclasses', (
+    print_test('subclasses'),
+    # declaring a class
+    class('_test', (
+        # class functions
+        def('get', 'self', -1),
+        def('get2', 'self', 1),
+        # subclass
+        class('_test_sub', (
+            @att=5, 
+            def('get_att', 'self', self.att())
+        )),
+        # creating an instance of the subclass
+        @sub = _test_sub(),
+        # asserting the class was created correctly
+        assert(equals(sub.att(), 5, sub.get_att())),
+    )),
+    # creating an instance of the class
+    @test = _test(),
+    # instance of the subclass
+    @sub = test.sub(),
+    # verifying you can access the subclass and create
+    # instances of it
+    assert(equals(sub.get_att(), 5, sub.att())),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTING SETS ------------------
+def('test_sets', (
+    print_test('sets'),
+    # creating an empty set
+    @ set = set(),
+    # length of set should be zero
+    assert(not(set.len())),
+    # add a bunch of things to the set
+    set.add(1, 2, 3, 4, 5, 5, 4, 3, 2, 1),
+    # length of set should be 5
+    assert(equals(set.len(), 5)),
+    # asserts what the set is
+    assert(equals(set, {1, 2, 3, 4, 5})),
+    # asserts the set can be cast to a list
+    assert(equals(set.list(), [1, 2, 3, 4, 5])),
+    # gets an an index in the set
+    assert(equals(set.get(0), 1)),
+    assert(equals(set.get(1), 2)),
+    assert(equals(set.get(2), 3)),
+    assert(equals(set.get(3), 4)),
+    assert(equals(set.get(4), 5)),
+    # assert set equals again
+    assert(set.equals({1, 2, 3, 4, 5})),
+    # creating a set from a constructor
+    @ set = set(0, 1, 2, 3),
+    # assert set equals
+    assert(set.equals({0, 1, 2, 3})),
+    # set inside a class
+    class('test_set', (
+        # set attributes
+        @ set = set(0, 1, 2, 3),
+        # gets this set
+        def('get_set', 'self', self.set()),
+        # add an element to the set
+        # also testing the 'as' function
+        def('add_element', 'self', '_el', 
+            self.set(
+                as('_t', self.set(), _t.add(_el)))
+        )
+    )),
+    # test set
+    @ set = test_set(),
+    assert(equals(set.set(), {0, 1, 2, 3})),
+    assert(equals(set.get_set(), {0, 1, 2, 3})),
+    # add an element to the set
+    set.add_element(4),
+    # assert the element was added
+    assert(equals(set.get_set(), set.set(), {0, 1, 2, 3, 4})),
+    # making another test_set() with its own set values
+    @ set2 = test_set(set('hello', 'hello', 'mason')),
+    # assert the set is correct
+    assert(equals(set2.get_set(), set2.set(), {'hello', 'mason'})),
+    # assert the first set is still the first set
+    assert(equals(set.get_set(), set.set(), {0, 1, 2, 3, 4})),
+    # testing class constructor bc bored
+    class('hello', (
+        @ val1=1,
+        @ val2=2,
+        @result=3,
+        # constructor
+        def('const', 'self', 
+            self.result(op.add(self.val1(), self.val2()))
+        )
+    )),
+    # test class
+    @ hey = hello(),
+    # assert the result is correct
+    assert(equals(hey.result(), 3)),
+    # assert the values are correct
+    assert(equals(hey.val1(), 1)),
+    assert(equals(hey.val2(), 2)),
+    # create a new class with different val1 and val2
+    @ hey2 = hello(3, 4),
+    # assert the result is correct
+    assert(equals(hey2.result(), 7)),
+    # creating a class with different values
+    # after needing default attribute prior to the
+    # attribute needing changed
+    @ hey3 = hello(static(hello.val1()), 5),
+    # assert the result is correct
+    assert(equals(hey3.result(), 6)),
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTING NEW CHAINING DEFAULT OBJECT METHODS ------------------
+# tests the new chaining default object methods
+def('test_new_chaining_default_obj_methods', (
+    print_test('new chaining default object methods'),
+
+    # create a variable
+    @a = 5,
+    
+    # testing conditionals
+    a.and(True).or(False),
+    assert:err(a.and()),
+    assert:err(a.or()),
+    a.sub(5).or(True) ??,
+    a.add(1).and(True, (True).or(False)) ??,
+    a.equals(1).assert(),
+
+    @b = False,
+    assert:err(b.not(awef)) ??,
+    b.not().assert(),
+    assert(b.not().assert()),
+    b.as('wef').not().assert(),
+    
+    @ c = 5,
+    c.as('d').add(d).equals(10).assert(),
+
+    @ d = 5,
+    # effectively performs d * 3
+    d.as('e', 'f').add(e, f).equals(15).assert(),    
+
+    # with chaining and the 'as' default object function,
+    # we actually just get new variable setting syntax
+    (30).as('b'),
+    
+    # assert the variable was set
+    assert(exists('b'), b.equals(30)),
+
+    # "(1000.0000).as('x', 'y', 'z')" returns the original value of 1000.0000
+    (1000.0000).as('x', 'y', 'z').add(x, y, z).equals(4000).assert() ??,
+    True
+))
+
+
+# ------------------ TESTING PYTHON SNIPPET \\ ------------------
+# declaring some python code
+\\
+import time
+
+# get the time
+t = time.time()
+script \\
+
+# defining another script
+\\
+import math
+
+    # get pi
+pi = math.pi
+
+# rename the script
+script2 \\
+
+# last script
+# create script argument
+# default value of 0
+@ script3:arg1 = 0
+\\
+v = {=script3:arg1=}
+for i in range(0, 300):
+    v += 1
+script3 \\
+
+# script should not exist
+0\\
+script4\\
+
+1\\
+script5 \\
+
+# varying scripts
+import ('lib/python')
+
+# function
+def('test_python_snippets', (
+    # starting message
+    print_test('python snippets'),
+    # run the script
+    py.run(script),
+    # assert the time was retrieved
+    isfloat(py.t()) ??,
+    # assert the number is correct
+    greater(py.t(), 0) ??,
+    # run the script
+    py.run(script2),
+    # assert the value can be retrieved by msn2
+    equals(py.pi(), 3.141592653589793) ??,
+    # create a python:script class
+    @ script = python:script(script3, ['script3:arg1']),
+    # running the script with the default argument
+    script.run(arr(script3:arg1)),
+    # assert the value is correct
+    equals(py.v(), 300) ??,
+    # run the script with a specific argument
+    script.run([13]),
+    # assert the value is correct
+    equals(py.v(), 313) ??,
+    # assert script4 does not exist
+    not(exists('script4')) ??,
+    # assert script5 does exist
+    exists('script5') ??,
+    True
+))
+# -------------------------------------------
+
+# ------------------ TESTING TRY() ------------------
+# a new implementation of try() has been added due to the
+# addition of msn2 errors, the logic for throwing an
+# error is now different for many situations, and the
+# number of situations will only increase in the coming version.
+def('test_try', (
+    print_test('try'),
+    # try() tries the first block, and if it fails,
+    # logic is directed to the catch block
+    try((
+
+        # create an array
+        @ array = [1, 2, 3, 4],
+        # getting at an illegal index
+        array.get(5)
+
+        # we just make an assertion in the catch block
+    ), assert(1)),
+    # trying with domain intertwining
+    try((
+        domain('testdomain', @ val = 5),
+        # you cannot recreate a domain
+        domain('testdomain', @ val = 6)
+    ), assert(1)),
+    # testing try with a single try block
+    try(array.get(5)),
+    # testing try with 2 errors thrown
+    try(array.get(5), try(array.get(6), assert(1))),
+    True
+))
+# -------------------------------------------
+# ------------------ TESTING NEW STRING FUNCTIONS ------------------
+# in 2.0.388, there are new string functions
+# these functions are tested correctly in the below test function
+def('test_new_string_functions', (
+    print_test('new string functions'),
+    # resets the test string
+    def('reset', @ a = "hello, how are you?"),
+    reset(),
+    # testing lwordremove
+    # removes a certain number of words from the string
+    a.lwordremove(2),
+    a.equals("are you?") ??,
+    reset(),
+    # testing with 0
+    a.lwordremove(0),
+    a.equals("hello, how are you?") ??,
+    # testing with a negative number
+    try(a.lwordremove(-1)),
+    a.equals("hello, how are you?") ??,
+    # testing rwordremove
+    # removes a certain number of words from the string
+    a.rwordremove(2),
+    a.equals("hello, how") ??,
+    # remove the last two words
+    a.rwordremove(2),
+    a.equals("") ??,
+    True
+))
+
+# ------------------------------ TESTING LONG STRINGS ------------------------------
+# testing longstring() and ls()
+def ('test_long_strings', (
+    print_test('long strings'),
+
+    # testing an empty string
+    equals(ls(), "") ??,
+    equals(longstring(), "") ??,
+
+    # create a long string
+    @s = longstring(
+        This is a super long string, it can carry to 
+        multiple lines which is pretty nice, it effectively
+        concatenates all the lines together, which can be helpful.
+    ),
+    # test standard long strings
+    s.equals("This is a super long string, it can carry tomultiple lines which is pretty nice, it effectivelyconcatenates all the lines together, which can be helpful.") ??,
+
+    # more complex long string with one insert
+    @s2 = ls(
+        This is another super long string with one insert< >
+        in it, the insert puts a space at the end of the line< >
+        so that its there when the string is rendered
+    ),
+    s2.equals("This is another super long string with one insert in it, the insert puts a space at the end of the line so that its there when the string is rendered") ??,
+
+    # multiple inserts
+    @s3 = ls(
+        This is a more complex string with a bunch of< >
+        inserts, the first is a whitespace, the second< >
+        and third are newlines<nl><nl> and the fourth is< >
+        a hashtag<tag>
+    ),
+    s3.equals("This is a more complex string with a bunch of inserts, the first is a whitespace, the second and third are newlines\n\n and the fourth is a hashtag#") ??,
+
+    True
+))
+# ------------------------------------------------------------
+
+
+# ------------------------------ TESTING LEGACY FUNCTIONS ------------------------------
+def('test_legacy_function_declaration', (
+    print_test('legacy function declarations'),
+
+    # creating a function with the old syntax
+    ~ f(arg1, arg2) -> f_return,
+        # body of the function with '--'
+        -- @f_return = arg1 + arg2,
+
+    # running the function is the same
+    equals(f(3, 4), 7) ??,
+    equals(f(0, 0), 0) ??,
+
+    # nested functions
+    ~ f2(arg1, arg2) -> f2_return,
+        -- @_f2_var = 5,
+
+        # creating a nested function
+        ~ _f2(arg3, arg4) -> _f2_return,
+            -- @ _f2_return = arg3 + arg4,
+            # end body with end()
+            end(),
+        -- @_f2_var += 4,
+        -- @f2_return = _f2(arg1, arg2.+(_f2_var)),
+
+    equals(f2(3, 4), 16) ??,
+    equals(f2(0, 0), 9) ??,
+
+    True
+))
+# ------------------------------------------------------------
+# ------------------------------ TESTING CHAINED METHODS ------------------------------
+# 2.0.403
+# testing a new interpretation method for ease of operation
+#
+# These are some basic tests, more comprehensive tests are made in tests/2.0.403/method_chaining.msn2
+# 
+# "finally, truthfully  
+def('test_chained_methods', (
+    print_test('chained methods'),
+
+    # general chained method using some math functions
+    assert(+(1, 2).equals(3)),
+    assert(not(+(3, 4).equals(5287345982.234958123049582))),
+    assert(+(3, 4).equals(7)),
+    assert(-(5, 4).equals(1)),
+
+    # more than 2 chained methods
+    assert(x(2, 3).+(5).equals(11)),
+    assert(not(x(2, 3).+(5).equals(10))),
+    assert(x(2, 3).+(4).-(5).equals(5)),
+    
+    # creating and working with it (this is non destructive)
+    assert   (  var (  'a'  ,   12  )   .  add    (   4 )  . equals(16)),
+    assert(exists('a'), a.equals(12), not(a.equals(13))),
+
+    # asserting with macros and post macros
+    # creating the macro
+    macro('CHAINED ADD ', '__chained_function', +(-(__chained_function), 1)),
+    # basic tests
+    equals(CHAINED ADD 2, 3) ??,
+    not(equals(CHAINED ADD 2, 6)) ??,
+
+    # with multiple arguments
+    assert(equals(+(1, 2).+(3), 6)),
+    assert(equals(+(1, 2).+(3).+(4), 10)),
+    assert(equals(+(1, 2).+(3).+(4).+(5), 15)),
+
+    # new chained methods
+    ("var('e', [1, 2, 3])").interpret(),
+    exists('e').assert() ??,
+    e.equals([1, 2, 3]).assert() ??,
+        
+    True
+))
+
+# ------------------------------------------------------------
+
+# ---------------------------------------------- RUNNING TESTS ----------------------------------------------
+
+# test information
+@ tests_ran = 0
+@ test_count = 0
+
+# macro for running tests
+# (added 5/16/2023)
+macro('TEST ', '__function', private(assert(-(__function))))
+
+# runs tests in their own private environment
+# a private block inherits copies of all variables and methods from the parent context
+def('run_tests', (
+    # cleans processes for next iteration
+    processes:clean_processes(),
+
+    # runs basic tests
+    # runs each test on a new thread    
+    TEST test_var(),
+    TEST test_math(),
+    TEST test_strings(),
+    TEST test_long_strings(),
+    TEST test_arrays(),
+    TEST test_msn2embed(),
+    TEST test_classes(),
+    TEST test_complex(),
+    TEST test_random(),
+    TEST test_simple_loops(),
+    TEST test_simple_cond(),
+    TEST test_enclosing(),
+    TEST test_destroy(),
+
+    # tests post macro functionality
+    private(assert(test_postmacros())),
+
+    # next test block
+    TEST test_function(),
+    TEST test_redirect(),
+    TEST test_userfunc_with_args(),
+    TEST test_op(),
+    TEST test_more_global_methods(),
+    TEST test_other_stuff(),
+    TEST test_global_methods(),
+    TEST test_int_methods(),
+    TEST subclasses(),
+    TEST test_sets(),
+    TEST test_python_snippets(),
+    TEST test_try(),
+    TEST test_new_string_functions(),
+    TEST test_legacy_function_declaration(),
+    TEST test_new_chaining_default_obj_methods(),
+
+    # testing macros
+    TEST test_macros(),
+    TEST base_syntax_updates(),
+
+    # testing chained methods
+    TEST test_chained_methods(),
+
+    # test is not run on another thread to avoid file reading conflicts
+    private(assert(test_user_syntax())),
+    # runs thread based test
+    private(assert(test_threads())),
+    # tests processes, currently only implemented for windows
+    if (and(windows(), not(tests_ran)), private(
+        assert(test_processes()))),
+    @ tests_ran = 1
+))
+
+
+# start the timer
+timer:start()
+
+# launches the tests multiple times to ensure integrity
+for (0, @iterations = 7, 'i', (
+    # print iteration header
+    print:color(
+        object(
+            'text', '--- iteration ',
+            'style', 'bold',
+            'fore', 'green'
+        ),
+        object(
+            'text', str(+(i, 1)),
+            'style', 'bold',
+            'fore', 'yellow'
+        ),
+        object(
+            'text', ' ---',
+            'style', 'bold',
+            'fore', 'green'
+        )
+    ),
+    assert(run_tests()),
+    print:color(
+        object(
+            'text', '-------------------------',
+            'style', 'bold',
+            'fore', 'green'
+        )
+    )
+))
+# prints accounting information
+print_threads()
+
+# run each test
+each(comp(
+    file.listdir('tests'), 'el', 
+        if (and(not(el.endswith('x')), el.startswith('2')), el, None())), 'folder', (
+            each(file.listdir(+('tests/', folder)), 'f', (
+                if(not(file.isdir(@_p=cat('tests/', folder, '/', f))), (
+                    -(script(new(import(cat('tests/', "{=folder=}", '/', "{=f=}"))))),
+                print:color(
+                    object(
+                        'text', 'Finished tests: ',
+                        'style', 'bold',
+                        'fore', 'green'
+                    ),
+                    object(
+                        'text', _p,
+                        'style', 'bold',
+                        'fore', 'yellow'
+                    )
+                )))
+            ))
+        ))
+
+
+
+
+# completes the validator
+print('[+] fin in', cat(@ validator:runtime = timer:runtime(), 's'))
+# write to stats
+import ('tests/stats/stats')
+private(stats:write(validator:runtime))
+# stops the validator
+stop()

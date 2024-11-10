@@ -1,0 +1,7 @@
+# english support
+#
+# author : Mason Marker
+# date : 5/12/2023
+
+# english alphabet
+@ eng:alphabet = 'abcdefghijklmnopqrstuvwxyz'

@@ -1,0 +1,42 @@
+# Designs and executes a Windows batch file
+# for launching automations on a remote machine.
+#
+# This program both generates the batch file
+# and launches it on this machine.
+
+
+
+# path to the batch file
+@ path = 'tests\\practical\\auto\\viral\\virus.bat'
+
+# import generation library
+import ('lib/gen/render')
+
+
+# function to print text via a batch fil
+function(@_bp="bat:print", ret(_bp, script(
+    @echo {=bat:print:text=}
+)), 'bat:print:text')
+
+# function to start an application
+function(@_bas="bat:start", ret(_bas, script(
+    @start {=bat:start:app=}
+)), 'bat:start:app')
+
+
+# generate a batch script for launching
+# the virus on a remote machine
+render:generate(path, script(
+
+    # msn2 element insertion
+    {=bat:print(input("What should the bat file print? "))=} & 
+
+    {=bat:start('notepad.exe')=}
+))
+
+
+# WIPWIPWIPWIPWIP
+
+# launch the batch file5
+console(+('cmd /c ', path))
+

@@ -1,0 +1,16 @@
+# Demonstrates Chrome MSN2 object.
+#
+# author : Mason Marker
+# date : 9/18/2023
+
+# import chrome
+import('lib/auto/chrome')
+
+# create a Chrome instance
+@ chrome = chrome:instance(chrome:default_path)
+
+chrome.start()
+
+# search in new tab
+chrome.search_in_new_tab('google.com')
+

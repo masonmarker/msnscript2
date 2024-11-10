@@ -1,0 +1,39 @@
+# Server to interact with the page
+#
+# author : Mason Marker
+# date : 6/27/2023
+
+# start the server in a new process
+function('server:start', (
+
+    # starting server on process message
+    # we use prnt() to avoid accidental double
+    # printing
+    prnt('[+] starting server in new process...'),
+
+    # set Python runner alias
+    # THIS NEEDS TO BE CHANGED TO PYTHON
+    # IF YOU DO NOT HAVE THE 'py' TERMINAL ALIAS
+    alias('py'),
+
+    # new process called 'server'
+    proc('e',
+
+        # start the endpoint
+        ENDPOINT(
+            # host
+            '127.0.0.1',
+            # port
+            8080,
+            # path
+            '/',
+            # initial data
+            {
+                'exp': '',
+                'result': ''
+            },
+            # using CORS
+            "CORS"
+        )
+    )
+))

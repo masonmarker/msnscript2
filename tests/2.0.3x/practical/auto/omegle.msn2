@@ -1,0 +1,55 @@
+# Automates Omegle messages.
+#
+# author : Mason Marker
+# date : 6/3/2023
+
+# opens and starts Google Chrome
+@ chrome = app('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe')
+chrome.start()
+
+# go to Omegle
+chrome.write('www.omegle.com/')
+chrome.enter()
+
+# waits for the text chat button to load
+@ element = chrome.wait_for_text_all('Text chat')
+element.click()
+
+# waits for the terms checkboxes to load
+@ checkbox1 = chrome.wait_for_checkbox('You must be')
+@ checkbox2 = chrome.wait_for_checkbox('reviewed and agree to be bound')
+@ continue_button = chrome.wait_for_button('Continue')
+
+# click the terms checkboxes and continue
+checkbox1.click()
+checkbox2.click()
+continue_button.click()
+
+# messages to send
+@ messages = ['hello!', 'hello 2!', 'hello 3!']
+
+# for each message, send to a different conversation
+messages.each('message', (
+
+    # sleep before sending message
+    sleep(random(2, 5)),
+
+    # send the message
+    chrome.write(message),
+    chrome.enter(),
+
+    # wait for the message to send
+    sleep(random(2, 5)),
+
+    # press escape 3x to disconnect
+    3(chrome.escape())
+))
+
+# sleep for 3 seconds
+sleep(3)
+
+# close Chrome
+chrome.stop()
+
+# we're done!
+print('[+] finished!')

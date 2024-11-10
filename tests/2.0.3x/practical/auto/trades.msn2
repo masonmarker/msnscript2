@@ -1,0 +1,45 @@
+# Extracts a table from OpenInsider and
+# transfers it to an Excel Worksheet.
+#
+# author : Mason Marker
+# date : 6/13/2023
+
+# ------------- LOAD EXCEL -------------
+# load an Excel Workbook
+@ book = excel(
+    'C:\\Users\\mason\\OneDrive\\Desktop\\msn\\trades.xlsx')
+# load the first Worksheet
+@ sheet = book.sheet(0)
+# --------------------------------------
+
+# ------------- LOAD TRADES -------------
+@ chrome = app(
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe')
+chrome.start()
+
+# go to OpenInsider
+chrome.write(
+    'http://openinsider.com/latest-ceo-cfo-purchases-25k')
+chrome.enter()
+
+# wait for the table to load
+chrome.wait_for_text_all('Filing Date')
+
+# loads the largest table on the page
+@ trades = auto.largest(chrome.tables())
+# --------------------------------------
+
+# ------------- TRADES --> EXCEL ------------
+# converts the loaded table into its
+# 2D array representation, and imports it into
+# the Worksheet with a 0, 0 offset
+# (offsets are optional arguments, but are shown here)
+sheet.import_matrix(trades.matrix(), 0, 0)
+# -------------------------------------------
+
+# close Chrome
+chrome.close()
+
+# save and close the Excel Workbook
+book.save()
+book.close()

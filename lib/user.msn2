@@ -1,0 +1,22 @@
+# Offers user capability to inject commands into into a running program.
+#
+# author : Mason Marker
+# date : 11/17/2022
+# updated in 2.0.387
+
+# starts a shell for the user to inject commands into the running program.
+def('user:shell', 'user:shell:name', (
+    sleep(0.2),
+    thread(user:shell:name, while(1, (
+        try(
+            print(-(=>(
+
+                # input() is a special method,
+                # and falls directly back to Python,
+                # integrating msn2 variables requires ??
+                input(?user:shell:name? + " >>  ")
+            )))
+        )
+    ))),
+    True
+))

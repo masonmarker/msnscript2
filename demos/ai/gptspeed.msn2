@@ -1,0 +1,93 @@
+# Testing AI features.
+#
+# author : Mason Marker
+# date : 9/18/2023
+# version : 3.0.388
+
+# clear the screen
+import ('lib/os')
+os:clear()
+
+# a couple built in functions
+# print(ai.advanced('How are you?'))
+# print(ai.tokens('hello, world!', 'gpt-3.5-turbo'))
+
+# import chatgpt
+import ('lib/auto/chatgpt')
+
+# create chatgpt instance
+# with retained context
+@ gpt = chatgpt:instance('gpt-3.5-turbo')
+
+# gets the amount of tokens for a string
+# given the instance's model
+# print(gpt.ask('hello, how are you?'))
+
+
+# get GPT to write large stories in multiple threads
+# private(thread(print(gpt.ask('write for me a large story'))))
+# private(thread(print(gpt.ask('write for me a large story'))))
+# gpt.ask('write for me a large story')
+# gpt.ask('write for me a large story')
+
+# timer for timing
+import ('lib/timer')
+# print divider
+macro('div', '_', print('-' * 20))
+
+@ prompt = 'write story 10 word'
+
+# single threaded approach
+(div, print('single threaded approach:'), div)
+# start the timer
+timer:start()
+# ask gpt to write a story
+print(@ run1 = gpt.ask(prompt))
+div
+print(@run2 = gpt.ask(prompt))
+div
+print(@run3 = gpt.ask(prompt))
+div
+print(@run4 = gpt.ask(prompt))
+div
+# print the runtime
+print(@ without_runtime = timer:runtime(), 'sec')
+
+# multi-threaded approach
+(div, print('multi-threaded approach:'), div)
+# with private threads
+# start the timer
+timer:start()
+# ask gpt to write a story
+# run in private context to avoid variable intertwining
+thread('t1', private((
+    # retrieve gpt response to prompt and export to global context
+    print(exportas('trun1', gpt.ask(prompt))),
+    # print divider
+    div
+)))
+thread('t2', private((
+    print(exportas('trun2', gpt.ask(prompt))),
+    div
+)))
+thread('t3', private((
+    print(exportas('trun3', gpt.ask(prompt))),
+    div
+)))
+thread('t4', private((
+    print(exportas('trun4', gpt.ask(prompt))),
+    div
+)))
+# wait for all threads to finish
+join('t1', 't2', 't3', 't4')
+# print the runtime
+print(@ with_runtime = timer:runtime(), 'sec')
+# write stats to file
+file.append('demos/ai/tokens.txt',
+    # use cat() for auto-casting to str
+    cat('without threads: ', without_runtime, '\n', 'with threads: ', with_runtime,
+        '\n', if(print:color(object(
+            'text', cat('difference: ', -(without_runtime, with_runtime)), 
+            'style', 'bold', 
+            'fore', 
+            'green')),'',''), '\n\n'))

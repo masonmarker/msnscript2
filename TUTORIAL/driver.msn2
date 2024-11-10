@@ -1,0 +1,143 @@
+# CONSOLE TUTORIAL FOR MSN2 PROGRAMMING.
+#
+# tutorial for package version 2.0.381
+#
+# author : Mason Marker
+# date : 8/5/2023
+
+# console printing styles
+import ('lib/console')
+
+# for clearing the console
+import ('lib/os')
+
+# import tutorial pages
+import ('TUTORIAL/_pages/home')
+import ('TUTORIAL/_pages/getting_started')
+import ('TUTORIAL/_pages/suggested_usage')
+import ('TUTORIAL/_pages/dependencies')
+import ('TUTORIAL/_pages/commands')
+import ('TUTORIAL/_pages/docs')
+import ('TUTORIAL/_pages/run_a_program')
+import ('TUTORIAL/_pages/changelog')
+import ('TUTORIAL/_pages/settings')
+
+# error key
+@ error_key = '____error'
+
+# help for msn2 version
+@ version = version()
+
+# displays a new page with the title
+def('new_page', (os:clear(), console:print(arr(object(
+    'text', '   MSN2 HELP   ',
+    'style', 'italic',
+    'back', 'blue'
+))), print()))
+
+# list of pages to go to
+function('list_page', console:print(arr(
+    object(
+        'text', +(' ', str(list_page:number), '   '),
+        'style', 'bold',
+        'fore', 'green',
+        'back', if(current_page.equals(list_page:number), 'blue', 'black')
+    ),
+    object(
+        'text', +(' ', option(list_page:title), ' '),
+        'style', 'italic',
+        'back', 'black'
+    )
+)), 'list_page:number', 'list_page:title')
+
+# menu option text padding
+@ menu_padding = 20
+
+# gets the correct text padding for a menu option
+function('option', ret('option', (
+    +(@option:name=option:text, x(' ', -(menu_padding, len(option:name))))
+)), 'option:text')
+
+# goes to a page
+def('goto', 'goto:page', -(pages.get(@current_page = goto:page)))
+
+# lists the navigation menu
+def('nav_menu', (
+    2(print()),
+    console:print(arr(object(
+        'text', '   Menu   ',
+        'style', 'italic',
+        'back', 'green'
+    ))),
+    print(),
+
+    # main options
+    list_page('d', 'Dependencies'),
+    list_page('r', 'Run a Program'),
+    list_page('0', 'Home'),
+    list_page('1', 'Getting Started'),
+    list_page('2', 'Suggested Usage'),
+    list_page('3', 'Commands'),
+    list_page('4', 'Documentation'),
+    list_page('5', 'Change Log'),
+    list_page('s', 'Settings'),
+
+    # quit option
+    list_page('q', 'Quit'),
+
+    # reset text colors
+    console:print(arr(object(
+        'text', ' ',
+        'fore', 'white'
+    ))),
+
+    # type an option message
+    console:print(arr(
+        object(
+            'text', 'Type a ',
+            'style', 'italic'
+        ),
+        object(
+            'text', 'page',
+            'style', 'italic',
+            'fore', 'green'
+        )
+    )),
+    @ driver:page = strip(input()),
+    # asks the user for a page to navigate to
+    goto(driver:page)
+    # ,goto(error_key)
+))
+
+# generates a page in the console
+function('page', ret('page', script((
+    new_page(),
+    -({=page:script=}),
+    nav_menu()
+))), 'page:script')
+
+# tutorial pages
+@ pages = object(
+
+    # home page
+    '0', page(page:home),
+    '1', page(page:getting_started),
+    '2', page(page:suggested_usage),
+    '3', page(page:commands),
+    error_key, page(script(
+        console:print(arr(object(
+            'text', ' ***  Page not found  *** ',
+            'style', 'bold',
+            'fore', 'red'
+        )))
+    )),
+    '4', page(page:docs),
+    '5', page(page:changelog),
+    's', page(page:settings),
+    'r', page(page:run_a_program),
+    'q', script(stop()),
+    'd', page(page:dependencies)
+)
+
+# go to the home page
+goto(next(iter(pages)))

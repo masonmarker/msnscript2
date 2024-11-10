@@ -1,0 +1,103 @@
+# standard api endpoint structure
+# author : Mason Marker
+# date : 11/17/2022
+# updated in 2.0.387
+
+# import http library
+import ('lib/http.msn2')
+
+# api structure
+# contains host, port, path, and initial json data
+class('api', (
+    var('host', None),
+    var('port', None),
+    var('path', None),
+    var('init_data', None)
+))
+
+# network api
+var('api:api_network', api(http:network, 5000, '/', {}))
+
+# local api
+var('api:api_local', api(http:localhost, 5000, '/', {}))
+
+# gets from an api endpoint
+def('api:get', 'api:get:__api__', (
+    GET(api:get:__api__.host(), api:get:__api__.port(), api:get:__api__.path())
+))
+
+# posts data to an api endpoint
+# essentially calls update() on the current json with the new data being sent
+def('api:post', 'api:post:__api__', 'data', (
+    POST(api:post:__api__.host(), api:post:__api__.port(), api:post:__api__.path(), data)
+))
+
+# deletes from an api endpoint
+def('api:delete', 'api:delete:__api__', (
+    DELETE(api:delete:__api__.host(), api:delete:__api__.port(), api:delete:__api__.path())
+))
+
+# constructs the url that the api endpoint passed resides
+def('api:url', 'api:url:__api__', (
+    cat('http://', api:url:__api__.host(), ':', api:url:__api__.port(), api:url:__api__.path())
+))
+
+# gets the name of the thread hosting the api endpoint passed
+def('api:thread_name', 'api:thread_name:__api__', api:url(api:thread_name:__api__))
+
+# starts an api endpoint on a new thread
+# DEPRECATED
+def('api:start', 'api:start:__api__', (
+    thread(api:url(api:start:__api__), (
+        ENDPOINT(api:start:__api__.host(), 
+                api:start:__api__.port(), 
+                api:start:__api__.path(), 
+                api:start:__api__.init_data())
+    )),
+    True
+))
+
+# API with CORS
+class('cors_api', (
+
+    # vars
+    @ host = '127.0.0.1',
+    @ port = 8080,
+    @ path = '/',
+    @ init_data = {},
+
+    # methods
+    # starts the api
+    def('start', 'self', 
+        ENDPOINT(self.host(), self.port(), self.path(), self.init_data())),
+
+    # creates the path for the api
+    def('url', 'self', cat('http://', self.host(), ':', self.port(), self.path())),
+
+    # gets from the API
+    def('GET', 'self', GET(self.host(), self.port(), self.path())),
+
+    # posts to the API
+    def('POST', 'self', 'POST:_data_', 
+        POST(self.host(), self.port(), self.path(), POST:_data_)),
+
+    # posts a single entry to the API
+    def('POSTENTRY', 'self', 'POSTENTRY:__key', 'POSTENTRY:__value', 
+        POST(self.host(), self.port(), self.path(), 
+            dictfrom(POSTENTRY:__key, POSTENTRY:__value))),
+
+    # deletes from the API
+    def('DELETE', 'self', DELETE(self.host(), self.port(), self.path())),
+
+    # waits for a field to be a certain value
+    def('wait_for_field', 'self', 'wait_for_field:__field', 'wait_for_field:__eq', 'wait_for_field:__interval',
+        wait(try((
+            equals(get(self.GET(), wait_for_field:__field), 
+                wait_for_field:__eq)
+        )),, wait_for_field:__interval)),
+
+    # switches a field on or off
+    def('switch', 'self', 'switch:__field', 
+        self.POST(dictfrom(switch:__field, not(get(self.GET(), switch:__field)))))
+))
+

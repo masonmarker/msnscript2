@@ -1,0 +1,40 @@
+# Launches the development enviroment
+# for using C to perform heavy computation
+# for JavaScript.
+#
+# author : Mason Marker
+# date : 6/27/2023
+
+# cleanup processes directory
+# from previous execution
+import ('lib/lang/dir')
+__lang_dir_.end()
+
+
+
+
+
+# workspace path
+@ wsp = 'tests\\lang\\html\\calc\\'
+
+
+# import the interface (HTML and JavaScript UI)
+import (+(wsp, 'interface'))
+
+# import server-side (Flask)
+import (+(wsp, 'server'))
+
+# import the page event handler
+# (just a thread watching for changes)
+import (+(wsp, 'handler'))
+
+
+
+
+
+# start the server
+server:start()
+# show the interface
+interface:show()
+# start the handler
+handler:start()

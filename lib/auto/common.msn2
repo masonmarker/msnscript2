@@ -1,0 +1,18 @@
+# Common applications for automation with MSN2.
+#
+# author : Mason Marker
+# date : 5/26/2023
+
+# import chrome library
+import('lib/auto/chrome')
+
+# class for applications
+class('common', (
+    # gets a notepad instance
+    def('notepad', 'self', app('notepad.exe')),
+    # gets a chrome instance
+    def('chrome', 'self', app(chrome:default_path)),
+))
+
+# instance of common to export to the main environment
+@ common = common()

@@ -1,0 +1,22 @@
+# Tests variable syntax and macro creation techniques
+#
+# author : Mason Marker
+# date : early 2023
+
+import('lib/os.msn2')
+import('lib/syntax/macrocreation.msn2')
+os:clear()
+
+
+# macro definitions
+macro('set', '__line', basic_variable_set(' to ', ?__line?))
+macro('create', '__line', basic_variable_set(' called ', ?__line?))
+macro('+++', '__line', basic_variable_set('===', ?__line?))
+
+macro('SET', '__line', advance_variable_set('=', ?__line?))
+macro('VAR', '__line', advance_variable_set('=', ?__line?))
+
+postmacro(';', '__line', advance_variable_set('=', ?__line?))
+postmacro('< var', '__line', advance_variable_set('=', ?__line?))
+
+postmacro('--', '__line', advance_variable_set(';', ?__line?))

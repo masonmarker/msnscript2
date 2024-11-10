@@ -1,0 +1,33 @@
+# Directory functions for the lang library
+#
+# author : Mason Marker
+# date : 6/13/2023
+
+# class for lang based directories
+class ('__lang_dir', (
+    @ path = '_exec',
+    # creates a directory for the lang class
+    function('start', try(file.mkdir(self.path())), 'self'),
+    # cleans up the directory for the lang class
+    function('end', try((
+        file.emptydir(self.path()),
+        file.rmdir(self.path())
+    )), 'self'),
+
+    # creates a new file for an execution
+    function('create', (
+        @ __curpath = cat(self.path(), '/', name),
+        file.create(__curpath),
+        file.write(__curpath, script),
+        # returns the path to the file for execution
+        ret('create', __curpath)
+    ), 'self', 'name' ,'script'),
+
+    # lists the directory
+    function('list', ret('list', file.listdir(self.path())), 'self'),
+))
+# create an instance to be used by the other lang classes
+@ __lang_dir_ = __lang_dir()
+# restarts the lang directory
+__lang_dir_.end()
+__lang_dir_.start()

@@ -1,0 +1,126 @@
+# animations
+
+
+# # card hover effect
+# _hover={
+#     "transform": 'translateY(-10px)',
+#     "boxShadow": '0 15px 25px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1)',
+# },
+# _before={
+#     "content": '""',
+#     "position": 'absolute',
+#     "top": 0,
+#     "left": '-75%',
+#     "width": '50%',
+#     "height": '100%',
+#     "background": 'linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%)',
+#     "transform": 'skewX(-25deg)',
+#     "transition": 'none',
+#     "animation": 'shine 0.75s'
+# },
+
+@animations:chakra_color_schemes = {
+    "gray": "#718096",
+    "red": "#e53e3e",
+    "orange": "#ed8936",
+    "yellow": "#ecc94b",
+    "green": "#48bb78",
+    "teal": "#38b2ac",
+    "blue": "#4299e1",
+    "cyan": "#0bc5ea",
+    "purple": "#9f7aea",
+    "pink": "#ed64a6",
+    "linkedin": "#0077b5",
+    "facebook": "#3b5998",
+    "messenger": "#0084ff",
+    "whatsapp": "#25d366",
+    "twitter": "#1da1f2",
+    "telegram": "#0088cc",
+}
+
+# enlarge hover animation
+def('animations:enlarge', 'animations:enlarge:classname', 
+    &animations:enlarge:scale=1.05, 
+    &animations:enlarge:transition="transform 0.3s ease", script(
+    .{=animations:enlarge:classname=} {
+        transition: {=animations:enlarge:transition=};
+    }
+    .{=animations:enlarge:classname=}:hover {
+        transform: scale({=animations:enlarge:scale=});
+    }
+))
+# shrink hover animation
+def('animations:shrink', 'animations:shrink:classname', 
+    &animations:shrink:scale=0.95, 
+    &animations:shrink:transition="transform 0.3s ease", script(
+    .{=animations:shrink:classname=} {
+        transition: {=animations:shrink:transition=};
+    }
+    .{=animations:shrink:classname=}:hover {
+        transform: scale({=animations:shrink:scale=});
+    }
+))
+
+# shine hover animation
+# should apply the above styles
+def('animations:shine', 'animations:shine:classname', 
+    &animations:shine:color="white", 
+    &animations:shine:negative_translate=5, 
+    &animations:enlarge:transition="transform 0.3s ease", script(
+    .{=animations:shine:classname=} {
+        position: relative;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: {=animations:enlarge:transition=}, box-shadow 0.3s ease;
+    }
+    .{=animations:shine:classname=}:hover {
+        transform: translateY(-{=animations:shine:negative_translate=}px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .{=animations:shine:classname=}:hover::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -75%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(128, 0, 128, 0.2) 50%,
+            {=try(animations:chakra_color_schemes.get(animations:shine:color), animations:shine:color)=} 10%
+        );
+        transform: skewX(-25deg);
+        transition: none;
+        animation: shine 0.75s;
+    }
+    @keyframes shine {
+        0% {
+            left: -75%;
+        }
+        100% {
+            left: 125%;
+        }
+    }
+))
+
+# border hover animation
+def('animations:border', 'animations:border:classname', 
+    &animations:border:width=2, 
+    &animations:border:style="solid", 
+    &animations:border:color="black", 
+    &animations:border:transition="border 0.3s ease", script(
+
+    # animation that grows the border over the card
+    .{=animations:border:classname=} {
+        border: {=animations:border:width=}px {=animations:border:style=} {=animations:border:color=};
+        transition: {=animations:border:transition=};
+    }
+    .{=animations:border:classname=}:hover {
+        border: {=animations:border:width=}px {=animations:border:style=} {=animations:border:color=};
+    }
+    
+
+))

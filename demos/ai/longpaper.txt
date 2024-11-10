@@ -1,0 +1,570 @@
+AI in Healthcare: An Impractical Contribution
+Mason Marker
+Computer Science
+James Madison University
+Harrisonburg, Virginia, United States
+ABSTRACT
+One excels in the field of medicine upon proving themselves 
+reliable in terms of correctness and consistency. This includes 
+medical diagnosis, treatments, and various intermediate steps
+in providing care for a patient. Artificially intelligent model
+implementation in many fields, such as businesses or 
+government, has taken a regressively strong, positive jump 
+over the past few years. This technological adoption improves 
+the methodology and decision-making of the use case by which 
+the AI is trained on. 
+Ethical and legal implications arise when considering the 
+implementation of artificial intelligence (AI) in healthcare. One 
+of the main challenges involves the quality and quantity of 
+training data supplied to an AI model in a medical environment. 
+The accuracy of an AI model depends on the quality and 
+quantity of data utilized for this training, in this case, the data 
+comprises private and protected medical information of 
+patients. Firstly, there doesn’t always exist enough medical 
+information to accurately train a model on every possible 
+disease or condition for all patient demographics. Secondly, the 
+chances of data breaches only increase with requests for tens 
+of thousands of pictures of, say, X-rays for image classification.
+As a byproduct of data breaches comes liability. It’s often 
+difficult to determine the entity liable for an AI’s 
+misinterpretation, if harmful. Due to the human inability to 
+reliably follow an AI’s decision-making process, determining 
+the cause of failure becomes an increasingly difficult task.
+Despite these issues, there are modifications to the 
+processes of both training AI on sensitive data and interpreting 
+the model’s decision. These approaches involve model selftraining sessions, exclusive access to a training environment, 
+and the complete automation of the process.
+The potential benefits of artificially intelligent machines in 
+medicine would increase patient diagnosis and treatment 
+option correctness and consistency exponentially as the 
+technology improves. These benefits expand possibilities 
+regarding human life expectancy. 
+1 Technical Analysis
+Before we discuss artificial intelligence implementations in 
+medicine, we need to understand the inner workings and 
+mechanisms of artificial intelligence (AI) models. Artificial 
+intelligence is defined as “intelligence—perceiving, 
+synthesizing, and inferring information—demonstrated by 
+machines, as opposed to intelligence displayed by non-human 
+animals or by humans.” Artificial intelligence is different from 
+concrete conditional statements involved in programming. For 
+example, traditional programming could ask a computer if two 
+numbers are the same, and the output of the computer would 
+always give the same answer, making it a deterministic 
+machine, or providing the same output for the same question. 
+Artificial intelligence, on the other hand, uses different 
+mathematical operations to determine the answer to a 
+problem, and this leads to a possible different answer for the 
+same question, making certain AI non-deterministic. A model is 
+an implementation of AI, and a model can incorporate many 
+different mathematical procedures to represent many different 
+types of decision-making processes. When referring to a 
+“model,” in this paper, we will be discussing a specific type of 
+model known as a Convolutional Neural Network (CNN). This 
+type of model is designed to classify images into different 
+categories. In medicine, these models are used to categorize 
+imaging techniques such as CT scans and X-rays into conditions 
+recognized by the model. 
+Further in this paper, we will discuss the AI training process
+or machine learning. This process consists of two main 
+sequences: forward and backward pass/propagation. During 
+forward propagation, an input image is passed through the 
+model, and the model produces a decision as to what 
+condition(s) may be present in the supplied image. There exists 
+an intermediate step between these two sequences, and that is 
+computing the loss via a loss function, which computes the 
+difference between the predicted output and the correct 
+output. The last step is backward propagation, which utilizes 
+the output from the loss function to adjust the inner 
+mathematical workings of the model to produce a more 
+accurate output for the next forward propagation iteration. In 
+repetitive forward and backward iterations, a model 
+continuously adjusts itself to minimize the loss between the 
+predicted output and the correct output, creating a functional 
+JAMES MADISON’23, April, 2023, Harrisonburg, Virginia USA M. Marker et al.
+AI model. This AI training process technique is called deep 
+learning.
+2 Virtue Ethics in Automation 
+Concerns regarding informed consent, patient privacy, and 
+the responsible administration of healthcare arise considering 
+the implementation of AI models in medicine. As a result, it’s
+critical that we consider applications of virtue ethics on such a 
+matter. 
+Aristotle’s virtue ethics comprise traits such as wisdom, 
+honesty, compassion, and integrity. These traits are important 
+in analyzing virtue ethic’s application to medical ethics. This 
+collection of traits, when combined and expressed by a single 
+patient or healthcare provider can prove beneficial to a 
+patient’s well-being and rights as a patient.
+When analyzing medicine through the lens of virtue ethics, 
+the use of automation by healthcare professionals should be 
+aimed at maximizing patient benefits, these benefits include 
+obvious health, as well as operation pricing, and utilizing the 
+traits to their greatest extent to improve patient well-being. 
+Expressing these traits in a medical sense may include the 
+addition of standards or barriers for what an AI model may 
+output given a patient’s well-being, needs, or even requests.
+In conclusion, the use of automation in the medical field 
+should align with the values included in Aristotle’s virtue 
+ethics, as they explain the importance of good character, and 
+encourage doctors not to just see automation as a means by 
+which to make more money but to better conform to their 
+patient’s well-being and desires.
+3 AI in Medicine
+Only recently has the world of artificial intelligence begun 
+leaking into the abyss of our reality. Online software 
+demonstrating the latest AI models has swept the internet, 
+creating vast opportunities for AI implementation in
+businesses, hospitals, the government, and our daily lives. 
+While new possibilities for improved technology become 
+apparent, so do new limitations. 
+Machine learning models utilize complex derivative 
+computations to perform operations like that of a human. Like
+humans, these models are non-deterministic, meaning the 
+same question may or may not yield the same answer. This 
+concept of non-determinism is not as much of an issue 
+regarding problems or questions where there is not a single 
+answer or a single method to retrieve an answer. However, it 
+highly restricts serious AI incorporation in fields where 
+consistent and deterministic approaches are necessary. Fields 
+such as these include government operations, politics, 
+militaristic operations, medicine, mathematics, physics, and 
+countless other fields. 
+Medicine is a deeply intricate and personal subject matter, 
+in which there is often no room for error, confusion, or 
+uncertainty. Medicine is defined as “the science and art dealing 
+with the maintenance of health and the prevention, alleviation, 
+or cure of disease [Merriam-Webster 2023].” This definition 
+encapsulates nearly all aspects of medicine, each individual 
+term having its own deep-rooting subfield. Medicinal
+administrations and operations generally have no margin for 
+approximations, the more exact and precise, the more accurate 
+care can be offered. This leads to the broad, yet highly 
+anticipated question: Can AI be safely and accurately 
+embedded into modernized medical systems? As it turns out, 
+this question is difficult to answer as we live in a critical 
+window of potential where AI can provide both the most 
+unique solutions and ideas, while collapsing in on itself upon a 
+request for proof of correctness.
+Medicine is a field where correctness is the pinnacle of 
+one’s reputation, this ideal serves both man and machine. The 
+more consistent a medical professional performs as far as 
+accuracy and precision when diagnosing, treating, or curing a 
+patient, the more reliable that person may be. This concept of 
+reliability becomes the broad term for all machinery proven 
+valid and safe in a medical environment, this includes 
+artificially intelligent machines. Reliability depends on the 
+deterministic factors of the machines utilized to perform 
+medical operations, and this is the explicit reasoning as to why 
+medicinal administrators are extremely hesitant to include AI 
+in common practice.
+AI models in practice, like humans, require excessive 
+amounts of training to reach a consistently correct output. 
+Training a model implies that you have a broad set of data to 
+summarize major spectrums of what is being learned. In 
+medicine, a doctor is trained to have a vast understanding of 
+both basic and complex terminology, diagnosis, and treatment
+of the organism being studied. During this training, doctors are 
+trained to focus only on factors that contribute to an 
+issue/condition, this means a doctor should not necessarily 
+focus on race, income, or any other unrelating external factors.
+Doctors attempt to generalize all possible diagnoses or causes 
+of a condition across all people regardless of these external 
+factors. If doctors are confident they are unable to do so, they 
+reach out for help, obtain new information, check and recheck 
+their work, then attend to the patient(s) again. This is of course 
+not the case for AI model training, too many variables are 
+brought to light upon its training, restricting the AI from 
+making consistent and correct decisions regardless of external 
+factors. An AI does not have safe access to the internet, to avoid
+bias, the AI would have to be initially trained on an incredibly 
+sized data set on all demographics.
+Large sets of health data bring their own implications, such 
+as private images could potentially be leaked. Hospitals are 
+required to manage patient information to the utmost security, 
+and data breaches can involve lawsuits for millions of dollars.
+AI in Healthcare: An Impractical Contribution JAMES MADISON’23, April, 2023, Harrisonburg, Virginia USA WOODSTOCK’18, June, 2018, El Paso, Texas USA
+Ethical setbacks such as patient privacy serve as new issues for 
+medical administrations to consider.
+These issues as a collective are the obstacles existing as a 
+border between a medicinally perfect attribution to general 
+public health and the healthcare system we experience today.
+4 Data Sets for Training
+As previously mentioned, an AI model output relies on 
+the quality and quantity of data by which it was trained. Though 
+a simple concept, obtaining such data sets in practice is much 
+harder than one may believe. 
+Say a hospital administration is tasked with 
+implementing artificially intelligent models into standard 
+diagnosing processes of their emergency rooms alongside 
+doctors. Emergency rooms experience a wide variety of 
+random conditions, injuries, diseases, and tragedies, often 
+daily. The people that enter, also comprising of a wide variety 
+of races, gender, income, and unique bodily features that may 
+or may not contribute to the reason they came to the 
+emergency room or diagnosis. When training this model(s), 
+each possible reason for coming to the emergency room must 
+be accounted for, or the model may output incorrect 
+information. Most healthcare organizations lack the data 
+infrastructure required to collect the data needed to optimally 
+train algorithms to (a) “fit” the local population and/or the local 
+practice patterns, a requirement prior to deployment that is 
+rarely highlighted by current AI publications, and (b) 
+interrogate them for bias to guarantee that the algorithms 
+perform consistently across patient cohorts, especially those 
+who may not have been adequately represented in the training 
+cohort [2]. The concept of coverage is crucial to the diagnosis 
+and treatment of the near-random variety of people that may 
+enter the emergency room.
+This is the first instance of an artificially intelligent 
+model proving incapable of serving as valid medical assistance.
+The sheer amount of data required by a hospital to cover the 
+entry possibilities of patients does not yet exist. An example of 
+this exists in race, an algorithm trained on mostly Caucasian 
+patients is not expected to have the same accuracy when 
+applied to minorities. In addition, such rigorous evaluation and 
+re-calibration must continue after implementation to track and 
+capture those patient demographics and practice patterns that
+inevitably change over time [3]. The hospital must consider not 
+only the general effects of a disease or condition upon 
+diagnosis, but they must also consider patient demographics.
+The implementation of AI models into hospitals then 
+raises the following questions: Who owns this health data? 
+Who is responsible for a model’s inevitable failures to properly 
+output a correct identification/diagnosis? These questions 
+cannot explicitly be answered, as there can be multiple faults. 
+For example, a model could be trained on several thousand –
+hundreds of thousands of pictures of skin cancer to accurately 
+and consistently be able to identify the mutation, however, the 
+model may still not be able to correctly identify skin cancer in 
+a production image. Although false-positive rates have been 
+reduced over time through redesigning and retraining, the 
+tendency for such software to incorrectly identify normal 
+structures as abnormal remains one of the key concerns [4].
+Incorrect assumptions could be due to a spectrum of issues, 
+some pictures in the retrieved data set could have a watermark 
+on them, or there might not be an equal distribution of all skin 
+colors or markings. In this case, the fault would be with the 
+health data set distributor, however, there are more factors to 
+consider. The model may not have been set up properly, or 
+trained as intricately as was needed. The model also may not 
+be being used correctly, being fed incorrect information upon 
+forward propagation. This distribution of fault leads to an 
+inability to identify what entity would be liable for an AI’s 
+misdiagnosis. AI models can receive input to then output a 
+decision based on the new input given the training data set it 
+was initially provided. If a model was given an x-ray of a person, 
+it would output a diagnosis to the radiologist responsible for 
+analyzing the picture. A setback of AI implementations is that 
+they yield a decision, however, do not always elaborate on the 
+process by which that decision was made. Whether data 
+scientists or manufacturers involved in the development, 
+marketing, and installation of AI systems will carry the ultimate 
+legal responsibility for adverse outcomes arising from AI 
+algorithm used is a difficult legal question; if doctors are no 
+longer the primary agents of interpretation of radiological 
+studies, will they still be held accountable [5]? If radiologists 
+monitor AI system outputs and still have a role in validating AI 
+interpretations, do they still carry the ultimate responsibility, 
+even though they do not understand, and cannot interrogate 
+the precise means by which a diagnosis was determined? This 
+“black box” element of AI poses many challenges, not least the 
+basic human need to understand how and why important 
+decisions were made [5]. How many of us would be content if 
+we were told by our doctor: “I don’t know why you’re ill, but 
+my computer says ‘take these pills’,” or “I don’t know why 
+you’re ill, but my computer recommends surgery?” [5]. 
+The fault of the issue becomes less of a focus after 
+assessing the pros and cons of what may happen to the patient 
+or doctor after diagnosis. A misdiagnosis is not beneficial to the 
+doctor or patient, creating setbacks that result in having to set 
+new patient-doctor appointments and leaving room for the 
+patient’s condition to worsen, and bringing more financial 
+burden to the patient. Surgery is often left to chance; the patient 
+will survive, or the patient will not. Medical professionals sign 
+an oath, promising that they will to the best of their ability 
+serve humanity—caring for the sick, promoting good health, 
+and alleviating pain and suffering [6].
+Given these two facts, we can concur that a utilitarian 
+outlook on medicine is generally seen as OK. A utilitarian 
+perspective favors that most entities are satisfied, when 
+applied to medical operations and diagnosis, most people, 
+doctors, and patients alike favor correct and consistent 
+JAMES MADISON’23, April, 2023, Harrisonburg, Virginia USA M. Marker et al.
+knowledge. It is in rare cases that a consensually disliked 
+person enters a hospital knowing that thousands to millions of 
+people wish they had not. It can be argued that patients such 
+as criminals or unlikable people should not receive the same 
+care as those with a good reputation, however, this argument 
+can be refuted knowing that this concept is 1. Illegal, and 2. 
+Disliked upon becoming, or knowing someone who may 
+become a criminal. A utilitarian approach can balance the 
+beliefs and needs of patients, doctors, and intermediaries. 
+Another ethical approach to consider when analyzing AI in 
+medicine is a Kantian analysis. A Kantian analysis would 
+narrow questions to a fundamental respect for individual 
+autonomy. Additionally, a Kantian approach emphasizes the
+importance of a patient’s dignity. These two aspects are 
+important in medicine as they recognize patient rights, these 
+rights follow similar principles to HIPAA (Health Insurance 
+Portability and Accountability Act). This approach would 
+support the decision of the patient, like the current medical 
+system in the US. The trait of dignity would encourage doctors 
+to see patients with a strong sense of empathy and respect, 
+again like the current medical system. Overall, a Kantian 
+approach would encourage healthcare professionals to ensure 
+their patients are taken care of not only in a medical sense but 
+also in a moral sense. 
+5 Privacy in Training
+ The adoption of artificial intelligence in not only hospitals 
+brings to light several ethical setbacks. There exists uncertainty 
+amongst the general public regarding their opinions on AI in 
+their common medical participation. An article from the 
+University of Cambridge states that some risks and challenges 
+appear (In implementing AI in medical practice), including the 
+risk of injury to patients from system errors, the risk of patient 
+privacy in obtaining data and drawing conclusions from 
+artificial intelligence, and more [7]. These risks to patients are
+unlike risks in many other fields, these areas of risk can gamble 
+the life or well-being of patients. As explained by Universitas 
+Muhammadiyah Kalimantan Timur, Indonesia, In the 
+healthcare system, the privacy of an individual should be 
+revered, as is obliged by patient autonomy or self-governance, 
+personal identity, and well-being. Henceforth, it is ethically 
+vital to give due respect to patients’ privacy and maintain 
+confidentiality [8]. Given this restriction, healthcare providers 
+are faced with a decision: Train AI models using private 
+healthcare data, possibly leaking private patient information, 
+use smaller and voluntarily obtained data sets, or refuse to 
+implement AI models entirely. 
+Referring to the concept of reliability in AI and 
+healthcare machinery, reliability in deep learning machines is 
+dependent on the quality and amount of data the model is 
+trained on. In deciding between a hospital’s AI protocols, the 
+administration must understand the tradeoffs with each 
+option. The tradeoffs include risking privacy leakage for 
+reliability, and though the risk of privacy leakage would be low, 
+lawsuits would cost the administration a fortune. Researchers 
+from Stanford University and a top cybersecurity organization 
+found that approximately 88 percent of all data breaches are 
+caused by an employee mistake, and this statistic would 
+transitively not be foreign to personal medical information in 
+AI training [9].
+A study by Massachusetts General Hospital and 
+Harvard Medical School explores an AI implementation in 
+Computed Tomography (CT) images of human bodies. The 
+study concluded that the model’s learning curve well predicted 
+a 98% correct classification accuracy for the training data size 
+of 1000 images per body class, with the observed actual 
+accuracy at 97.25%. This leaves 2.75% of the model’s outputs 
+to be incorrect, meaning the model output is either an incorrect 
+condition of a similar condition class or no condition at all.
+Based on this learning curve, they could predict that their deep
+learning classifier needs a training data set per class of 4092
+images to reach a desired accuracy of 99.5%. Accordingly, they
+will start from a baseline training data set per class size of 5,000 
+images and steadily increase from there in order to achieve a 
+much higher system accuracy [10]. Those conducting the study 
+also concluded that “patient privacy laws and policies make 
+access to such medical images very difficult. [10]” The 
+transference of thousands of pictures from a secure health data 
+center to a model, as of today, requires human mitigation of the 
+process. Breaches involving training data should then be 
+considered by a hospital’s administration upon implementing 
+AI models.
+6 Improving the Process
+Though artificially intelligent models have a great margin 
+for error, it doesn’t mean they’re necessarily impossible to 
+implement. 
+A simple approach and an approach that exists in today’s 
+medical model solutions to the issue of consistency and 
+correctness when implementing an AI model into healthcare 
+would add a man in the middle of machine diagnosis and 
+chosen treatment. A human between the two steps in a 
+machine-patient interaction raises the diagnosis quality by 
+measures.
+Medical scanning procedures, such as X-rays or CAT scans, 
+make up a large portion of diagnosis protocols. Luckily, these 
+concentrated deep learning models would be designed mainly 
+to interpret pictures, as in the study by Massachusetts General 
+Hospital and Harvard Medical School. The training of these 
+models, requiring thousands of pictures to accurately make a 
+diagnosis, would need a more secure training process. 
+A human approach would mean an AI training session 
+would be performed in a no-device room, with a dedicated 
+system for receiving data sets, training, and linking with 
+necessary diagnosis output diagnostics. This would be given 
+AI in Healthcare: An Impractical Contribution JAMES MADISON’23, April, 2023, Harrisonburg, Virginia USA WOODSTOCK’18, June, 2018, El Paso, Texas USA
+that the health data servers reply to data requests without 
+human authorization. In doing this, we would be minimizing 
+the percentage by which employees (doctors, such as 
+radiologists) demonstrate human error.
+As a robotics processing automation engineer, I would 
+personally suggest the complete automation of the training 
+process to reduce the change of liability upon failure of the 
+hospital to obtain the technology. The main impact of
+automation lies also with the statistic of human error, the 
+reduction of human interaction with this technology directly
+minimizes the chances of this error. This approach is not a 
+technological impossibility, an article by the Department of 
+Software Technology and Methodology Faculty of Informatics, 
+Eötvös Loránd University, explains their argument that 
+supervised learning of labels may be fully eliminated under 
+certain conditions: a component-based architecture together 
+with a knowledge-based system can train itself [11]. With a 
+self-trained model, human input to the system is minimized, as 
+well as the sample size (private images for training), reducing 
+harm to the liable entity when a data breach may occur, and 
+reducing images requested from patients or volunteers for 
+fine-tuning. The automation aspect, however, comes with its 
+own implications such as the possibility for the AI to fail to train 
+itself on the correct data or amount of data. 
+After analyzing possible improvements for the 
+implementation of AI models in healthcare systems, it becomes 
+clear that tradeoffs will exist until new breakthroughs in AI 
+capabilities arise. Given the strong positive regression of AI 
+capabilities to this day, there is no doubt that these tradeoffs 
+will inevitably minimize soon.
+7 Conclusion
+It is an unfortunate reality that machine learning models 
+have implications restricting their involvement in areas of 
+society where their proficiency is most needed. The application 
+of machine learning models in healthcare has legal and ethical 
+complications, as we have discussed in this paper. The potential 
+of artificially intelligent machines in healthcare could serve for 
+massive improvements in diagnosis and treatment 
+recommendations, but these advantages are balanced with 
+disadvantages. Before integrating AI models into common 
+medical practice, there are several implications needing 
+resolution, including the quality and quantity of data required 
+to train the models, as well as the consideration of patient 
+privacy of the data being used. 
+To produce sufficient quality decisions in a medical 
+environment, AI models must be supplied with large quantities 
+of private patient information. As shown, the quality and 
+quantity of data used to train AI models have a significant 
+impact on correctness and consistency. This means that for 
+accurate diagnosis, these models need training data from a 
+large variety of patient demographics and possible 
+conditions/diseases one may be diagnosed with. The 
+infrastructure needed to gather and observe this data is lacking 
+in healthcare institutions, and this proves to be another
+considerable obstacle in the training and application of AI 
+models in the industry.
+Another obstacle is patient privacy in model training. We 
+discussed the oaths taken by doctors and hospitals to provide 
+patients with confidentiality over their health information. In 
+preparing AI models for involvement in a hospital, large sets of 
+private patient information are used to teach the model to 
+make correct and consistent decisions. We explained how this 
+process can bring legal implications to the distributor of the 
+models, the hospitals, and the entities responsible for training 
+the AI. Healthcare providers interested in AI incorporation into
+their common practice must consider this implication, and 
+their options as far as reducing the chances of data breaches.
+These issues do not indicate the impossibility of AI models 
+in healthcare, however, as of today, they restrict us from 
+utilizing the unforeseeable power of diagnosis and treatment 
+accuracy and speed that would be granted. 
+Approaches to the obstacle that is correctness and 
+consistency would involve a man in the middle, or a doctor 
+responsible for using their own intellect to analyze decisions or 
+reasoning output from an AI model, then acting accordingly. If 
+a model’s decision accuracy is 95-99 percent accurate, the 
+doctor’s eye would nearly guarantee a correct 
+diagnosis/treatment. This paper also analyzed uncertainty 
+with the process by which an artificially intelligent machine 
+makes a decision. Did the lump under certain spinal vertebrae 
+impact a patient’s headache, or was it the bulging disc on the 
+vertebrae above? These questions are difficult to answer given 
+that AI models often do not provide answers alongside their
+reasoning. However, this uncertainty is minimized after a 
+human doctor can reassure the patient as opposed to a 
+machine, as well as develop their own reasoning behind a 
+mechanical decision. 
+An approach to the issue of possible data breaches upon 
+data transfer and training is the automation of the process. We 
+discussed statistics explaining reasons for data breaches such 
+as human error. The automation of the training process, as well 
+as the retrieval of private medical information used for 
+training, would directly reduce human interaction in the 
+process, lowering the chance for human error regarding 
+training data.
+In conclusion, AI in healthcare calls for the consideration of 
+various issues, ethical and legal. This should not hold us back 
+from exploring the potential of the technology, as its future 
+benefits will outweigh today’s cons. When adopting this 
+technology, healthcare providers should consider the cons 
+before considering the pros, as lawsuits involving thousands of 
+patients can cost a liable entity millions of dollars, and likely the 
+loss of patients and remaining patients’ well-being. If the 
+decision is made to implement artificially intelligent models, 
+healthcare providers need to take rigorous action to avoid 
+ethical, legal, and practical setbacks, and adopt one of the listed 
+JAMES MADISON
+’23, April, 2023, Harrisonburg, Virginia USA M. Marker et al.
+approaches to maximize compassion for patients and 
+diagnosis/treatment correctness and consistency.
+Simultaneously, they should take the necessary steps to ensure 
+reliability in their models, accepting the tradeoff of choice.
+REFERENCES
+[1] Medicine definition & meaning (no date) Merriam
+-Webster. Merriam
+-
+Webster. Available at: https://www.merriam
+-
+webster.com/dictionary/medicine (Accessed: April 7, 2023).
+[2] Gijsberts, C.M. et al. (no date) Race/ethnic differences in the associations of 
+the Framingham risk factors with carotid IMT and cardiovascular events, 
+PLOS ONE. Public Library of Science. Available at: 
+https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.01
+32321 (Accessed: April 8, 2023). 
+[3] Hermansson, J. and Kahan, T. (2017) Systematic review of validity assessments 
+of Framingham risk score results in health economic modelling of lipid
+-
+modifying therapies in Europe 
+- pharmacoeconomics, SpringerLink. Springer 
+International Publishing. Available at: 
+https://link.springer.com/article/10.1007/s40273
+-017
+-0578
+-1 (Accessed: 
+April 8, 2023). 
+[4] C.W.L. Ho a et al. (2019) Governance of Automated Image Analysis and 
+artificial intelligence analytics in Healthcare, Clinical Radiology. W.B. 
+Saunders. Available at: 
+https://www.sciencedirect.com/science/article/pii/S0009926019301151 
+(Accessed: April 8, 2023). 
+[5] Smith G (2018) The AI Delusion. Oxford University Press 
+[6] Sritharan, K. et al. (2001) Medical oaths and declarations, BMJ (Clinical 
+research ed.). U.S. National Library of Medicine. Available at: 
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1121898/ (Accessed: 
+April 9, 2023). 
+[7] Hamid, S. (2016) The opportunities and risks of Artificial Intelligence in 
+medicine and Healthcare, Apollo Home. CUSPE. Available at: 
+https://www.repository.cam.ac.uk/handle/1810/278276 (Accessed: April 
+9, 2023). 
+[8] Sunarti, S.; Rahman, F.F.; Naufal, M.; Risky, M.; Febriyanto, K.; Masnina, R. 
+Artificial intelligence in healthcare: Opportunities and risk for future. Gac. 
+Sanit. 2021
+, 35 (Suppl. 1), S67
+–S70.
+[9] Sjouwerman, S. (no date) Stanford Research: 88% of data breaches are caused 
+by human error, Blog. Available at: https://blog.knowbe4.com/88
+-percent
+-
+of
+-data
+-breaches
+-are
+-caused
+-by
+-human
+-
+error#:~:text=Researchers%20from%20Stanford%20University%20and,c
+aused%20by%20an%20employee%20mistake. (Accessed: April 10, 2023). 
+[10] Cho, J. et al. (2016) How much data is needed to train a medical image deep 
+learning system to achieve necessary high accuracy?, arXiv.org. Available at: 
+https://arxiv.org/abs/1511.06348# (Accessed: April 10, 2023). 
+[11] Lőrincz, A. et al. (2016) Cognitive deep machine can train itself, arXiv.org. 
+Available at: https://arxiv.org/abs/1612.00745 (Accessed: April 10, 2023). 

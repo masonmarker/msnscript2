@@ -1,0 +1,51 @@
+# reversing a string
+#
+# author : Mason Marker
+# date : 5/15/2023
+
+# timer for timing sections of code
+import ('lib/timer.msn2')
+
+# global string to test
+@ string = 'hello world'
+@ expected = reverse(string)
+
+
+# test index
+@ test_ind = 0
+
+# macro for timing and verifying a string
+# has been correctly reversed
+macro('TEST', '__line', (
+    
+    # start timer
+    timer:start(),
+
+    # assert the test is correct
+    -(__line).equals(expected).assert(),
+
+    # print the time
+    print('test', test_ind , ':', timer:runtime(), 's'),
+
+    # increment test index
+    test_ind.++()
+))
+
+# hard coded answer
+TEST 'dlrow olleh'
+
+# in place reversal
+TEST (
+    @ _ = string,
+    _.reverse()
+)
+
+# python fallback
+TEST <<|string|[::-1]>>
+
+# actual algorithm #1
+TEST (
+    @ _ = '',
+    for (string.len(), 0, 'i', _.add(string.get(i))),
+    _ 
+)

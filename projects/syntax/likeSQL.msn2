@@ -1,0 +1,84 @@
+# creates a language syntax similar to that of SQL
+# 
+# note that the macros created do not perform the most safe interpretations, 
+# however provide an example of what the syntax might do in a broader context
+# 
+# a much more effective macro implementation would be iterative, as opposed to
+# blunt splitting regardless of argument content
+# 
+# author : Mason Marker
+# date : 12/20/2022
+
+# clear console
+import ('lib/os')
+
+# syntax additions
+import ('lib/syntax/msn2plus')
+
+os:clear()
+
+# placeholder to look like SQL, simply interprets the preceeding line
+postmacro(';', '__line', -(__line))
+
+# creates a variable setting standard
+macro('SET ', '__line', =>(
+    @__sp = __line.split(' TO '),
+    var(strip(__sp.get(0)), -(__sp.get(1))),
+    destroy('__')
+))
+
+# macro for printing
+macro('PRINT ', '__line', print(-(__line)))
+
+
+# for selecting certain items from an array
+macro('SELECT ', '__line', (
+    
+    @ __selected = [],
+
+    # obtain SELECT arguments
+    @__sp = __line.split(' FROM '),
+    @__selecting = strip(__sp.get(0)),
+
+    # obtain WHERE arguments
+    @__sp2 = split(__sp.get(1), ' WHERE '),
+    @__iterable = -(__sp2.get(0)),
+    @__condition = __sp2.get(1),
+
+    # user is selecting from everything in the iterable
+    if (equals(__selecting, '*'), each(__iterable, 'el', if (-(__condition), __selected.add(el)))),
+    
+    
+    __selected
+))
+
+# compares two values
+macro('COMPARE ', '__line', (
+    @__sp=__line.split(' AND '),
+
+    # compares arguments in separate environments
+    if(not(equals(private(-(__sp.get(0))), 
+        private(-(__sp.get(1))))), 
+        print('[-] assertion error :', __sp.get(0), '==', __sp.get(1)))
+))
+
+
+# --------------------- like SQL ---------------------
+
+PRINT '[*] starting program';
+
+
+# creates a new variable v
+SET v TO [1, 2, 3, 4, 5, 6, 7, 8];
+
+# testing COMPARE macro
+# change these values to see a difference in the program's output
+COMPARE 0 AND 0;
+COMPARE [1, 2, 3, 4] AND [1,2,3,4];
+
+# compares a selection of even elements
+COMPARE SELECT * FROM v WHERE equals(mod(el, 2), 0) AND [2, 4, 6, 8];
+
+PRINT '[*] ending program';
+
+PRINT trace.before(2);

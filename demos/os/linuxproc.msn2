@@ -1,0 +1,35 @@
+# demonstrates forking of processes in a linux environment
+# 
+# author : Mason Marker
+# date : 11/29/2022
+# updated in 2.0.387
+
+
+if (linux(), (
+
+    # in Linux, can proceed
+    print('[+] using Linux, proceeding...'),
+    
+    import ('lib/processes.msn2'),
+
+    # clean processes from previous run
+    processes:clean_processes(),
+
+    # forks another process
+    proc('p1', print('hello from another process!'))
+
+    # join with the new process
+    join('p1'),
+    
+    # end program
+    stop()
+
+), (
+    print:color(
+        object(
+            'text', '[-] you are not running Linux',
+            'style', 'bold',
+            'fore', 'red'
+        )
+    )
+))

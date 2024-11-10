@@ -1,0 +1,20 @@
+# Tests working with a notepad.
+#
+# author : Mason Marker
+# date : 5/30/2023
+
+
+
+
+# declare and open notepad
+@ notepad = app('notepad.exe')
+notepad.start:lock()
+
+# type a message
+notepad.write('hello!')
+
+# sleep for a little bit
+sleep(3)
+
+# close notepad
+notepad.stop()

@@ -1,0 +1,64 @@
+# demonstrates hosting of an api endpoint, then getting and posting to that endpoint
+# in a multithreaded system
+#
+# after executing, open a browser and go to http://127.0.0.1:5000/data
+#
+# author : Mason Marker
+# date : 11/15/2022
+# updated in 2.0.387
+
+# fresh console
+import ('lib/os')
+os:clear()
+
+# http specific resources and methods
+# see this file for http server-specific variables such as 'http:localhost' and 'http:default_flask_port'
+# as well as API specific methods such as 'http:local_post' and 'http:local_get'
+import ('lib/http.msn2')
+
+# starts an api endpoint on 127.0.0.1:5000/data on a new thread
+# endpoint(path) with a single argument starts an endpoint on the default localhost and endpoint hosting port (above)
+
+# new context used to simulate complete environment and thread separation from the main thread
+new((
+
+    # data currently stored in this api endpoint
+    var('initial_data', {}),
+
+    # starts a new endpoint, defaulting to localhost and port 5000, on a new thread
+    # api endpoint initial data as second argument
+    # ENDPOINT is a system call that starts an http server on localhost at the path specified with its initial data
+    thread('ep', ENDPOINT('/data', initial_data))
+))
+
+
+
+# give small segment of time for api endpoint startup
+# before tests / prompting user with shell
+sleep(0.05)
+
+# tests posting and getting to the api endpoint
+assert(equals(http:local_post('/data', {'data': {}}), {'data':{}}))
+assert(equals(http:local_get('/data'), {'data':{}}))
+assert(equals(http:local_post('/data', {'data2': {}}), {'data':{}, 'data2':{}}))
+assert(equals(http:local_get('/data'), {'data':{}, 'data2':{}}))
+assert(equals(http:local_post('/data', {'data': {'username': 'password'}}), {'data':{'username':'password'}, 'data2':{}}))
+assert(equals(http:local_get('/data'), {'data':{'username':'password'}, 'data2':{}}))
+
+print('[+] GET and POST testing succeeded', '')
+print('   Now you can try POSTing and GETing to the api endpoint yourself', '')
+print('   execute http:local_post(path, dict) or http:local_get(path) in the shell to do so', '')
+
+
+# deletes all entries in the endpoint, essentially sets endpoint JSON to {}
+http:local_delete('/data')
+
+# JSON should have been deleted
+assert(equals(http:local_get('/data'), {}))
+
+# imports user:shell(name)
+import('lib/user')
+
+# creates a private context for the user shell, 
+# inherits methods and variables while separating from parent context
+private(user:shell('usershell'))

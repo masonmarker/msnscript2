@@ -1,0 +1,95 @@
+# Example of an msn2 program.
+#
+# Run me with '{python_alias} msn2cli.py -f example'
+#
+# author : Mason Marker
+# date : 8/17/2023
+# version : 2.0.385
+
+# import color printing
+import ('lib/console')
+
+# print a starting message
+console:print(arr(
+    object(
+        'text', 'Starting ',
+        'style', 'italic'
+    ),
+    object(
+        'text', 'example.msn2',
+        'style', 'bold',
+        'fore', 'green'
+    )
+))
+
+# get user input
+def('inp', @ example:number = try(int(input("Enter a number (0 - 100) or 'q': ")), example:random))
+
+# generate a random integer
+@ example:random = random(0, 100,)
+
+inp()
+
+
+# while the number is not equal to a random integer
+while (and(not(example:number.equals(example:random), not(number.equals('q')))), (
+
+    # if higher, print too high
+    if (example:number.greater(example:random), (
+        console:print(arr(
+            object(
+                'text', 'Too high!',
+                'style', 'bold',
+                'fore', 'red'
+            )
+        ))
+    ), if(example:number.less(example:random), (
+            
+            # if lower, print too low
+            console:print(arr(
+                object(
+                    'text', 'Too low!',
+                    'style', 'bold',
+                    'fore', 'red'
+                )
+            ))
+    ))),
+
+    # get user input
+    inp()
+
+))
+
+# if quitting
+if (example:number.equals('q'), (
+    console:print(arr(
+        object(
+            'text', 'Quitting...',
+            'style', 'bold',
+            'fore', 'red'
+        )
+    )),
+    goto('r')
+))
+
+# you win!
+console:print(arr(
+    object(
+        'text', 'You win!',
+        'style', 'bold',
+        'fore', 'green'
+    )
+))
+
+# program finished
+console:print(arr(
+    object(
+        'text', 'Finished ',
+        'style', 'italic'
+    ),
+    object(
+        'text', 'example.msn2',
+        'style', 'bold',
+        'fore', 'green'
+    )
+))

@@ -1,0 +1,217 @@
+# JavaScript to inject into Leetcode.
+#
+# author : Mason Marker
+# date : 7/2/2023
+
+# JavaScript
+@ js = script(
+    
+    # get the first element with an id that startswith
+    # 'headlessui-listbox-options'
+    let langs = document.querySelector('[id^="headlessui-listbox-options"]');
+    
+    # add a new list item to the dropdown
+    # with this format: <li class="relative flex h-8 cursor-pointer select-none py-1.5 pl-2 text-label-2 dark:text-dark-label-2" id="headlessui-listbox-option-:r20:" role="option" tabindex="-1" aria-selected="false" data-headlessui-state=""><div class="flex h-5 flex-1 items-center pr-2"><div class="whitespace-nowrap">C++</div></div><span class="text-blue dark:text-dark-blue flex items-center pr-2 invisible"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="h-5 w-5" aria-hidden="true"><path fill-rule="evenodd" d="M9.688 15.898l-3.98-3.98a1 1 0 00-1.415 1.414L8.98 18.02a1 1 0 001.415 0L20.707 7.707a1 1 0 00-1.414-1.414l-9.605 9.605z" clip-rule="evenodd"></path></svg></span></li>
+    let newLang = document.createElement('li');
+    newLang.className = 'relative flex h-8 cursor-pointer select-none py-1.5 pl-2 text-label-2 dark:text-dark-label-2';
+    newLang.id = 'headlessui-listbox-option-:r20:';
+    newLang.role = 'option';
+    newLang.tabindex = '-1';
+    newLang.ariaSelected = 'false';
+    newLang.dataset.headlessuiState = '';
+    # set a new text
+    newLang.innerHTML = '
+        <div class="flex h-5 flex-1 items-center pr-2">
+            <div class="whitespace-nowrap">
+                MSN2</div>
+            </div>
+        <span class="text-blue dark:text-dark-blue flex items-center pr-2 invisible">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                <path fill-rule="evenodd" d="M9.688 15.898l-3.98-3.98a1 1 0 00-1.415 1.414L8.98 18.02a1 1 0 001.415 0L20.707 7.707a1 1 0 00-1.414-1.414l-9.605 9.605z" clip-rule="evenodd">
+                </path>
+            </svg>
+            </span>';
+    # border radius
+    newLang.style.borderRadius = '0.375rem';
+    # transition
+    newLang.style.transition = 'background-color 0.2s ease-in-out 0s';
+
+    # add an onhover
+    newLang.onmouseover = function() {
+        # glow with gold
+        this.style.backgroundColor = '#FDE68A';
+        # font color
+        this.style.color = '#000000';
+    };
+    # add an onmouseout
+    newLang.onmouseout = function() {
+        # remove the glow
+        this.style.backgroundColor = '';
+        # font color
+        this.style.color = '';
+    };
+
+    # get the first element that has an id that startswith
+    # 'headlessui-listbox-button'
+    let button = document.querySelector('[id^="headlessui-listbox-button"]');
+    # first child
+    let chosen = button.firstChild.childNodes[1];
+    
+    
+    newLang.onclick = function() {
+        # set the value of the chosen language
+        chosen.innerText = 'MSN2';
+
+        # hide the langs dropdown
+        langs.style.display = 'none';
+    };
+
+    # get submit button by data-e2e-locator
+    # called 'console-submit-button'
+    let submit = document.querySelector('[data-e2e-locator="console-submit-button"]');
+    # create a clone of the submit button
+    let clone = submit.cloneNode(true);
+
+    # remove all event listeners
+    submit.replaceWith(clone);
+    let editor = document.querySelector('[class^="view-lines"]');
+
+    # add an onclick to the submit button
+    clone.onclick = function() {
+        # buffer for code as string
+        let code = editor.textContent;
+
+        
+        console.log('textContent: ' + editor.textContent);
+
+        # msn2 response buffer
+        let msn2_response = null;
+
+        # common headers
+        let headers = {
+            'Content-Type': 'application/json'
+        };
+        # post the code to the local Flask
+        # server 8080
+        fetch('http:\/\/127.0.0.1:8080/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                'code': code
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            function fetcher() {
+                try {
+                    fetch('http:\/\/127.0.0.1:8080/', {
+                        method: 'GET',
+                        headers: headers
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data['out'] != '') {
+
+                            # post '' to the out field
+                            # to clear it
+                            fetch('http:\/\/127.0.0.1:8080/', {
+                                method: 'POST',
+                                headers: headers,
+                                body: JSON.stringify({
+                                    'out': ''
+                                })
+                            });
+
+                            console.log('data out:', data['out']);
+                            msn2_response = data['out'];
+                            # get the msn2-output id element
+                            let output = document.getElementById('msn2-output');
+
+                            # if element with ID 'msn2-output' does not exist
+                            if (output == null) {
+
+                                # get the second div that has a classname starting with
+                                # 'bg-layer-2'
+                                let answerDiv = document.querySelectorAll('[class^="bg-layer-2"]')[1];
+                                console.log(answerDiv);
+
+                                # format of response div, without the button tags:
+                                # <button class="rounded px-3 py-1.5 font-medium items-center whitespace-nowrap focus:outline-none inline-flex group pl-0 text-xs text-label-2 dark:text-dark-label-2 hover:text-label-1 dark:hover:text-dark-label-1"><div class="mr-1 flex h-4 w-4 items-center justify-center"><div class="h-1 w-1 rounded-full transition-all bg-gray-6 dark:bg-dark-gray-6 group-hover:bg-brand-orange dark:group-hover:bg-dark-brand-orange"></div></div>Auto</button>
+                                
+                                # create a new div to add with the responses
+                                let newDiv = document.createElement('div');
+
+                                # set the attributes
+                                newDiv.id = 'msn2-output';
+                                newDiv.className = 'rounded px-3 py-1.5 font-medium items-center whitespace-nowrap focus:outline-none inline-flex group pl-0 text-xs text-label-2 dark:text-dark-label-2 hover:text-label-1 dark:hover:text-dark-label-1';
+                                newDiv.tabindex = '0';
+                                newDiv.dataset.headlessuiFocusRing = '';
+                                newDiv.dataset.headlessuiState = '';
+                                newDiv.style.transition = 'background-color 0.2s ease-in-out 0s';
+                                newDiv.style.borderRadius = '0.375rem';
+
+                                # add padding and margin
+                                newDiv.style.padding = '0.375rem 0.75rem';
+                                newDiv.style.margin = '0.375rem 0.75rem';
+
+
+                                # center the text
+                                newDiv.style.justifyContent = 'center';
+                                # align center
+                                newDiv.style.alignItems = 'center';
+                                # set the font size
+                                newDiv.style.fontSize = '1rem';
+
+                                # set the innerHTML
+                                newDiv.innerHTML = '<div class="mr-1 flex h-4 w-4 items-center justify-center"><div class="h-1 w-1 rounded-full transition-all bg-gray-6 dark:bg-dark-gray-6 group-hover:bg-brand-orange dark:group-hover:bg-dark-brand-orange"></div></div>Auto';
+
+                                # add an onmouseover
+                                newDiv.onmouseover = function() {
+                                    # glow with gold
+                                    this.style.backgroundColor = '#FDE68A';
+                                    # font color
+                                    this.style.color = '#000000';
+                                    this.style.cursor = 'default';
+                                };
+                            
+                                # add an onmouseout
+                                newDiv.onmouseout = function() {
+                                    # remove the glow
+                                    this.style.backgroundColor = '';
+                                    # font color
+                                    this.style.color = '';
+                                };
+
+                                output = newDiv;
+
+                                # insert the child as the 3rd child
+                                answerDiv.insertBefore(newDiv, answerDiv.childNodes[0]);
+                            }
+
+                            # log the msn2 output
+                            console.log('msn2 response:', data['out']);
+
+                            # set the innerHTML of the output div to the msn2 response
+                            output.innerText = msn2_response;
+
+                            return;
+                        } else {
+                            setTimeout(fetcher, 100);
+                        }
+                    });
+                } catch (e) {
+                    setTimeout(fetcher, 500);
+                }
+            };
+            fetcher();
+
+
+        });
+
+        
+    };
+
+
+    langs.appendChild(newLang);
+)

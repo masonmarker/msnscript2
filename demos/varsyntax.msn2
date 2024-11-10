@@ -1,0 +1,65 @@
+# different variable setting syntax created with MSNScript2 macros
+# 
+# the macros created do not check for similarities between variables and keywords,
+# however demonstrates a simple approach to a variable naming scheme
+# 
+# author : Mason Marker 
+# date : 12/12/2022
+
+import('demos/lib/varsyntax.msn2')
+
+# MSNScript2 test variables
+@ variable = {'people': [6543, -64932.5923, 0, -1]}
+
+# -------------------- INVOCATION --------------------
+
+# english approach (more base script to write to protect from text splitting issues) (more readable)
+set v to  variable
+set v2 to variable 
+create v3 called variable
+create v4 called variable
+
+# symbolistic approach (less base code to write to protect from text splitting issues) (less readable)
++++ v5 === variable
+
+# add a word to the syntax to make it less likely to interfere? 
+# unsafe!
+
+# safer solution: iteration to first '=' and evaluate arguments via -()
+# see demos/lib/varsyntax.msn2 for all macro definitions
+
+# demonstration
+SET v6 = variable
+SET v7 = 'hello how are you?'
+SET v8 = [1, 2, 3, 4, 5, 4, 3, 2, 1]
+SET v9 = {'object': [[],[],[],[],[],[None, -54325.52345]]}
+
+# a variation
+VAR v10 = variable
+VAR v11 = 'hello how are you?'
+VAR v12 = [1, 2, 3, 4, 5, 4, 3, 2, 1]
+VAR v13 = {'object': [[],[],[],[],[],[None, -54325.52345]]}
+
+
+# postmacro approach, less code to write, given the single character postmacro invocation requirement
+v14 = variable; 
+v15 = 'hello i made this new syntax';
+v16 = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+v17 = {'object': [[],[],[],[],[],[None, -54325.52345]]};
+
+# fancier syntax, for, well, really no reason
+v18  = variable                                        < var
+v19 = 'hello i made this new syntax'                   < var
+v20 =  [1, 2, 3, 4, 5, 4, 3, 2, 1]                     < var
+v21 ={'object': [[],[],[],[],[],[None, -54325.52345]]} < var
+
+# equals sign substitution
+v22;  variable --
+v23 ;'hello i made this new syntax'    --
+v24 ;  [1, 2, 3, 4, 5, 4, 3, 2, 1] --
+v25 ; {'object': [[],[],[],[],[],[None, -54325.52345]]} --
+
+
+
+
+env(True)

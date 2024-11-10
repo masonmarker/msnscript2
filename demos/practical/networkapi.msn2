@@ -1,0 +1,63 @@
+# demonstrates manipulation of an api endpoint
+# available across an executor's local network
+#
+# author : Mason Marker
+# date : 11/18/2022
+# updated in 2.0.387
+
+# fresh console
+import ('lib/os')
+os:clear() 
+
+# general api structure
+import ('lib/apis/api.msn2')
+
+# usershell for command injection
+import ('lib/user.msn2')
+
+# constructs an api endpoint
+var('networkapi', api(http:network, http:default_flask_port, '/stuff', {}))
+
+# launch the api endpoint
+private(api:start(networkapi))
+
+# privips system call offers a list of private ip addresses of the local machine
+print('visit one of the following URLs on another device on the same network:')
+
+# print out the urls for the api endpoint
+each(privips(), 'ip', (
+    print(cat('\thttp://', ip, ':', networkapi.port(), networkapi.path()))
+))
+
+# asserts a post operation is successful to networkapi
+# updated in 2.0.387
+def('assert_post', 'data', 'expected', private(
+    assert(equals(api:post(networkapi, data), expected))
+))
+
+
+# asserts a get operation is successful to networkapi
+# updated in 2.0.387
+def('assert_get', 'expected', private(
+    assert(equals(api:get(networkapi), expected))
+))
+
+
+# assert post works properly
+var('p1', {'entry':{}})
+private(assert_post(p1, p1))
+
+# assert get works properly
+private(assert_get(p1))
+
+
+# assert post works properly
+var('p2', {'entry':{'name': 'mason'}})
+private(assert_post(p2, p2))
+
+# assert get works properly
+private(assert_get(p2))
+
+
+# user scripts
+user:shell('usershell')

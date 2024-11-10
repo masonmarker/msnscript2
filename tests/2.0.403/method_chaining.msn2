@@ -1,0 +1,305 @@
+# Testing method chaining
+
+# starting tests
+import ('tests/resources/start')
+
+
+print_test('chained methods')
+
+# general chained method using some math functions
+assert(+(1, 2).equals(3))
+assert(not(+(3, 4).equals(5287345982.234958123049582)))
+assert(+(3, 4).equals(7))
+assert(-(5, 4).equals(1))
+
+# more than 2 chained methods
+assert(x(2, 3).+(5).equals(11))
+assert(not(x(2, 3).+(5).equals(10)))
+assert(x(2, 3).+(4).-(5).equals(5))
+
+# creating and working with it (this is non destructive)
+assert   (  var (  'a'  ,   12  )   .  add    (   4 )  . equals(16))
+assert(exists('a'), a.equals(12), not(a.equals(13)))
+
+# asserting with macros and post macros
+# creating the macro
+macro('CHAINED ADD ', '__chained_function', +(-(__chained_function), 1))
+# postmacro for assertions
+postmacro("<<?", '__??_line', assert(equals(-(__??_line), 1)))
+
+# basic tests
+equals(CHAINED ADD 2, 3) <<?
+not(equals(CHAINED ADD 2, 6)) <<?
+
+# making sure the macro works
+assert(equals(CHAINED ADD 2, 3))
+assert(not(equals(CHAINED ADD 2, 6)))
+
+# testing as a single expression
+assert(equals(CHAINED ADD (1).+(1, 2), 5))
+assert(equals(5, CHAINED ADD (1).+(1, 2)))
+# testing with 3 total arguments
+assert(equals(6, CHAINED ADD (1).+(1, 2).+(1), +(1, 1, 1, 1, 1).+(1)))
+assert(not(equals(7, CHAINED ADD (1).+(1, 2).+(1), +(1, 1, 1, 1, 1).+(1))))
+
+# testing with both a macro and postmacro
+equals(CHAINED ADD +(1, 2).+(2), 6) <<?
+
+(CHAINED ADD (5).-(5)) <<?
+(CHAINED ADD ((5).-(5))) <<?
+
+
+# with multiple arguments
+assert(equals(+(1, 2).+(3), 6))
+assert(equals(+(1, 2).+(3).+(4), 10))
+assert(equals(+(1, 2).+(3).+(4).+(5), 15))
+assert(equals(5, +(1, 1).+(3)))
+assert (  equals  (  5  , +  ( 1  , 1   )  .  + ( 3 )   .   +   (  0   )  )  )
+assert(equals(6, +(1, 1)     .    +(3)   .     +(1)))
+# interleaving
+assert(equals(
+    6, 
+    +(4, 1).x(2).-(4), 
+    6, 
+    -(9, 3)  .  -  ( 1 )  .  +  (  1 ),
+    3 + 3
+))
+# interleaving
+assert(equals(
+    "hello!",
+    # starting with a literal requires parenthesis around it for now
+    ("hello").add("!"),
+    ("h").add("ello").add("!")
+))
+# chaining methods without arguments
+assert(equals(
+    "HELLO!",
+    # note that this doesnt actually work, because python fallback returns None from print(), as this is valid python
+    # print(("hello!").upper())
+
+    (+("hel", 'lo')).upper().add('!'),
+    var('___', "he").add('ll').replace('ll', '').add('llo!').upper(),
+    
+    # nested chains
+    ("h").add(("el").replace("el", "le").replace("le", "el").add("lo").add("!")).upper(),
+
+    # complex nesting with many arguments in many places
+    ("")
+        .add("asdf").replace('asdf', (
+            3984752938475928345.2345872349857293845, {423452345: {"hello": "complex object"}},
+            @__=(("he").slice(,1).upper()),
+            __,
+            @__=((__).upper().lower().add('el')),
+            assert(equals("random string and stuff", "random string and stuff")),
+            __.add("lo!").upper()
+    ))
+))
+
+
+
+# with more complex functions and arguments
+
+equals(
+    ls(This is a pretty long {="string"=}).upper(),
+    "THIS IS A PRETTY LONG STRING"
+) <<?
+equals(
+    ls(This is a pretty long {="string"=}).upper().add('!'),
+    "THIS IS A PRETTY LONG STRING!"
+) <<?
+equals(
+    ls(This is a pretty long {="string"=}).upper().add('!').replace('!', '?'),
+    "THIS IS A PRETTY LONG STRING?",
+    cat(
+        ("This").upper(), (" is").upper(), (" a").upper(), 
+        (cat(" ", "preTtY")).lower().upper(), (" long").upper(), ls(< >string).upper(), "?"
+    )
+) <<?
+
+equals(   (   [1, 2, 3, 4, 5]   )   .  append(5).remove(5), [1, 2, 3, 4]) <<?
+
+
+
+# ------------- single expressions -------------
+# testing expressions on their own
+(True).assert()
++(1, 2).+(5).assert()
+
++(1, 2).+(5).-(5).assert()
+
+@t = [1, 2, 3]
+append('t', 3).assert()
+append('t', 3).equals([1, 2, 3, 3, 3]).assert()
+
+# testing with macros and postmacros for single expressions
+macro('MC:ASSERT:', '__MC:ASSERT:__', assert(-(__MC:ASSERT:__)))
+
+@test_number = 1
+MC:ASSERT:1
+MC:ASSERT:True
+MC:ASSERT:not(False)
+MC:ASSERT: +(1, 2).equals(3)
+MC:ASSERT:add('test_number', 3).equals(4).assert().assert().assert()
+MC:ASSERT:add(cat('TEST', '_NUMBER').lower(), 3).equals(7).assert().equals(True)
+MC:ASSERT:add(cat('TEST', '_NUMBER').lower(), 
+    3).equals(10, +(5, 5), +(5, 3).-(1).add(3)).assert().equals(True)
+MC:ASSERT:add(("test_number").upper() . lower(), 10).equals(20)
+
+# --------- testing some special functions ---------
+strip("    hello!  ").equals("hello!").assert()
+MC:ASSERT:strip("    hello!  ").equals("hello!").assert()
+
+ls(asdf).equals("asdf").assert()
+MC:ASSERT:ls(asdf).equals("asdf").assert()
+
+ls(asdff).equals("asdff").assert()
+MC:ASSERT:ls(asdff).equals("asdff").assert()
+
+
+ls(asdf {="string insertion1"=} also {='string insertion 2'=}).equals("asdf string insertion1 also string insertion 2").assert()
+MC:ASSERT:ls(asdf {="string insertion1"=} also {='string insertion 2'=}).equals("asdf string insertion1 also string insertion 2").assert()
+
+
+script(This is a script).equals("This is a script").assert()
+MC:ASSERT:script(This is a script).equals("This is a script").assert()
+
+HTML(This is also a script).equals("This is also a script").assert()
+MC:ASSERT:HTML(This is also a script).equals("This is also a script").assert()
+
+cat("hel", "lo!").equals("hello!").assert()
+MC:ASSERT:cat("hel", "lo!").equals("hello!").assert()
+
+# lists
+([1, 2, 3, 4, 5, 6]).map('e', e.add(1)).map('e', e.sub(1)).equals([1, 2, 3, 4, 5, 6]).assert()
+MC:ASSERT:([1, 2, 3,   4, 5,    6]  ).map('e'    , e    .add(     1  )).map   ('e', e.sub(1      )  ).     equals((     [1, 2, 3, 4, 5]).add(6), [1, 2, 3, 4, 5, 6], (   [1]*   6).map('_e', if(exists('_i'),  _i  . add(1),    @_i=1)), if   (   0, 0, ([1, 2, 3, 4, 5, 6]))).assert()
+
+# making sure top level calls are performing the correct actions
+@f = 'tests/2.0.403/tests/_test'
+import(f)
+@fpath = cat(f, '.txt')
+assert(equals(file.read(fpath), 'hello!', ls(hello!, how are you?).replace(', how are you?', '')).equals(True).assert()).assert()
+# delete the file
+file.delete(fpath).assert()
+
+# # ---------------- new default object functions ----------------
+
+# then
+(1).then(assert(True))
+(0).then(assert(False))
+
+if(True, 1).then((True).assert(), assert(False))
+if(False, 1, 0).then(assert(False), assert(True)).assert()
+
+# testing with user functions
+@a = 0
+def('f', a.add(1))
+# returns 1 and works!
+f().assert()
+
+@a2 = 5
+def ('f2', 'f2:arg1', a2.sub(f2:arg1))
+f2(3).assert:equals(2)
+
+# postmacros
+postmacro(':MC:ASSERT', '__MC:ASSERT:__', assert(-(__MC:ASSERT:__)))
+
+# testing some with with postmacros
+1:MC:ASSERT
+True:MC:ASSERT
+not(False):MC:ASSERT
++(1, 2).equals(3):MC:ASSERT
+strip("    hello!  ").equals("hello!").assert():MC:ASSERT
+ls(asdf).equals("asdf").assert():MC:ASSERT
+ls(asdff).equals("asdff").assert():MC:ASSERT
+ls(asdf {="string insertion1"=} also {='string insertion 2'=}).equals("asdf string insertion1 also string insertion 2").assert():MC:ASSERT
+script(This is a script).equals("This is a script").assert():MC:ASSERT
+HTML(This is also a script).equals("This is also a script").assert():MC:ASSERT
+cat("hel", "lo!").equals("hello!").assert():MC:ASSERT
+([1, 2, 3, 4, 5, 6]).map('e', e.add(1)).map('e', e.sub(1)).equals([1, 2, 3, 4, 5, 6]).assert():MC:ASSERT
+
+
+# ----------------- testing with special syntaxes -----------------
+
+# testing with @ {} = {} variable setting syntax
+
+# testing as single expressions
+@ v   = +(3, 3).-(2)
+
+v.equals(4).assert()
+v.sub(2).equals(2).assert()
+# assert that the .sub() was permanent
+assert(v.equals(2))
+
+
+(@v = +(1, 2).add(3)).assert:equals(6)
+assert(v.equals(6))
+v.equals(6).assert()
+
+# using with macros
+MC:ASSERT:(@v = +(10, 10).add(1)).equals(21)
+MC:ASSERT:@v = +(10, 11).add(2).equals(23)
+
+# ----------------- testing with multi-line and @= variable setting -----------------
+
+(
+    @ test = +(4, 4).+(1),
+    @ test2 = +(4, 4).+(1).-(1),
+    assert(exists('test'), exists('test2')),
+    assert(test.equals(9)),
+    assert(test2.equals(8))
+)
+
+
+
+# ----------------- testing with custom classes -----------------
+
+# single variable set with chaining
+class('Thing', (
+    @stuff = arr(1, 2, 3).map('e', e.add(1))
+))
+@t = Thing()
+t.equals({'stuff': [2, 3, 4]}).assert()
+(@t = Thing()).keys().has('stuff').assert()
+Thing().keys().has('stuff').assert()
+Thing().stuff().equals([2, 3, 4]).assert()
+
+
+
+
+
+class('TwoAttributes', (
+    @attr1 = arr(1, 2, 3).map('e', e.add(1)),
+    @attr2 = arr(1, 2, 3).map('e', e.add(2))
+))
+
+TwoAttributes().equals({'attr1': [2, 3, 4], 'attr2': [3, 4, 5]}).assert()
+
+
+class('Thing2', (
+    @stuff2 = arr(1, 2, 3).map('e', e.add(2)),
+    @stuff3 = arr(1, 2, 3).map('e', e.add(3)),
+    def('add_to_stuff', 'self', 'val', self.stuff2(self.stuff2().append(val))),
+    def('add_to_stuff3', 'self', 'val', self.stuff3(self.stuff3().append(val)))
+))
+
+@t = Thing2()
+t.add_to_stuff(4)
+t.stuff2().equals([3, 4, 5, 4]).assert()
+t.add_to_stuff3(5)
+t.stuff3().equals([4, 5, 6, 5]).assert()
+
+t.add_to_stuff(+(1, 2).-(3)).equals([3, 4, 5, 4, 0]).assert()
+
+
+
+
+
+# ------------------ COMPLEX SYNTAX ------------------
+
+# this doesnt work yet, only single expressions with ls() and raw string calls
+# ls(hello, I'm doing well).add('!').assert()
+
+(
+    @sc = ls(Im doing well),
+    sc.add('!').assert:equals("Im doing well!")
+)

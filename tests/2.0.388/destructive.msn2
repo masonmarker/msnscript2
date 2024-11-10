@@ -1,0 +1,49 @@
+# Tests '!' objfunc destructive specifier.
+#
+# The object specifier can be placed at the end of
+# and method call.
+#
+# author : Mason Marker
+# date : 9/17/2023
+
+# import resources
+import ('tests/resources/start')
+
+# create a variable
+@ string = 'hello'
+
+# regardless of what the method returns,
+# the variable linked will be set to the return
+# value
+#
+# that is if the objfunc ends with a '!'
+#
+# this only applies to non-class() created
+# variables
+
+# destructive method call
+string.slice!(,3)
+
+# assert the string was modified
+assert(string.equals('hel'))
+
+# destructive casting
+@ string = '3'
+assert(string.equals('3'))
+
+# the following operation gets a casted version of the variable
+assert(equals(string.int(), 3))
+# while the string remains unchanged
+assert(string.equals('3'))
+
+# destructive casting as an alternative if string is no longer needed
+string.int!()
+assert(string.equals(3))
+string.str!()
+assert(string.equals('3'))
+
+# more complex example
+@ string = 'hello'
+# destructive modification
+string.+!(' world')
+assert(string.equals('hello world'))

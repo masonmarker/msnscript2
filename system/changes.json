@@ -1,0 +1,55 @@
+{
+    "2.0.387": {
+        "1": "Determined necessary dependencies, greatly speeding up execution of any single program",
+        "2": "Rewrote msn2 library to incorporate new, safer syntax, this includes many tests",
+        "3": "Implemented 'argument picker' for def() defined functions, allowing for more flexible argument passing"
+    },
+    "2.0.388": {
+        "1": "Added '!' specifier for object methods, this specifier forces the method to be destructive regardless of the prior value of the variable calling the method.",
+        "2": "Added partial type enforcements, this has only been applied to the existing MSN2 package functions. User functions may come in the future.",
+        "3": "Enabled the MSN2 interpreter to interpret multi-lined blocks of code for a few more cases (line ending with ',', etc...)",
+        "4": "Added ai.tokens(), ai.advanced(), ai.query() in the msn2 ai class",
+        "5": "Added chatgpt:instance class to lib/auto/chatgpt for more control over a ChatGPT model (demo in demos folder)",
+        "6": "Updated the msn2 ai class model structure, and with a few more models (WIP)",
+        "7": "Improved performance in raising errors",
+        "8": "Improved performance in general interpretation. This includes simplifying potentially tight loops and common method executions such as argument parsing.",
+        "9": "Repaired function insert(iterable, index, object)"
+    },
+    "2.0.401": {
+        "1": "Added msn2cli.py for more control over executing .msn2 programs",
+        "2": "Added JavaScript generation support (see tests/next_2.0.400/)",
+        "3": "Added function: uuid4()"
+    },
+    "2.0.402": {
+        "1": "Created function dispatch for the general MSN2 interpreter functions and objects, this should significantly improve performance in the long run. This is not yet done for pywinauto automation.",
+        "2": "Created longstring() (ls() alias) for multi-line strings",
+        "3": "Published VS Code extension 'msn2-syntax-highlighting' for .msn2 file extension syntax highlighting",
+        "4": "Converted main function interpretation to a dispatch table, this should significantly improve performance in the long run",
+        "5": "Fixed a bug involving MSN2 portable package generation",
+        "6": "Fixed a bug involving '{python_alias} msn2cli.py int' to start the MSN2 interpreter",
+        "7": "Fixed a bug involving the 'Getting Started' and 'Suggested Usage' help pages",
+        "8": "Fixed a bug involving the CLI 'element' command",
+        "9": "Fixed a bug with mod()",
+        "10": "Removed CLI 'package' option",
+        "11": "Removed CLI 'gpt' option",
+        "12": "Removed /speed profiling",
+        "13": "Removed auto-installing dependencies, but keeping the capability to auto install",
+        "14": "Removed auto printing errors with JS() and C()",
+        "15": "Migrated documentation to CLI / legacy execution method and hybrids",
+        "16": "Deprecated <msn2element> and <msn2> inserts, only {==} inserts are allowed within calls such as script() or longstring()",
+        "17": "trace.before() with no arguments now returns the total number of interpretations",
+        "18": "Changed alias() with no arguments to return the current python_alias"
+    },
+    "2.0.403": {
+        "1": "CHAINING! See TUTORIAL/suggestedusage2.msn2 :: Implemented chaining for the standard instruction, for example: +(1, 2).add(3).print()",
+        "2": "Restructured core functionality layout in core/ for readability, scalability, and maintainability",
+        "3": "Moved javascript generation functions and files to core/using_js/",
+        "4": "Updated env() and env(arg)",
+        "5": "Fixed bugs with excel() and corresponding classes/functions",
+        "6": "Fixed python -> msn2 -> python tutorial in TUTORIAL/python/",
+        "7": "Changed '{python_alias} msn2cli.py portable' functionality to exclude __pycache__ folders",
+        "8": "Removed 'install_deps.py' script and associated documentation throughout the codebase",
+        "9": "Added CLI command 'install' to globally install dependencies",
+        "10": "Added default object methods .then(), .as(), .and(), .or(), .not() for chaining"
+    }
+}

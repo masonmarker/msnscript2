@@ -1,0 +1,55 @@
+# Driver for the server project.
+#
+# hosts a server on ports 5000-5004 (inc) to the executors private network.
+#
+# author : Mason Marker
+# date : 11/20/2022
+# updated in 2.0.387
+
+# fresh console
+import ('lib/os')
+os:clear()
+
+# driver needs project-specific resources
+import ('lib/processes')
+
+# starts 5 processes
+for (0, 5, 'i', proc(cat('p', i), (
+
+    # import resources
+    import ('projects/server/resources'),
+
+    # create this endpoint
+    # i is from the outer process's resources
+    var('this', api(api:api_network.host(), +({=i=}, 5000), 
+        api:api_network.path(), api:api_network.init_data())),
+
+    # start this endpoint
+    api:start(this),
+
+    # main endpoint, performs mathematical evaluation of a math expression
+    # as a string
+    if (equals(this.port(), 5000),
+        private(msg(this.port(), 'starting...')),
+    ),
+    if (equals(this.port(), 5001),
+        private(msg(this.port(), 'starting...'))
+    ),
+    if (equals(this.port(), 5002),
+        private(msg(this.port(), 'starting...'))
+    ),
+    if (equals(this.port(), 5003),
+        private(msg(this.port(), 'starting...'))
+    ),
+
+    # user shell
+    if (equals(this.port(), 5004), (
+        # user command injection
+        import ('lib/user'),
+        private(msg(this.port(), 'starting...')),
+        user:shell('|5004| overseer')                
+    ))
+)))
+
+
+

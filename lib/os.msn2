@@ -1,0 +1,8 @@
+# offers operating system specific resources
+#
+# author : Mason Marker
+# date : 11/27/2022
+
+# duplicate function for clarity
+def('os:clear', if(
+    windows(), console('cls'), console('clear')))

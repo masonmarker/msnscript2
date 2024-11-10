@@ -1,0 +1,86 @@
+# Tests basic actions within the automation capabilities
+# of the language. Uses a multiple threads of execution
+# to find elements.
+#
+# As of 6/5/2023, there is no speedup between this 
+# and the single thread version of this script, I don't
+# believe their is enough work to be done to actually see
+# a speedup.
+#
+# author : Mason Marker
+# date : 5/23/2023
+
+# import timer
+import ('lib/timer')
+
+# get the Google Chrome application
+@ chrome = app('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe')
+chrome.start()
+chrome.write('www.calculator.net')
+chrome.enter()
+
+# wait for the calculator to load
+wait(@ five_button = first(chrome.find_all_children_exact('5')))
+
+# ------------------- PAGE LOADED -------------------
+
+# start timer
+timer:start()
+
+# gets the operator buttons
+thread('+', (
+    @ plus_button = first(chrome.find_all_children_exact('+')),
+    @ back_button = plus_button.element_right(45)
+))
+thread('=', @ equals_button = first(chrome.find_all_children_exact('=')))
+
+# gets all children
+@ children = chrome.all_children()
+
+# number buttons as a shared resource
+@ numbers = []
+@ threads = 3
+@ work_size = op.//(len(children), threads)
+
+# divides the search within the children
+# among 4 threads
+for(0, threads, 'i', thread(str(i), private((
+    @ start = i.*(work_size),
+    each(children.slice(start, start.+(work_size)), 'child', if(
+        and(
+            equals(child.width(), five_button.width()),
+            isdigit(child.text())
+        ),
+        numbers.append(child)
+    )),
+
+    # exports the elements found to the parent thread's context
+    export('numbers')
+))))
+
+# join the threads
+join('0', '1', '2')
+
+# sorts the numbers by a child's text
+@ numbers = reverse(sortby(numbers, 'child', child.text()))
+
+print('numbers ready in ', timer:runtime(), 'seconds')
+
+
+# type in the equation
+each(numbers.slice(0, 5), 'button', button.click())
+plus_button.click()
+each(numbers.slice(5, 10), 'button', button.click())
+
+# solve the equation
+equals_button.click()
+
+# extract the result
+@ result_text_box = back_button.element_above(30)
+print('Calculator says', int(result_text_box.text()))
+
+# print runtime
+print('multiple threads took', timer:runtime(), 'seconds')
+
+# stops chrome
+chrome.stop()

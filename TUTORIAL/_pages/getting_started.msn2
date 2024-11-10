@@ -1,0 +1,56 @@
+# Tutorial getting started page.
+#
+# author : Mason Marker
+# date : 8/6/2023
+# version : 2.0.382
+
+# getting started page component
+@ page:getting_started = script((
+
+    # getting started title
+    console:print(
+        arr(object(
+            'text', 'Getting Started',
+            'style', 'bold'
+        ))
+    ),
+
+    # list the getting started text
+    each(split(file.read('README.md'), "\n"), 'getting_started:line', (
+        if (getting_started:line.startswith(' '), (
+            console:print(arr(
+                object(
+                    'text', getting_started:line,
+                    'style', 'italic'
+                )
+            ))
+        ), if(getting_started:line.startswith('see '), (
+            console:print(arr(
+                object(
+                    'text', getting_started:line,
+                    'style', 'bold'
+                )
+            ))
+        ), 
+            console:print(arr(
+                object(
+                    'text', getting_started:line
+                )
+            ))
+        ))
+    )),
+
+    2(print()),
+    console:print(arr(
+        object(
+            'text', 'See more information in the MSN2 ',
+            'style', 'bold' 
+        ),
+        object(
+            'text', 'documentation',
+            'style', 'bold',
+            'fore', 'green'
+        )
+    )),
+    print()
+))

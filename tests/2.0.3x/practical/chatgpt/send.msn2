@@ -1,0 +1,34 @@
+# Sends a message to ChatGPT, and retrieves the response.
+# 
+# Why use this as opposed to OpenAI's ChatGPT API?
+# A: 
+#   1. No API key
+#   2. No charge per request
+#   3. Model settings pre-determined and refined by OpenAI's team
+#   4. ChatGPT's algorithm for retaining and interpreting the previous messages
+#      is maintained (THIS IS ABSOLUTELY HUGE AND CRUCIAL TO 
+#      UTILIZING GPT'S COMPLETE CAPABILITIES)
+#
+# author : Mason Marker
+# date : 6/3/2023
+
+
+# import ChatGPT automation library
+import ('lib/auto/chatgpt')
+
+# make up some questions
+@questions = (
+    ['Who is Obama?', 
+    'How old is he?', 
+    'Did he believe in aliens?'])
+
+# get ChatGPT responses for some questions
+# chatgpt:ask_gpt[0] = opened Google Chrome instance
+# chatgpt:ask_gpt[1] = array of responses
+@responses = get(chatgpt:ask_gpt(questions), 1)
+
+# print responses
+responses.each('response', print('RESPONSE: ', response))
+
+# send results to an enclosing .py script
+out(responses)
