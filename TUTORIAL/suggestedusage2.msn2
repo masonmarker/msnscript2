@@ -39,7 +39,7 @@ assert((
 
 # TUPLES
 # tuples are allowed in msn2... for now,
-# this may change if they're too unsafe or something
+# this may change if they're too unsafe for adjacent syntax
 
 # ending in '('
 @ b = (
