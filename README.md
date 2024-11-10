@@ -8,8 +8,11 @@ when pulling from GitHub, you should thoroughly review the version changes in bo
 *It's heavily suggested to install the msn2-syntax-highlighter package for your text editor to make coding in msn2 easier.*
 
 the insertion ```{python_alias}``` specified below is your machine's python alias.
-for most this is 'python', however it may be different for you.
-if yours is different, you should set your python alias under msn2_settings.json that should be created in your ```msnscript2/``` directory after an initial launch of a .msn2 program.
+for most, this would be the keyword 'python', however if yours is different, you should run
+`{python_alias} msn2cli.py help`, and navigate to the 'settings' page to change your alias.
+
+specifying your python running alias for the msn2 interpreter is important, as the interpreter uses it
+for system functions such as proc() or JAVA().
 
 ### installing dependencies
 

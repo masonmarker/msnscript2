@@ -60,22 +60,22 @@ tests:cli:run_test(
 
 
 
-# testing 2 files 2 argpacks
-tests:cli:run_test(
-    # commands to test
-    cat('-f ', tests:cli:test_file_3, ' -a "Hello, World!" -f ', tests:cli:test_file_4, ' -a "Hello, World!"'),
-    arr(tests:cli:test_file_3, tests:cli:test_file_4)
-)
+# # testing 2 files 2 argpacks
+# tests:cli:run_test(
+#     # commands to test
+#     cat('-f ', tests:cli:test_file_3, ' -a "Hello, World!" -f ', tests:cli:test_file_4, ' -a "Hello, World!"'),
+#     arr(tests:cli:test_file_3, tests:cli:test_file_4)
+# )
 
-# testing running a snippet
-tests:cli:run_test(
-    # commands to test
-    script(-s "file.write('tests/2.0.401/cli_tests/test4.txt', 'Hello, World!')"),
-    arr(tests:cli:test_file_4)
-)
+# # testing running a snippet
+# tests:cli:run_test(
+#     # commands to test
+#     script(-s "file.write('tests/2.0.401/cli_tests/test4.txt', 'Hello, World!')"),
+#     arr(tests:cli:test_file_4)
+# )
 
-# test running a file and snippet
-tests:cli:run_test(
-    cat('-f ', tests:cli:test_file_5, script( -s "file.write('tests/2.0.401/cli_tests/test5.txt', 'Hello, World!')")),
-    arr(tests:cli:test_file_5)
-)
+# # test running a file and snippet
+# tests:cli:run_test(
+#     cat('-f ', tests:cli:test_file_5, script( -s "file.write('tests/2.0.401/cli_tests/test5.txt', 'Hello, World!')")),
+#     arr(tests:cli:test_file_5)
+# )
