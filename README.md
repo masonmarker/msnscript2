@@ -12,6 +12,8 @@
 
 when pulling new changes after already having cloned, you should thoroughly review the version changes in both the commit history, and `/system/changes.json` to ensure that your existing code is compatible with the latest version of the msn2 library. commits are made often, and this only emphasizes the importance of reviewing the changes made to the language.
 
+---
+
 ### steps after cloning
 
 1. navigate to the cloned repository:
@@ -45,6 +47,8 @@ cd msnscript2
 7. install the [msn2-syntax-highlighting](https://marketplace.visualstudio.com/items?itemName=MasonMarker.msn2-syntax-highlighting) VS Code extension (or use the _CoffeeScript_ language mode if this isn't available to you)
 
 8. learn to code in msn2 by reading through and running `TUTORIAL/suggestedusage2.msn2` as well as files in `demos/`, `problems/`, and `projects/`
+
+---
 
 ### starting a .msn2 script (latest version, recommended)
 
@@ -97,6 +101,8 @@ timing .msn2 code:
 
 run `{python_alias} msn2cli.py --help` for more information on the msn2cli interpreter and its usage.
 
+---
+
 ### tutorial
 
 See the msn2 suggested usage and tutorials in the `TUTORIAL/` directory for more information on how to use the msn2 language.
@@ -107,9 +113,13 @@ The help pages also offer a walkthrough of the suggested usage, invoke the help 
 {python_alias} msn2cli.py help
 ```
 
+---
+
 ### known issues
 
 find language integrity related issues under the [issues](https://github.com/masonmarker/msnscript2/issues) tab of this repository.
+
+---
 
 ### notes
 
@@ -124,6 +134,8 @@ find language integrity related issues under the [issues](https://github.com/mas
 - run `{python_alias} msn2cli.py verify` to run the validator for msn2 integrity.
 
 again, run '{python_alias} msn2.py help' for more information on the msn2 interpreter and its usage, or see more help through the CLI with `{python_alias} msn2cli.py --help`
+
+---
 
 ## Contributing
 
