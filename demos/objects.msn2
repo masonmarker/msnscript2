@@ -12,7 +12,6 @@ os:clear()
 # all resources and methods created in the class
 # will be absorbed as a single object variable once definition is complete
 class('person', (
-
     # person attributes
     var('name', None),
     var('age', None)
@@ -25,8 +24,8 @@ var('joe', person('joe', 21))
 prnt('main: created instance of "person" called "joe"')
 
 # assert attributes were automatically set correctly
-assert(equals(getattr('joe', 'name'), 'joe'))
-assert(equals(getattr('joe', 'age'), 21))
+getattr('joe', 'name').equals('joe').assert()
+getattr('joe', 'age').equals(21).assert()
 prnt('main: getattr() passed testing')
 
 # testing setattr()
@@ -53,7 +52,6 @@ var('son1', son('alvin'))
 
 # easier way of getting attributes
 assert(equals(dad1.name(), 'david'))
-# assert(<<|dad1.name()| != 50 and |dad1.children()| == []>>)
 assert(and(not(equals(dad1.name(), 50)), equals(dad1.children(), [])))
 
 # setting attributes

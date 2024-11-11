@@ -1,103 +1,149 @@
-# PULLING FROM GITHUB
+# 🚀 msnscript2 (msn2)
 
-when pulling from GitHub, you should thoroughly review the version changes in both the commit history, and `/system/changes.json` to ensure that your existing code is compatible with the latest version of the msn2 library. commits are made often, and this only emphasizes the importance of reviewing the changes made to the library.
+[![Project Version][version-image]][version-url]
+[![Backend][backend-image]][backend-url]
+[![Minimum Python Version][minimum-python]][repository-url]
+[![Documentation][docs-image]][docs-url]
+[![SyntaxHighlighting][syntax-highlighting]][syntax-highlighting-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+[![Website][website-shield]][website-url]
 
-## setup
+## PULLING NEW CHANGES
 
-- _It's heavily suggested to install the msn2-syntax-highlighter package for your text editor to make coding in msn2 easier._
-  the insertion `{python_alias}` specified below is your machine's python alias.
-  for most, this would be the keyword 'python', however if yours is different, you should run
-  `{python_alias} msn2cli.py help`, and navigate to the 'settings' page to change your alias.
+when pulling new changes after already having cloned, you should thoroughly review the version changes in both the commit history, and `/system/changes.json` to ensure that your existing code is compatible with the latest version of the msn2 library. commits are made often, and this only emphasizes the importance of reviewing the changes made to the language.
 
-specifying your python running alias for the msn2 interpreter is important, as the interpreter uses it
-for system functions such as proc() or JAVA().
+### steps after cloning
 
-### steps after your first clone
+1. navigate to the cloned repository:
 
-1. cd `msnscript2/`
-2. install dependencies in `requirements.txt`, this can be done manually or with `{python_alias} msn2cli.py install`
-3. run `{python_alias} msn2cli.py help`
+```sh
+cd msnscript2
+```
+
+2. install dependencies in `requirements.txt`, this can be done through pip or globally with:
+
+```sh
+{python_alias} msn2cli.py install
+```
+
+3. launch the msn2 help pages with:
+
+```sh
+{python_alias} msn2cli.py help
+```
+
 4. navigate to the _settings_ page
-5. set your python _runner_alias_
-6. run `{python_alias} msn2cli.py verify` to ensure your alias has been set correctly, and the integrity of the msn2 library is intact
-7. install the _msn2-syntax-highlighter_ VS Code extension (or use _CoffeeScript_ if this isn't available to you)
-8. learn to code in msn2 by viewing `TUTORIAL/suggestedusage2.msn2`, `demos/`, `problems/`, and `projects/`
 
-### installing dependencies
+5. set your python _runner_alias_ (for most this is set to 'python'). specifying this is important for calls such as proc() or JAVA().
 
-while globally installing dependencies isn't recommended, you can do this with `{python_alias} msn2cli.py install`
+6. ensure your alias has been set correctly, and the integrity of the msn2 library is intact with:
 
-not all dependencies might be used in your programs, so it's recommended to install dependencies as needed.
+```sh
+{python_alias} msn2cli.py verify
+```
 
-these dependencies can also be re-installed via the msn2 help pages if necessary
-as of 2.0.385. find these pages and much more with `{python_alias} msn2cli.py help`
+7. install the [msn2-syntax-highlighting](https://marketplace.visualstudio.com/items?itemName=MasonMarker.msn2-syntax-highlighting) VS Code extension (or use the _CoffeeScript_ language mode if this isn't available to you)
+
+8. learn to code in msn2 by reading through and running `TUTORIAL/suggestedusage2.msn2` as well as files in `demos/`, `problems/`, and `projects/`
 
 ### starting a .msn2 script (latest version, recommended)
 
+create a file with a `.msn2` extension in the `msnscript2/` directory to get started 🚀
+
 there are a few ways to launch an msn2 program, but the recommended way uses the msn2 CLI:
 
-1. `cd msnscript2`
-2. `{python_alias} msn2cli.py -f script1`
+```sh
+cd msnscript2
+```
+
+```sh
+{python_alias} msn2cli.py -f script1
+```
+
+you should be in the `msnscript2/` directory when launching programs or interacting with the msn2 CLI.
 
 the `.msn2` file extension is optional when specifying a file to execute.
 
 #### CLI examples
 
-##### multiple files
+multiple files:
 
-- `{python_alias} msn2cli.py -f script1 -f script2`
+```sh
+{python_alias} msn2cli.py -f script1 -f script2
+```
 
+<!--
 ##### multiple files with system arguments
 
-- `{python_alias} msn2cli.py time -f script1 -a "['hello', 'bye']" -f script2 -a "'no way'"`
+- `{python_alias} msn2cli.py time -f script1 -a "['hello', 'bye']" -f script2 -a "'no way'"` -->
 
-##### running just a code snippet
+multiple files with system arguments:
 
-- `{python_alias} msn2cli.py -s "(@v = 1, print(v))"` -> "1"
+```sh
+{python_alias} msn2cli.py time -f script1 -a "['hello', 'bye']" -f script2 -a "'no way'"
+```
 
-##### timing .msn2 code
+running just a code snippet:
 
-- `{python_alias} msn2cli.py time -s "sleep(1)"`
+```sh
+{python_alias} msn2cli.py -s "(@v = 1, print(v))"
+```
+
+timing .msn2 code:
+
+```sh
+{python_alias} msn2cli.py time -s "sleep(1)"
+```
 
 run `{python_alias} msn2cli.py --help` for more information on the msn2cli interpreter and its usage.
 
-### starting a .msn2 script (pre 2.0.401)
+### tutorial
 
-       if it works you can use: $ msn2 script.msn2 script2.msn2
-       else: $ {python_alias} msn2.py script.msn2 script2.msn2
+See the msn2 suggested usage and tutorials in the `TUTORIAL/` directory for more information on how to use the msn2 language.
 
-       the in() call retrieves arguments to the command line
-       in the msn2 environment
+The help pages also offer a walkthrough of the suggested usage, invoke the help pages with:
 
-    see the msn2 help pages via ```{python_alias} msn2.py help``` too see the most updated syntax and usage.
-    see /TUTORIAL for the msn2 source code for this demonstration.
-    other syntax likely exists outside of the suggested syntax, however outside syntax works in very
-    specific scenarios, and are not recommended to be used.
-
-    the suggested syntax is the most updated, and safest way to code.
+```sh
+{python_alias} msn2cli.py help
+```
 
 ### known issues
 
-find language integrity related issues under the issues tab of this repository.
+find language integrity related issues under the [issues](https://github.com/masonmarker/msnscript2/issues) tab of this repository.
 
 ### notes
 
-- see /demos for demonstrations
-- see /tests for syntax specific usage (find the most recent validator in /tests)
-- see /projects for larger demonstrations
-- see /msn2 for a portable MSNScript2 Interpreter package that can be copied
+- see `demos/` for demonstrations
+- see `tests/` for syntax specific usage (find the most recent validator in /tests)
+- see `projects/` for larger demonstrations
+- see `portable/` for a portable MSNScript2 Interpreter package that can be copied
   into your project directories for launching .msn2 programs anywhere.
-- see /problems for popular programming problems solved in msn2.
-- see /system for system related operations in msn2.
+- see `problems/` for popular programming problems solved in msn2.
+- see `system/` for system related operations in msn2.
 
 - run `{python_alias} msn2cli.py verify` to run the validator for msn2 integrity.
 
-- file-based code depends on the user's current directory after executing a .msn2 program (ex imports),
-- verify that file paths in written code are compatible with the directory at which the program is launched
+again, run '{python_alias} msn2.py help' for more information on the msn2 interpreter and its usage, or see more help through the CLI with `{python_alias} msn2cli.py --help`
 
-- be wary of function name changes in the msn2 library, the libraries and interpreter are subject to change,
-  this is to make the library safer and/or faster. be sure to read commits of TheMsnProject
-  to understand the status and naming conventions of the latest versions of the package.
+## Contributing
 
-again, run '{python_alias} msn2.py help' for more information on the msn2 interpreter and its usage,
-or see more help through the CLI with `{python_alias} msn2cli.py --help`
+1. Fork it (<https://github.com/masonmarker/msnscript2/fork>)
+2. Create your feature branch (`git checkout -b feature/fooBar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Pull Request
+
+[repository-url]: https://github.com/masonmarker/msnscript2
+[linkedin-url]: https://www.linkedin.com/in/masonmarker
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[website-url]: https://masonmarker.com
+[website-shield]: https://img.shields.io/badge/-portfolio-black.svg?style=for-the-badge&logo=Google-Chrome&colorB=555
+[docs-url]: https://masonmarker.com/projects/msn2
+[docs-image]: https://img.shields.io/badge/Docs-msn2<=2.0.401-blue?style=for-the-badge&logo=appveyor
+[version-image]: https://img.shields.io/badge/Version-2.0.403-brightgreen?style=for-the-badge&logo=appveyor
+[version-url]: https://img.shields.io/badge/version-1.0.0-green
+[backend-image]: https://img.shields.io/badge/Backend-Python-blue?style=for-the-badge
+[backend-url]: https://img.shields.io/badge/Backend-Python-blue?style=for-the-badge
+[minimum-python]: https://img.shields.io/badge/Requires%20Python-3.8%2B-blue?style=for-the-badge
+[syntax-highlighting]: https://img.shields.io/badge/Syntax%20Highlighting-%20VSCode%20Marketplace-orange?style=for-the-badge
+[syntax-highlighting-url]: https://marketplace.visualstudio.com/items?itemName=MasonMarker.msn2-syntax-highlighting

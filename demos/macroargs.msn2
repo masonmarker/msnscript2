@@ -11,12 +11,14 @@ os:clear()
 postmacro(';', '__line', macro_args(':::', __line))
 
 # sorts an array
-macro('SORT', '__line', sorted(-(__line)))
 macro('REV', '__line', << |-(__line)|[::-1] >>)
 
 
 
 print('[+] starting program with new syntax') ::: print('[+] sequential operator working');
+
+
+macro('SORT', '__line', sorted(-(__line)))
 
 
 print(SORT [6, 5, 43, 3, 2, 1]) ::: print(SORT [3, 2, 1]);
