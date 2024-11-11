@@ -8,13 +8,13 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![Website][website-shield]][website-url]
 
-## PULLING NEW CHANGES
+## ❗ PULLING NEW CHANGES ❗
 
 when pulling new changes after already having cloned, you should thoroughly review the version changes in both the commit history, and `/system/changes.json` to ensure that your existing code is compatible with the latest version of the msn2 library. commits are made often, and this only emphasizes the importance of reviewing the changes made to the language.
 
 ---
 
-### steps after cloning
+### 📋 steps after cloning
 
 1. navigate to the cloned repository:
 
@@ -50,7 +50,7 @@ cd msnscript2
 
 ---
 
-### starting a .msn2 script (latest version, recommended)
+### ⚡ starting a .msn2 script (latest version, recommended)
 
 create a file with a `.msn2` extension in the `msnscript2/` directory to get started 🚀
 
@@ -103,7 +103,39 @@ run `{python_alias} msn2cli.py --help` for more information on the msn2cli inter
 
 ---
 
-### tutorial
+### 💻 code examples
+let's take a glance at some msn2 code...
+
+*basic variables and functions*
+
+![image](https://github.com/user-attachments/assets/f1932e0a-7a80-49fb-a599-6c5ff1ac8984)
+
+*starting an API endpoint and querying*
+
+![image](https://github.com/user-attachments/assets/3cddfd61-c2ec-4971-a5c2-314278ed7e41)
+
+*custom syntax*
+
+![image](https://github.com/user-attachments/assets/cdbb0ffe-2d83-46ec-b7d8-df15b4205276)
+
+*inline foreign languages*
+*AS OF 2.0.403: JAVA(), JS(), C()*
+
+![image](https://github.com/user-attachments/assets/7d12a698-0d12-45e4-99c7-db3f98d08b18)
+
+*inline Python*
+
+![image](https://github.com/user-attachments/assets/b8ba6317-cf16-4af3-b759-e81d30da7326)
+
+*automates Cookie Clicker online!*
+
+![image](https://github.com/user-attachments/assets/9afec34b-9a57-4821-a82f-e7bdc37b5685)
+
+There's so much more here to uncover aside from the above examples, I'm actually getting giddy just explaining the possibilities, see the below `tutorials` section for more focused teachings.
+
+---
+
+### 👩🏼‍🏫 tutorials
 
 See the msn2 suggested usage and tutorials in the `TUTORIAL/` directory for more information on how to use the msn2 language.
 
@@ -115,13 +147,13 @@ The help pages also offer a walkthrough of the suggested usage, invoke the help 
 
 ---
 
-### known issues
+### ❗ known issues 
 
 find language integrity related issues under the [issues](https://github.com/masonmarker/msnscript2/issues) tab of this repository.
 
 ---
 
-### notes
+### 📝 notes
 
 - see `demos/` for demonstrations
 - see `tests/` for syntax specific usage (find the most recent validator in /tests)
