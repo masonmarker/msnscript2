@@ -18,7 +18,6 @@ from core.classes.auto.toolbar import ToolBar
 from core.classes.auto.scrollbar import ScrollBar
 
 # common
-from core.containers.container_obj import OBJ_GENERAL_CONTAINER_DISPATCH
 from core.obj.ai.default import OBJ_AI_DEFAULT_DISPATCH
 from core.obj.ai.info import OBJ_AI_INFO_DISPATCH
 from core.obj.ai.querying import OBJ_AI_QUERYING_DISPATCH
@@ -118,11 +117,13 @@ from core.auto.scrollbar.general import OBJ_GENERAL_SCROLLBAR_GENERAL_DISPATCH
 from core.auto.table.general import OBJ_GENERAL_TABLE_GENERAL_DISPATCH
 from core.auto.toolbar.general import OBJ_GENERAL_TOOLBAR_GENERAL_DISPATCH
 
-# special functions
-from core.special.loops import SPECIAL_LOOPS_DISPATCH
 
 # containers
 from core.containers.containers import CONTAINERS_DISPATCH
+from core.containers.container_obj import OBJ_GENERAL_CONTAINER_DISPATCH
+
+# special functions
+from core.special.loops import SPECIAL_LOOPS_DISPATCH
 
 # misc
 from core.misc import MISC_DISPATCH
