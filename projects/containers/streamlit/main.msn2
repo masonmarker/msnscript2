@@ -8,27 +8,31 @@
 \\
 import streamlit as st
 
-
+# main script
 def main():
-    st.title("This is a test app")
+    st.title('This is a test app')
+
+if __name__ == '__main__':
+    main()
+
 main_script \\
 
 
-@ streamlit_container = container(
-    object(
-        'name', 'streamlit',
-        'image', object('requirements', ['streamlit']),
-        'commands', ['streamlit', 'run', 'main.py'],
-        'mounting', arr(
-            object(
-                'extension', 'py',
-                'body', main_script
+
+thread('p_streamlit_container', (
+    (@ streamlit_container = container(
+        object(
+            'name', 'streamlit',
+            'image', object('requirements', ['streamlit']),
+            'commands', ['streamlit', 'run', 'run.py'],
+            'mounting', arr(
+                object(
+                    'file', 'run.py',
+                    'body', main_script
+                )
             )
         )
-    )
-)
+    )).run()
+))
 
-
-streamlit_container.print()
-
-streamlit_container.run()
+print('hello!')

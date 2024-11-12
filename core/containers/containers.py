@@ -32,17 +32,16 @@ correct_mounting_schema = {
     "items": {
         "type": "object",
         "properties": {
-            "extension": {"type": "string"},
+            "file": {"type": "string"},
             "body": {"type": "string"},
         },
-        "required": ["extension", "body"],
+        "required": ["file", "body"],
         "additionalProperties": False,
     },
     "additionalItems": False,
 }
 
 def _verify_container_image(inter, image_config, line, **kwargs):
-    print(image_config)
     try:
         validate(instance=image_config, schema=correct_image_schema)
     except jsonschema.ValidationError as e:
@@ -94,7 +93,7 @@ def _verify_container_config(inter, line, args, **kwargs):
 def f_container(inter, line, args, **kwargs):
     config = _verify_container_config(inter, line, args, **kwargs)
     """Create a container."""
-    return Container(inter, **config)
+    return Container(inter, _kwargs={**kwargs, "line": line}, **config)
 
 
 

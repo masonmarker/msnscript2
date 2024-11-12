@@ -5,7 +5,7 @@
 
 def f_obj_general_container_run(inter, line, args, **kwargs):
     # get the container, which should be the first argument
-    kwargs["object"].run()
+    return kwargs["object"].run()
 
 
 
