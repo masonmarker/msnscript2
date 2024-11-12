@@ -1,8 +1,16 @@
 
 
 
-macro('SORT ', '__SORT_LINE', sorted(-(__SORT_LINE)))
+# runs javascript via node
+@ js_out = JS(
+    # javascript goes here, all stdout/errs are captured
+    # and returned to msn2
+    function reverseArray(array) {
+        return array.reverse();
+    }
+    console.log(reverseArray([1, 2, 3, 4, 5]));
+)
+# prints [ 5, 4, 3, 2, 1 ]
+print(js_out.out())
 
-# prints "[1, 2, 3, 4, 5] [1, 2, 3]"
-print(SORT [5, 4, 3, 2, 1], SORT [2, 3, 1])
 

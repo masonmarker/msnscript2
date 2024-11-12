@@ -17,7 +17,7 @@ main_script \\
 @ streamlit_container = container(
     object(
         'name', 'streamlit',
-        'image', object('asdf', 'awef'),
+        'image', object('requirements', ['streamlit']),
         'commands', ['streamlit', 'run', 'main.py'],
         'mounting', arr(
             object(
@@ -31,3 +31,4 @@ main_script \\
 
 streamlit_container.print()
 
+streamlit_container.run()
