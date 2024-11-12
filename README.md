@@ -149,23 +149,23 @@ The help pages also offer a walkthrough of the suggested usage, invoke the help 
 
 ### ❗ known issues 
 
-find language integrity related issues under the [issues](https://github.com/masonmarker/msnscript2/issues) tab of this repository.
+as much as I wish there weren't bugs in such a large, overly complex, single contributor having repository, there are XD.
+
+
+find the dreaded language integrity related issues under the [issues](https://github.com/masonmarker/msnscript2/issues) tab of this repository.
 
 ---
 
 ### 📝 notes
 
 - see `demos/` for demonstrations
-- see `tests/` for syntax specific usage (find the most recent validator in /tests)
-- see `projects/` for larger demonstrations
-- see `portable/` for a portable MSNScript2 Interpreter package that can be copied
-  into your project directories for launching .msn2 programs anywhere.
 - see `problems/` for popular programming problems solved in msn2.
+- see `projects/` for larger, multi-filed demonstrations
+- see the README in `portable/` for a smaller, lightweight msn2 interpreter package that can be copied anywhere as a portable msn2 runner in your projects.
 - see `system/` for system related operations in msn2.
+- see `tests/` for syntax specific usage (find the most recent validator in /tests)
 
-- run `{python_alias} msn2cli.py verify` to run the validator for msn2 integrity.
-
-again, run '{python_alias} msn2.py help' for more information on the msn2 interpreter and its usage, or see more help through the CLI with `{python_alias} msn2cli.py --help`
+*run `{python_alias} msn2.py help` for more information on the msn2 interpreter and its usage, and see more help with the CLI with `{python_alias} msn2cli.py --help`*
 
 ---
 
