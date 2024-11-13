@@ -1,4 +1,4 @@
-# portable MSN2 Directories
+# portable msn2 directories
 
 1. create a fresh, lightweight yet all-inclusive MSN2 package that can be copied to any of your projects:
 
