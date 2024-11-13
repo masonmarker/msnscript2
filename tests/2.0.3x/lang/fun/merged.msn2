@@ -108,11 +108,9 @@
                                                 =}
                                         );
                                     }
-
                                 ), 'out')
                             =}
                         ;
-
                         # rotate the array 2 positions
                         int rotations = 2;
                         rotateArray(numbers, rotations);
