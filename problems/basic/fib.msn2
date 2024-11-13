@@ -5,18 +5,21 @@
 # updated in 2.0.387
 
 # ----------------------------- Algorithm 1 -----------------------------
-def('fib', 'n', 'i', (
-    if (i.equals(1), 
-        1,
-        if (i.equals(2), 
+def('fib:get_num', 'fib:get_num:n', 'fib:get_num:i', (
+    if (fib:get_num:i.equals(0), 
+        0,
+        if (fib:get_num:i.equals(1), 
             1,
             # must recurse in a private context
             # to avoid variable name collisions
-            +(private(fib(n, i - 1)), private(fib(n, i - 2)))
+            +(
+                private(fib:get_num(fib:get_num:n, fib:get_num:i.-(1))), 
+                private(fib:get_num(fib:get_num:n, fib:get_num:i.-(2)))
+            )
         )
     )
 ))
 # -----------------------------------------------------------
 
 # running the recursive function
-for(1, 10, 'i', fib(1, i).print())
+for(1, 10, 'i', fib:get_num(1, i).print())
