@@ -47,9 +47,11 @@
         "4": "Updated env() and env(arg)",
         "5": "Fixed bugs with excel() and corresponding classes/functions",
         "6": "Fixed python -> msn2 -> python tutorial in TUTORIAL/python/",
-        "7": "Changed '{python_alias} msn2cli.py portable' functionality to exclude __pycache__ folders",
-        "8": "Removed 'install_deps.py' script and associated documentation throughout the codebase",
-        "9": "Added CLI command 'install' to globally install dependencies",
-        "10": "Added default object methods .then(), .as(), .and(), .or(), .not() for chaining"
+        "7": "Fixed a bug with JAVA() running the incorrect execution command",
+        "8": "Changed '{python_alias} msn2cli.py portable' functionality to exclude __pycache__ folders",
+        "9": "Removed 'install_deps.py' script and associated documentation throughout the codebase",
+        "10": "Added CLI command 'install' to globally install dependencies",
+        "11": "Added default object methods .then(), .as(), .and(), .or(), .not() for chaining",
+        "12": "Reworked None() implementation for comp() and similar iterable functions"
     }
 }
