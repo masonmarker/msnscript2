@@ -1,3 +1,7 @@
+![image](https://github.com/user-attachments/assets/f1a5b992-ac77-4304-90e3-9d4f53d91000)
+<sub>*unformatted, runnable code, see below for more code examples*</sub>
+
+
 # 🚀 msnscript2 (msn2)
 
 [![Project Version][version-image]][version-url]
