@@ -1,0 +1,38 @@
+
+
+
+
+
+
+
+\\
+import streamlit as st
+
+# main script
+def main():
+    st.title('This is a test app')
+
+if __name__ == '__main__':
+    main()
+
+main_script \\
+
+
+
+thread('p_streamlit_container', (
+    (@ streamlit_container = container(
+        object(
+            'name', 'streamlit',
+            'image', object('requirements', ['streamlit']),
+            'commands', ['streamlit', 'run', 'run.py'],
+            'mounting', arr(
+                object(
+                    'file', 'run.py',
+                    'body', main_script
+                )
+            )
+        )
+    )).run()
+))
+
+print('hello!')

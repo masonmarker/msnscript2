@@ -6,6 +6,9 @@ dev_files/
 localstorage/
 msnint2-processes/
 
+# containers
+tmp/
+
 # msn2 language files
 _exec/
 

@@ -60,6 +60,7 @@ import threading
 
 # classes
 from core.classes.instruction import Instruction
+from core.classes.nothing import Nothing
 from core.classes.var import Var
 from core.classes.method import Method
 from core.classes.exceptions.msn2exception import MSN2Exception
@@ -119,7 +120,7 @@ with open("msn2_settings.json") as f:
     settings = json.load(f)
     python_alias = settings["settings"]["runner_alias"]
 # msn2 implementation of None
-msn2_none = "___msn2_None_"
+msn2_none = Nothing()
 # thread serial
 thread_serial = 0
 # global vars

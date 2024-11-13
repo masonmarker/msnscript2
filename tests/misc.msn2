@@ -1,8 +1,3 @@
 
-
-
-macro('SORT ', '__SORT_LINE', sorted(-(__SORT_LINE)))
-
-# prints "[1, 2, 3, 4, 5] [1, 2, 3]"
-print(SORT [5, 4, 3, 2, 1], SORT [2, 3, 1])
-
+@ l = comp([1, 2, 3, 4, 5],'e',e.%(2).equals(0).then(e, None()))
+l.print()

@@ -32,33 +32,41 @@ correct_mounting_schema = {
     "items": {
         "type": "object",
         "properties": {
-            "extension": {"type": "string"},
+            "file": {"type": "string"},
             "body": {"type": "string"},
         },
-        "required": ["extension", "body"],
+        "required": ["file", "body"],
         "additionalProperties": False,
     },
     "additionalItems": False,
 }
 
-def _verify_container_image(image_config):
-    print(image_config)
+def _verify_container_image(inter, image_config, line, **kwargs):
     try:
         validate(instance=image_config, schema=correct_image_schema)
     except jsonschema.ValidationError as e:
-        return f"Invalid image configuration\n{e}"
+        return inter.err(
+            "Container error",
+            f"Invalid image configuration\n{e}",
+            line,
+            kwargs["lines_ran"],
+        )
     return image_config
 
-def _verify_container_mounting(mounting_config):
+def _verify_container_mounting(inter, mounting_config, line, **kwargs):
     try:
         validate(instance=mounting_config, schema=correct_mounting_schema)
     except jsonschema.ValidationError as e:
-        return f"Invalid mounting configuration\n{e}"
+        return inter.err(
+            "Container error",
+            f"Invalid mounting configuration\n{e}",
+            line,
+            kwargs["lines_ran"],
+        )
     return mounting_config
 
 # verifies the container()'s configuration is correct
 def _verify_container_config(inter, line, args, **kwargs):
-    from pprint import pprint
     config = inter.parse(0, line, args)[2]
     # config should be a dictionary
     inter.type_err([(config, (dict,))], line, kwargs["lines_ran"])    
@@ -76,16 +84,16 @@ def _verify_container_config(inter, line, args, **kwargs):
     # get the image from the config
     image_config = config.get("image", {})
     # verify the image is correct
-    image_config = _verify_container_image(image_config)
+    image_config = _verify_container_image(inter, image_config, line, **kwargs)
     # verify the mounting is correct
     mounting_config = config.get("mounting", [])
-    mounting_config = _verify_container_mounting(mounting_config)
+    mounting_config = _verify_container_mounting(inter, mounting_config, line, **kwargs)
     return config
 
 def f_container(inter, line, args, **kwargs):
     config = _verify_container_config(inter, line, args, **kwargs)
     """Create a container."""
-    return Container(**config)
+    return Container(inter, _kwargs={**kwargs, "line": line}, **config)
 
 
 
