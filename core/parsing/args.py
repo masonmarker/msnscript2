@@ -71,17 +71,17 @@ def get_args(inter, line, prev_args=[], chain_index=0,
             a -= 1
         if c == "(" and not s2 > 0 and not s > 0:
             p += 1
-            if func == "ls":
-                in_ls = True
-                # iterate up to the next ')' to get the arguments
-                ls_args = ""
-                for k in range(i + 1, l):
-                    if line[k] == ")":
-                        break
-                    ls_args += line[k]
-                # add as an arg
-                args.append([ls_args, i + 1, i + 1 + len(ls_args)])
-                return args, {"is_chained": False}, k
+            # if func == "ls":
+            #     in_ls = True
+            #     # iterate up to the next ')' to get the arguments
+            #     ls_args = ""
+            #     for k in range(i + 1, l):
+            #         if line[k] == ")":
+            #             break
+            #         ls_args += line[k]
+            #     # add as an arg
+            #     args.append([ls_args, i + 1, i + 1 + len(ls_args)])
+            #     return args, {"is_chained": False}, k
         if c == ")" and not s2 > 0 and not s > 0:
             complete_paren_count += 1
             p -= 1
