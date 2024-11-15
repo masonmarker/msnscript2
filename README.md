@@ -18,6 +18,35 @@ when pulling new changes after already having cloned, you should thoroughly revi
 
 ---
 
+### Beginnings
+A few years ago, after tossing 2 draft languages, I began my personal project pinnacle. _MSN2_ was (and still is) what I consider to be a mock programming language, mostly due to its unconventional, deoptimized interpretation methods that can result in language integrity issues.
+
+But then again I ask myself, why would I keep coming back to this project over the years? Why hadn't I tossed it with the other drafts in fear of developers embarrassment? I kept it because of how _far_ I exceeded my expectations for a programming language having a _single contributor_, even though I'm still miles short of the vision I have.
+
+### Why another language?
+Early in development, there _was no real intention_ to release it to the public as it was merely a learning exercise, thus there's no real reason to introduce a new language, at least not this one. Regardless, _as a functional tool and a main source of my Python studies_, I leave this project here for the community. 
+
+Though purely for the sake of thought, the benefits of building a programming language on top of Python equips us with the not only the complete capabilities of Python itself, but new features for:
+- multiprogramming
+- syntax additions
+- automation (win 10 exclusive)
+- multilingual (as of 2.0.403, Python, JavaScript, Java, C)
+- _MSN2_ -> JavaScript/React transpilation
+- API endpoint creation and interactions
+- Simple, lightweight containers
+
+Because of the ease of implementing new features, it could serve as the foundation for a more community-oriented language that continuously progresses through community feedback and contributions. With these the current and future contributions, we create opportunity to:
+- Innovate programming strategies
+- Foster cross-language interoperability
+- Support flexible and customizable syntax
+- Provide pre-built utilities for natural language processing (NLP)
+- Facilitate the creation of custom libraries and plugins
+- Adapt to a wider range of development environments
+
+_and how much more...?_
+
+---
+
 ### 📋 steps after cloning
 
 1. navigate to the cloned repository:
