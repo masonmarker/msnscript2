@@ -45,6 +45,8 @@ Because of the ease of implementing new features, it could serve as the foundati
 
 _and how much more...?_
 
+read more on [dev.to](https://dev.to/masonmarker/msn2-an-experimental-programming-language-for-the-bold-developer-2b11)
+
 ---
 
 ### 📋 steps after cloning
